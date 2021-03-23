@@ -1,5 +1,6 @@
 /*
- *	TechnicalUserX C/C++ Library
+ *	TechnicalUserX C Library
+ *	You can use this library in a cpp program but this library's main focus is the C programing language.
  */
 
 

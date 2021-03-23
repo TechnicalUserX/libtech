@@ -13,8 +13,12 @@
 #define not !
 #define PI 3.1415926535897932384
 
-/* If you want to use color macros inside Linux,
+/* 
+ * If you want to use color macros inside Linux,
  * type: #define TUXLIB_LINUX before including tuxstdlib.h
+ *
+ * If you want to use color macros inside Windows
+ * type: #define TUXLIB_WINDOWS
 */
 #if defined(TUXLIB_WINDOWS)
 	#include <windows.h>

@@ -14,7 +14,7 @@
 #define PI 3.1415926535897932384
 
 /* If you want to use color macros inside Linux,
- * type: #define LINUX before including tuxstdlib.h
+ * type: #define TUXLIB_LINUX before including tuxstdlib.h
 */
 #if defined(TUXLIB_WINDOWS)
 	#include <windows.h>

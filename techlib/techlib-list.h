@@ -9,10 +9,24 @@
  */
 
 
-#include <stdlib.h>
+#ifndef _STDIO_H
 #include <stdio.h>
+#endif
+
+#ifndef _STRING_H
 #include <string.h>
+#endif
+
+#ifndef __STDBOOL_H
 #include <stdbool.h>
+#endif
+
+#ifndef _STDLIB_H
+#include <stdlib.h>
+#endif
+
+#ifndef _TECHLIB_LIST_H
+#define _TECHLIB_LIST_H
 
 #define LIST_GET_STRING_RETURN_NULL "(NULL)"
 
@@ -5117,3 +5131,4 @@ list* list_new(list_type type){
     return list_new;
 }
 
+#endif // techlib-list.h

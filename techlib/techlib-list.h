@@ -4935,7 +4935,7 @@ void list_remove(list* l, int index){
     int converted_index = (index == -1) ? l->size -1 : index;
     
 
-    if((long long)l->size <= converted_index || converted_index < -1){
+    if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
         printf("%s\n",list_error_remove_out_of_range);
         #endif
@@ -4962,7 +4962,7 @@ void list_remove(list* l, int index){
 
     }
     else if(l->type == LIST_TYPE_SINGLE_LINKED || l->type == LIST_TYPE_DOUBLE_LINKED){
-
+        
         if(converted_index == 0){
 
             list_object* next_object = l->objects->next;
@@ -4978,15 +4978,25 @@ void list_remove(list* l, int index){
             l->size-=1;
             return;
         }else{
-        
+
             list_object* prev_object,*current_object,*next_object;
             int i;
-            for(i = 1, prev_object = l->objects, current_object = l->objects->next; i != index; i++,prev_object = prev_object->next, current_object = current_object->next        );
+            prev_object = l->objects;
+            current_object = l->objects->next;
+
+            for(i = 1; i<converted_index  ;i++ ){
+                prev_object = prev_object->next;
+                current_object = current_object->next;
+            }
+
 
             next_object = current_object->next;
 
+           
+
             free(current_object->data);
             free(current_object);
+
             prev_object->next = next_object;
 
             if(l->type == LIST_TYPE_DOUBLE_LINKED){
@@ -4994,7 +5004,7 @@ void list_remove(list* l, int index){
                     next_object->prev = prev_object;  
             }else{
                 if(next_object != NULL)
-                    next_object->prev = NULL;                
+                    next_object->prev = NULL;               
             }
 
 

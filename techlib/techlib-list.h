@@ -1,6 +1,6 @@
 /*
  *  C/C++ Dynamic Memory Based List Implementation | By TechnicalUserX
- *  Please note that this library is intended mainly for c but you can 
+ *  Please note that this library is intended mainly for C but you can 
  *  use this library with C++
  * 
  *  If you want to disable list error messages, #define TECHLIB_LIST_DISABLE_ERRORS

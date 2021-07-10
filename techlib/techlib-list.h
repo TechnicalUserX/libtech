@@ -1,12 +1,34 @@
-/*
- *  C/C++ Dynamic Memory Based List Implementation | By TechnicalUserX
+ //===================================================================================================//
+/**
+ *  WRITER: TechnicaluserX
+ *  
+ *  C/C++ Dynamic Memory Based List Implementation
  *  Please note that this library is intended mainly for C but you can 
  *  use this library with C++
+ *  
+ *  LICENSE: This library is currently not under any license and it is free to modify/distribute. 
  * 
- *  If you want to disable list error messages, #define TECHLIB_LIST_DISABLE_ERRORS
+ * 
+ *  IMPORTANT: This library uses the name "list" in order to represent the list data type.
+ *  This might cause conflicts with the C++ data type "list", please do not use both types together.
+ *  If you are using C++, proceed with caution.
+ *  
+ * 
+ *  ERRORS: If you want to disable list error messages, #define TECHLIB_LIST_DISABLE_ERRORS
  *  You can change the null return value of list_get_string function by changing
  *  LIST_GET_STRING_RETURN_NULL down below. 
+ * 
+ * 
+ *  Please do not forget to de-allocate the memory reserved for the list with the list_clear() function,
+ *  you can also use the "function pointer" version of this function.
+ * 
+ *  
  */
+ //===================================================================================================//
+
+
+
+
 
 
 #ifndef _STDIO_H
@@ -32,7 +54,7 @@
 
 // Error messages //
 
-char list_error_allocation[] = "List Error: Memory couldn't have been allocated.";
+char list_error_allocation[] =  "List Error: Memory couldn't have been allocated.";
 char list_error_get_out_of_range[] = "List Error: get() index out of range.";
 char list_error_get_type_mismatch[] = "List Error: get() data type mismatch.";
 char list_error_set_out_of_range[] = "List Error: set() index out of range.";

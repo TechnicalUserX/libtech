@@ -40,9 +40,12 @@ char list_error_remove_out_of_range[] = "List Error: remove() index out of range
 char list_error_insert_out_of_range[] = "List Error: insert() index out of range.";
 char list_error_incorrect_type_initialization[] = "List Error: Incorrect list type initialzation -> (Unknown type).";
 char list_error_at_out_of_range[] = "List Error: at() index out of range.";
+char list_error_sort_type_inconsistent[] = "List Error: Cannot sort due to type inconsistency.";
 /// Type Definitions ///
 
 typedef struct list list;
+typedef list* list_t;
+
 
 typedef enum list_type{
     LIST_TYPE_SEQUENTIAL,
@@ -66,11 +69,17 @@ typedef enum list_object_type{
     LIST_STRING
 }list_object_type;
 
+typedef enum list_sort_type{
+    LIST_SORT_TYPE_ASCENDING,
+    LIST_SORT_TYPE_DESCENDING
+}list_sort_type;
+
+
 typedef struct list_object{
 
     void* data;
     list_object_type type;
-
+    
     struct list_object* next;
     struct list_object* prev;
 
@@ -153,6 +162,7 @@ typedef struct list_set{
     void (*_char_)(struct list* l, int index, char element);
     void (*_uchar_)(struct list* l, int index, unsigned char element);
     void (*_string_)(struct list* l, int index, const char* element);
+    void (*_element_)(struct list*l, int index, void* element);
 
 }list_set;
 
@@ -161,22 +171,23 @@ typedef struct list_set{
 /// LIST CLASS ///
 
 typedef struct list{
-    list_object* objects;
-    size_t size;
-    list_type type;
+    list_object*    objects;
+    size_t          size;
+    list_type       type;
     // Inner structures
-    list_append* append;
-    list_prepend* prepend;
-    list_insert* insert;
-    list_get* get;
-    list_set* set;
+    list_append*    append;
+    list_prepend*   prepend;
+    list_insert*    insert;
+    list_get*       get;
+    list_set*       set;
 
 
     // Misc functions
-    void* (*at)(struct list* l, int index);
-    void (*clear)(struct list* l);
-    void (*remove)(struct list* l, int index);
-    void (*print_all)(struct list* l);
+    void*   (*at)           (struct list* l, int index);
+    void    (*clear)        (struct list* l);
+    void    (*remove)       (struct list* l, int index);
+    void    (*print_all)    (struct list* l);
+    int     (*sort)         (struct list* l,list_sort_type t);
 
 }list;
 
@@ -3760,10 +3771,10 @@ void list_print_all(list* l){
                     printf("(%Lf) ",l->get->_longdouble_(l,i));
                     break;
                 case LIST_CHAR:
-                    printf("(%c) ",l->get->_char_(l,i));
+                    printf("('%c') ",l->get->_char_(l,i));
                     break;
                 case LIST_UCHAR:
-                    printf("(%c) ",l->get->_uchar_(l,i));
+                    printf("('%c') ",l->get->_uchar_(l,i));
                     break;
                 case LIST_STRING:
                     printf("(\"%s\") ",l->get->_string_(l,i));
@@ -3809,13 +3820,13 @@ void list_print_all(list* l){
                     printf("(%Lf) ",l->get->_longdouble_(l,i));
                     break;
                 case LIST_CHAR:
-                    printf("(%c) ",l->get->_char_(l,i));
+                    printf("('%c') ",l->get->_char_(l,i));
                     break;
                 case LIST_UCHAR:
-                    printf("(%c) ",l->get->_uchar_(l,i));
+                    printf("('%c') ",l->get->_uchar_(l,i));
                     break;
                 case LIST_STRING:
-                    printf("(%s) ",l->get->_string_(l,i));
+                    printf("(\"%s\") ",l->get->_string_(l,i));
                     break;
 
             }
@@ -3832,6 +3843,280 @@ void list_print_all(list* l){
 
     printf("\n");
 
+}
+
+int list_sort(list* l, list_sort_type t){
+    list_object_type dummy = -1;
+
+    // Returns 0 when the list is empty
+    if(l->size < 2)
+        return 0;
+
+    // Type checking before sorting
+    if(l->type == LIST_TYPE_SEQUENTIAL){
+        dummy = l->objects[0].type;
+        for(int i = 1; i < l->size; i++){
+            if(l->objects[i].type != dummy){
+                printf("%s\n",list_error_sort_type_inconsistent);
+                return -1;
+            }
+
+        }
+
+    }else if(l->type == LIST_TYPE_SINGLE_LINKED || l->type == LIST_TYPE_DOUBLE_LINKED){
+
+        dummy = l->objects->type;
+
+        list_object* iterator = NULL;
+
+        for(iterator = l->objects->next; ;iterator = iterator->next){
+
+            if(iterator->type != dummy){
+                printf("%s\n",list_error_sort_type_inconsistent);
+                return -1;
+            }
+            if(iterator->next == NULL)
+                break;
+
+        }
+
+    }else{
+        #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
+        printf("%s\n",list_error_incorrect_type_initialization);
+        #endif
+        return -1;        
+    }
+
+
+
+        for(int i = 0; i < l->size-1; i++){
+            int swap_index = i;
+
+            void* swap_element = (void*)l->at(l,i);
+
+            for(int j = i+1; j < l->size; j++){
+
+                void* current_element = l->at(l,j);
+                
+                switch(t){
+                    case LIST_SORT_TYPE_ASCENDING:
+
+                        switch(dummy){
+
+                            case LIST_UCHAR:
+                            if( *((unsigned char*)swap_element) > *((unsigned char*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_CHAR:
+                            if( *((char*)swap_element) > *((char*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+                            case LIST_LONGDOUBLE:
+                            if( *((long double*)swap_element) > *((long double*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_DOUBLE:
+                            if( *((double*)swap_element) > *((double*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_FLOAT:
+                            if( *((float*)swap_element) > *((float*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_ULONGLONG:
+                            if( *((unsigned long long*)swap_element) > *((unsigned long long*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+                            case LIST_LONGLONG:
+                            if( *((long long*)swap_element) > *((long long*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+                            case LIST_USHORT:
+                            if( *((unsigned short*)swap_element) > *((unsigned short*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+                            case LIST_SHORT:
+                            if( *((short*)swap_element) > *((short*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_UINT:
+                            if( *((unsigned int*)swap_element) > *((unsigned int*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_INT:
+                            if( *((int*)swap_element) > *((int*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;   
+
+                            case LIST_STRING:
+                            if( strcmp(swap_element,current_element) > 0 ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+
+                        }
+ 
+                        break;
+
+
+                    case LIST_SORT_TYPE_DESCENDING:
+
+                        switch(dummy){
+
+                            case LIST_UCHAR:
+                            if( *((unsigned char*)swap_element) < *((unsigned char*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_CHAR:
+                            if( *((char*)swap_element) < *((char*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+                            case LIST_LONGDOUBLE:
+                            if( *((long double*)swap_element) < *((long double*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_DOUBLE:
+                            if( *((double*)swap_element) < *((double*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_FLOAT:
+                            if( *((float*)swap_element) < *((float*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_ULONGLONG:
+                            if( *((unsigned long long*)swap_element) < *((unsigned long long*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+                            case LIST_LONGLONG:
+                            if( *((long long*)swap_element) < *((long long*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+                            case LIST_USHORT:
+                            if( *((unsigned short*)swap_element) < *((unsigned short*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+                            case LIST_SHORT:
+                            if( *((short*)swap_element) < *((short*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_UINT:
+                            if( *((unsigned int*)swap_element) < *((unsigned int*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+                            case LIST_INT:
+                            if( *((int*)swap_element) < *((int*)current_element) ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;   
+
+                            case LIST_STRING:
+                            if( strcmp(swap_element,current_element) < 0 ){
+                                swap_element = current_element;
+                                swap_index = j;
+                            }
+                            break;
+
+
+
+                        }
+
+
+                        break;
+                }
+
+            }
+
+            if(swap_index == i)
+                continue;
+            // Change the order //
+            void* temp = l->at(l,i);
+            l->set->_element_(l,i,l->at(l,swap_index));
+            l->set->_element_(l,swap_index,temp);
+            
+
+            
+            //l->objects[i].data = l->objects[swap_index].data;
+            
+            //l->objects[swap_index].data = temp;
+
+        }
+
+
+    return 1;
 }
 
 
@@ -4367,6 +4652,37 @@ void list_set_string(list*l, int index, const char* element){
 
 
     return;
+}
+
+void list_set_element(list*l,int index,void* element){
+    if(index >= (long long)l->size || index < -1){
+        #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
+        printf("%s\n",list_error_set_out_of_range);
+        #endif
+        return;        
+    }
+
+    if(l->type == LIST_TYPE_SEQUENTIAL){
+
+        l->objects[index].data = element;
+
+    }
+    else if(l->type == LIST_TYPE_SINGLE_LINKED || l->type == LIST_TYPE_DOUBLE_LINKED){
+
+        int converted_index = (index == -1) ? l->size -1 : index;
+        list_object* current_object;
+        int i;
+        for(current_object = l->objects,i=0; i != converted_index; current_object=current_object->next,i++);
+        
+        current_object->data = element;
+
+    }else{
+        #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
+        printf("%s\n",list_error_incorrect_type_initialization);
+        #endif
+        return;        
+    }
+
 }
 
 
@@ -5126,6 +5442,8 @@ list* list_new(list_type type){
     list_new->set->_char_ = list_set_char;
     list_new->set->_uchar_ = list_set_uchar;
     list_new->set->_string_ = list_set_string;
+    list_new->set->_element_ = list_set_element;
+
 
     // Remove Functions
     list_new->remove = list_remove;
@@ -5136,7 +5454,8 @@ list* list_new(list_type type){
     list_new->at = list_at;
     list_new->clear = list_clear;
     list_new->print_all = list_print_all;
-
+    list_new->sort = list_sort;
+    
 
     return list_new;
 }

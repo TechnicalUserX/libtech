@@ -1,6 +1,6 @@
 /*
  *  C/C++ Dynamic Memory Based List Implementation | By TechnicalUserX
- *  Please note that this library is intended mainly for C but you can 
+ *  Please note that this library is intended mainly for c but you can 
  *  use this library with C++
  * 
  *  If you want to disable list error messages, #define TECHLIB_LIST_DISABLE_ERRORS
@@ -675,7 +675,7 @@ void list_append_longlong(list* l,long long element){
 
 void list_append_ulonglong(list* l,unsigned long long element){
 
-    if(l->type = LIST_TYPE_SEQUENTIAL){
+    if(l->type == LIST_TYPE_SEQUENTIAL){
         list_object* new_object_list = (list_object*)malloc(sizeof(list_object)*(l->size +1));
 
         if(new_object_list != NULL){   
@@ -2519,7 +2519,7 @@ void list_insert_int(list* l, int index, int element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -2619,7 +2619,7 @@ void list_insert_uint(list* l, int index, unsigned int element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -2718,7 +2718,7 @@ void list_insert_short(list* l, int index, short element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -2817,7 +2817,7 @@ void list_insert_ushort(list* l, int index, unsigned short element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -2916,7 +2916,7 @@ void list_insert_longlong(list* l, int index, long long element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -3016,7 +3016,7 @@ void list_insert_ulonglong(list* l, int index, unsigned long long element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -3115,7 +3115,7 @@ void list_insert_float(list* l, int index, float element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -3214,7 +3214,7 @@ void list_insert_double(list* l, int index, double element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -3312,7 +3312,7 @@ void list_insert_longdouble(list* l, int index, long double element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -3411,7 +3411,7 @@ void list_insert_char(list* l, int index, char element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -3510,7 +3510,7 @@ void list_insert_uchar(list* l, int index, unsigned char element){
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -3609,7 +3609,7 @@ else if(l->type == LIST_TYPE_SINGLE_LINKED || l->type == LIST_TYPE_DOUBLE_LINKED
             int i;
 
 
-            list_object* current_object,*prev_object,*next_object;
+            list_object* current_object,*prev_object;
 
             for( prev_object = l->objects,current_object=l->objects->next, i=1; i != index ; i++,prev_object=prev_object->next,current_object=current_object->next){}        
 
@@ -3766,7 +3766,7 @@ void list_print_all(list* l){
                     printf("(%c) ",l->get->_uchar_(l,i));
                     break;
                 case LIST_STRING:
-                    printf("(%s) ",l->get->_string_(l,i));
+                    printf("(\"%s\") ",l->get->_string_(l,i));
                     break;
 
             }

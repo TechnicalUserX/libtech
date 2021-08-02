@@ -16,10 +16,6 @@
  *  You can change the null return value of list_get_string function by changing
  *  LIST_GET_STRING_RETURN_NULL down below. 
  * 
- * 
- *  Please do not forget to de-allocate the memory reserved for the list with the list_clear() function,
- *  you can also use the "function pointer" version of this function.
- * 
  *  
  */
  //===================================================================================================//

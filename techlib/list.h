@@ -54,19 +54,21 @@
 
 // Error messages //
 
-char list_error_allocation[] =  "List Error: Memory couldn't have been allocated.";
-char list_error_get_out_of_range[] = "List Error: get() index out of range.";
-char list_error_get_type_mismatch[] = "List Error: get() data type mismatch.";
-char list_error_set_out_of_range[] = "List Error: set() index out of range.";
-char list_error_remove_out_of_range[] = "List Error: remove() index out of range.";
-char list_error_insert_out_of_range[] = "List Error: insert() index out of range.";
-char list_error_incorrect_type_initialization[] = "List Error: Incorrect list type initialzation -> (Unknown type).";
-char list_error_at_out_of_range[] = "List Error: at() index out of range.";
-char list_error_sort_type_inconsistent[] = "List Error: Cannot sort due to type inconsistency.";
+
+#define LIST_ERROR_ALLOCATION                       "List Error: Memory couldn't have been allocated."
+#define LIST_ERROR_GET_OUT_OF_RANGE                 "List Error: get() index out of range."
+#define LIST_ERROR_GET_TYPE_MISMATCH                "List Error: get() data type mismatch."
+#define LIST_ERROR_SET_OUT_OF_RANGE                 "List Error: set() index out of range."
+#define LIST_ERROR_REMOVE_OUT_OF_RANGE              "List Error: remove() index out of range."
+#define LIST_ERROR_INSERT_OUT_OF_RANGE              "List Error: insert() index out of range."
+#define LIST_ERROR_INCORRECT_TYPE_INITIALIZATION    "List Error: Incorrect list type initialzation -> (Unknown type)."
+#define LIST_ERROR_AT_OUT_OF_RANGE                  "List Error: at() index out of range."
+#define LIST_ERROR_SORT_TYPE_INCONSISTENT           "List Error: Cannot sort due to type inconsistency."
+
+
 /// Type Definitions ///
 
 typedef struct list list;
-typedef list* list_t;
 
 
 typedef enum list_type{
@@ -90,6 +92,8 @@ typedef enum list_object_type{
     LIST_UCHAR,
     LIST_STRING
 }list_object_type;
+
+
 
 typedef enum list_sort_type{
     LIST_SORT_TYPE_ASCENDING,
@@ -234,7 +238,7 @@ void list_append_int(list* l,int element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -307,14 +311,10 @@ void list_append_int(list* l,int element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
-
-
-
-
 
 }
 
@@ -333,7 +333,7 @@ void list_append_uint(list* l,unsigned int element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -408,7 +408,7 @@ void list_append_uint(list* l,unsigned int element){
     }
     else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -433,7 +433,7 @@ void list_append_short(list* l,short element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -506,7 +506,7 @@ void list_append_short(list* l,short element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -530,7 +530,7 @@ void list_append_ushort(list* l,unsigned short element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -603,7 +603,7 @@ void list_append_ushort(list* l,unsigned short element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -627,7 +627,7 @@ void list_append_longlong(list* l,long long element){
 
             }
             else{
-                printf("%s\n",list_error_allocation);
+                printf("%s\n",LIST_ERROR_ALLOCATION);
                 exit(EXIT_FAILURE);
             }
 
@@ -699,7 +699,7 @@ void list_append_longlong(list* l,long long element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }  
@@ -721,7 +721,7 @@ void list_append_ulonglong(list* l,unsigned long long element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -793,7 +793,7 @@ void list_append_ulonglong(list* l,unsigned long long element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }    
@@ -815,7 +815,7 @@ void list_append_float(list* l,float element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -886,7 +886,7 @@ void list_append_float(list* l,float element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -910,7 +910,7 @@ void list_append_double(list* l,double element){
 
             }
             else{
-                printf("%s\n",list_error_allocation);
+                printf("%s\n",LIST_ERROR_ALLOCATION);
                 exit(EXIT_FAILURE);
             }
 
@@ -983,7 +983,7 @@ void list_append_double(list* l,double element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -1006,7 +1006,7 @@ void list_append_longdouble(list* l,long double element){
 
             }
             else{
-                printf("%s\n",list_error_allocation);
+                printf("%s\n",LIST_ERROR_ALLOCATION);
                 exit(EXIT_FAILURE);
             }
 
@@ -1080,7 +1080,7 @@ void list_append_longdouble(list* l,long double element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -1102,7 +1102,7 @@ void list_append_char(list* l,char element){
 
             }
             else{
-                printf("%s\n",list_error_allocation);
+                printf("%s\n",LIST_ERROR_ALLOCATION);
                 exit(EXIT_FAILURE);
             }
 
@@ -1175,7 +1175,7 @@ void list_append_char(list* l,char element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }   
@@ -1198,7 +1198,7 @@ void list_append_uchar(list* l,unsigned char element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -1270,7 +1270,7 @@ void list_append_uchar(list* l,unsigned char element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }    
@@ -1292,7 +1292,7 @@ void list_append_string(list* l, const char* element){
 
             }
             else{
-                printf("%s\n",list_error_allocation);
+                printf("%s\n",LIST_ERROR_ALLOCATION);
                 exit(EXIT_FAILURE);
             }
 
@@ -1360,7 +1360,7 @@ void list_append_string(list* l, const char* element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -1386,7 +1386,7 @@ void list_prepend_int(list*l,int element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -1454,7 +1454,7 @@ void list_prepend_int(list*l,int element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -1479,7 +1479,7 @@ void list_prepend_uint(list*l,unsigned int element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -1548,7 +1548,7 @@ void list_prepend_uint(list*l,unsigned int element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }    
@@ -1572,7 +1572,7 @@ void list_prepend_short(list*l,short element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -1641,7 +1641,7 @@ void list_prepend_short(list*l,short element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }    
@@ -1664,7 +1664,7 @@ void list_prepend_ushort(list*l,unsigned short element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -1733,7 +1733,7 @@ void list_prepend_ushort(list*l,unsigned short element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -1757,7 +1757,7 @@ void list_prepend_longlong(list*l,long long element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -1826,7 +1826,7 @@ void list_prepend_longlong(list*l,long long element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -1850,7 +1850,7 @@ void list_prepend_ulonglong(list*l,unsigned long long element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -1919,7 +1919,7 @@ void list_prepend_ulonglong(list*l,unsigned long long element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -1942,7 +1942,7 @@ void list_prepend_float(list*l,float element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2011,7 +2011,7 @@ void list_prepend_float(list*l,float element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2034,7 +2034,7 @@ void list_prepend_double(list*l,double element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2103,7 +2103,7 @@ void list_prepend_double(list*l,double element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2126,7 +2126,7 @@ void list_prepend_longdouble(list*l,long double element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2195,7 +2195,7 @@ void list_prepend_longdouble(list*l,long double element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2218,7 +2218,7 @@ void list_prepend_char(list*l,char element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2288,7 +2288,7 @@ void list_prepend_char(list*l,char element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2310,7 +2310,7 @@ void list_prepend_uchar(list*l,unsigned char element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2379,7 +2379,7 @@ void list_prepend_uchar(list*l,unsigned char element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2402,7 +2402,7 @@ void list_prepend_string(list*l,const char* element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2470,7 +2470,7 @@ void list_prepend_string(list*l,const char* element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2488,7 +2488,7 @@ void list_insert_int(list* l, int index, int element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -2529,7 +2529,7 @@ void list_insert_int(list* l, int index, int element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2577,7 +2577,7 @@ void list_insert_int(list* l, int index, int element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2590,7 +2590,7 @@ void list_insert_uint(list* l, int index, unsigned int element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -2629,7 +2629,7 @@ void list_insert_uint(list* l, int index, unsigned int element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2677,7 +2677,7 @@ void list_insert_uint(list* l, int index, unsigned int element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2689,7 +2689,7 @@ void list_insert_short(list* l, int index, short element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -2728,7 +2728,7 @@ void list_insert_short(list* l, int index, short element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2776,7 +2776,7 @@ void list_insert_short(list* l, int index, short element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }   
@@ -2788,7 +2788,7 @@ void list_insert_ushort(list* l, int index, unsigned short element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -2827,7 +2827,7 @@ void list_insert_ushort(list* l, int index, unsigned short element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -2875,7 +2875,7 @@ void list_insert_ushort(list* l, int index, unsigned short element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2887,7 +2887,7 @@ void list_insert_longlong(list* l, int index, long long element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -2926,7 +2926,7 @@ void list_insert_longlong(list* l, int index, long long element){
 
             }
             else{
-                printf("%s\n",list_error_allocation);
+                printf("%s\n",LIST_ERROR_ALLOCATION);
                 exit(EXIT_FAILURE);
             }
 
@@ -2974,7 +2974,7 @@ void list_insert_longlong(list* l, int index, long long element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -2987,7 +2987,7 @@ void list_insert_ulonglong(list* l, int index, unsigned long long element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -3026,7 +3026,7 @@ void list_insert_ulonglong(list* l, int index, unsigned long long element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -3074,7 +3074,7 @@ void list_insert_ulonglong(list* l, int index, unsigned long long element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     } 
@@ -3086,7 +3086,7 @@ void list_insert_float(list* l, int index, float element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -3125,7 +3125,7 @@ void list_insert_float(list* l, int index, float element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -3173,7 +3173,7 @@ void list_insert_float(list* l, int index, float element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }    
@@ -3185,7 +3185,7 @@ void list_insert_double(list* l, int index, double element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -3224,7 +3224,7 @@ void list_insert_double(list* l, int index, double element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
         
@@ -3272,7 +3272,7 @@ void list_insert_double(list* l, int index, double element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }    
@@ -3284,7 +3284,7 @@ void list_insert_longdouble(list* l, int index, long double element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -3323,7 +3323,7 @@ void list_insert_longdouble(list* l, int index, long double element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }  
     }
@@ -3370,7 +3370,7 @@ void list_insert_longdouble(list* l, int index, long double element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }    
@@ -3382,7 +3382,7 @@ void list_insert_char(list* l, int index, char element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -3421,7 +3421,7 @@ void list_insert_char(list* l, int index, char element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -3469,7 +3469,7 @@ void list_insert_char(list* l, int index, char element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }    
@@ -3481,7 +3481,7 @@ void list_insert_uchar(list* l, int index, unsigned char element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -3520,7 +3520,7 @@ void list_insert_uchar(list* l, int index, unsigned char element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -3568,7 +3568,7 @@ void list_insert_uchar(list* l, int index, unsigned char element){
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }    
@@ -3580,7 +3580,7 @@ void list_insert_string(list* l, int index, const char* element){
 
     if(index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_insert_out_of_range);
+        printf("%s\n",LIST_ERROR_INSERT_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -3619,7 +3619,7 @@ void list_insert_string(list* l, int index, const char* element){
 
         }
         else{
-            printf("%s\n",list_error_allocation);
+            printf("%s\n",LIST_ERROR_ALLOCATION);
             exit(EXIT_FAILURE);
         }
 
@@ -3667,7 +3667,7 @@ else if(l->type == LIST_TYPE_SINGLE_LINKED || l->type == LIST_TYPE_DOUBLE_LINKED
         
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -3683,7 +3683,7 @@ else if(l->type == LIST_TYPE_SINGLE_LINKED || l->type == LIST_TYPE_DOUBLE_LINKED
 void* list_at(list* l, int index){
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_at_out_of_range);
+        printf("%s\n",LIST_ERROR_AT_OUT_OF_RANGE);
         #endif
         return NULL;
     }    
@@ -3701,7 +3701,7 @@ void* list_at(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return NULL;        
     }
@@ -3858,7 +3858,7 @@ void list_print_all(list* l){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -3879,7 +3879,7 @@ int list_sort(list* l, list_sort_type t){
         dummy = l->objects[0].type;
         for(int i = 1; i < l->size; i++){
             if(l->objects[i].type != dummy){
-                printf("%s\n",list_error_sort_type_inconsistent);
+                printf("%s\n",LIST_ERROR_SORT_TYPE_INCONSISTENT);
                 return -1;
             }
 
@@ -3894,7 +3894,7 @@ int list_sort(list* l, list_sort_type t){
         for(iterator = l->objects->next; ;iterator = iterator->next){
 
             if(iterator->type != dummy){
-                printf("%s\n",list_error_sort_type_inconsistent);
+                printf("%s\n",LIST_ERROR_SORT_TYPE_INCONSISTENT);
                 return -1;
             }
             if(iterator->next == NULL)
@@ -3904,10 +3904,12 @@ int list_sort(list* l, list_sort_type t){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1;        
     }
+
+
 
 
 
@@ -4149,7 +4151,7 @@ void list_set_int(list*l, int index, int element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4181,7 +4183,7 @@ void list_set_int(list*l, int index, int element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4195,7 +4197,7 @@ void list_set_uint(list*l, int index, unsigned int element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4227,7 +4229,7 @@ void list_set_uint(list*l, int index, unsigned int element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4240,7 +4242,7 @@ void list_set_short(list*l, int index, short element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4271,7 +4273,7 @@ void list_set_short(list*l, int index, short element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4284,7 +4286,7 @@ void list_set_ushort(list*l, int index, unsigned short element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4315,7 +4317,7 @@ void list_set_ushort(list*l, int index, unsigned short element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4328,7 +4330,7 @@ void list_set_longlong(list*l, int index, long long element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4359,7 +4361,7 @@ void list_set_longlong(list*l, int index, long long element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4372,7 +4374,7 @@ void list_set_ulonglong(list*l, int index, unsigned long long element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4403,7 +4405,7 @@ void list_set_ulonglong(list*l, int index, unsigned long long element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4416,7 +4418,7 @@ void list_set_float(list*l, int index, float element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4447,7 +4449,7 @@ void list_set_float(list*l, int index, float element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4460,7 +4462,7 @@ void list_set_double(list*l, int index, double element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4490,7 +4492,7 @@ void list_set_double(list*l, int index, double element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4503,7 +4505,7 @@ void list_set_longdouble(list*l, int index, long double element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4534,7 +4536,7 @@ void list_set_longdouble(list*l, int index, long double element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4547,7 +4549,7 @@ void list_set_char(list*l, int index, char element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4578,7 +4580,7 @@ void list_set_char(list*l, int index, char element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4591,7 +4593,7 @@ void list_set_uchar(list*l, int index, unsigned char element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4622,7 +4624,7 @@ void list_set_uchar(list*l, int index, unsigned char element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4635,7 +4637,7 @@ void list_set_string(list*l, int index, const char* element){
 
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4667,7 +4669,7 @@ void list_set_string(list*l, int index, const char* element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4679,7 +4681,7 @@ void list_set_string(list*l, int index, const char* element){
 void list_set_element(list*l,int index,void* element){
     if(index >= (long long)l->size || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_set_out_of_range);
+        printf("%s\n",LIST_ERROR_SET_OUT_OF_RANGE);
         #endif
         return;        
     }
@@ -4700,7 +4702,7 @@ void list_set_element(list*l,int index,void* element){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return;        
     }
@@ -4716,7 +4718,7 @@ int list_get_int(list* l, int index){
 
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -4727,7 +4729,7 @@ int list_get_int(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_INT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -4742,7 +4744,7 @@ int list_get_int(list* l, int index){
 
         if(current_object->type != LIST_INT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -4751,7 +4753,7 @@ int list_get_int(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -4763,7 +4765,7 @@ unsigned int list_get_uint(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -4772,7 +4774,7 @@ unsigned int list_get_uint(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_UINT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -4786,7 +4788,7 @@ unsigned int list_get_uint(list* l, int index){
 
         if(current_object->type != LIST_UINT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -4795,7 +4797,7 @@ unsigned int list_get_uint(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -4809,7 +4811,7 @@ short list_get_short(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -4818,7 +4820,7 @@ short list_get_short(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_SHORT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -4833,7 +4835,7 @@ short list_get_short(list* l, int index){
 
         if(current_object->type != LIST_SHORT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -4842,7 +4844,7 @@ short list_get_short(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -4855,7 +4857,7 @@ unsigned short list_get_ushort(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -4864,7 +4866,7 @@ unsigned short list_get_ushort(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_USHORT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -4879,7 +4881,7 @@ unsigned short list_get_ushort(list* l, int index){
 
         if(current_object->type != LIST_USHORT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -4888,7 +4890,7 @@ unsigned short list_get_ushort(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -4901,7 +4903,7 @@ long long list_get_longlong(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -4910,7 +4912,7 @@ long long list_get_longlong(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_LONGLONG){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -4925,7 +4927,7 @@ long long list_get_longlong(list* l, int index){
 
         if(current_object->type != LIST_LONGLONG){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -4934,7 +4936,7 @@ long long list_get_longlong(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -4947,7 +4949,7 @@ unsigned long long list_get_ulonglong(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -4956,7 +4958,7 @@ unsigned long long list_get_ulonglong(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_ULONGLONG){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -4971,7 +4973,7 @@ unsigned long long list_get_ulonglong(list* l, int index){
 
         if(current_object->type != LIST_ULONGLONG){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -4980,7 +4982,7 @@ unsigned long long list_get_ulonglong(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -4993,7 +4995,7 @@ float list_get_float(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -5002,7 +5004,7 @@ float list_get_float(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_FLOAT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s",list_error_get_type_mismatch);
+            printf("%s",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -5017,7 +5019,7 @@ float list_get_float(list* l, int index){
 
         if(current_object->type != LIST_FLOAT){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -5026,7 +5028,7 @@ float list_get_float(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -5039,7 +5041,7 @@ double list_get_double(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -5048,7 +5050,7 @@ double list_get_double(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_DOUBLE){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -5063,7 +5065,7 @@ double list_get_double(list* l, int index){
 
         if(current_object->type != LIST_DOUBLE){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -5072,7 +5074,7 @@ double list_get_double(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -5085,7 +5087,7 @@ long double list_get_longdouble(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -5094,7 +5096,7 @@ long double list_get_longdouble(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_LONGDOUBLE){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -5109,7 +5111,7 @@ long double list_get_longdouble(list* l, int index){
 
         if(current_object->type != LIST_LONGDOUBLE){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -5118,7 +5120,7 @@ long double list_get_longdouble(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -5130,7 +5132,7 @@ char list_get_char(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -5139,7 +5141,7 @@ char list_get_char(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_CHAR){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -5154,7 +5156,7 @@ char list_get_char(list* l, int index){
 
         if(current_object->type != LIST_CHAR){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -5163,7 +5165,7 @@ char list_get_char(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -5175,7 +5177,7 @@ unsigned char list_get_uchar(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return -1;
     }
@@ -5184,7 +5186,7 @@ unsigned char list_get_uchar(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_UCHAR){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;
         }
@@ -5199,7 +5201,7 @@ unsigned char list_get_uchar(list* l, int index){
 
         if(current_object->type != LIST_UCHAR){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return -1;            
         }
@@ -5208,7 +5210,7 @@ unsigned char list_get_uchar(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return -1; 
     }
@@ -5220,7 +5222,7 @@ char* list_get_string(list* l, int index){
     
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_get_out_of_range);
+        printf("%s\n",LIST_ERROR_GET_OUT_OF_RANGE);
         #endif
         return LIST_GET_STRING_RETURN_NULL;
     }
@@ -5229,7 +5231,7 @@ char* list_get_string(list* l, int index){
     if(l->type == LIST_TYPE_SEQUENTIAL){
         if(l->objects[converted_index].type != LIST_STRING){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return LIST_GET_STRING_RETURN_NULL;
         }
@@ -5244,7 +5246,7 @@ char* list_get_string(list* l, int index){
 
         if(current_object->type != LIST_STRING){
             #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-            printf("%s\n",list_error_get_type_mismatch);
+            printf("%s\n",LIST_ERROR_GET_TYPE_MISMATCH);
             #endif
             return LIST_GET_STRING_RETURN_NULL;            
         }
@@ -5253,7 +5255,7 @@ char* list_get_string(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return LIST_GET_STRING_RETURN_NULL; 
     }
@@ -5275,7 +5277,7 @@ void list_remove(list* l, int index){
 
     if((long long)l->size <= index || index < -1){
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_remove_out_of_range);
+        printf("%s\n",LIST_ERROR_REMOVE_OUT_OF_RANGE);
         #endif
         return;
     }
@@ -5360,7 +5362,7 @@ void list_remove(list* l, int index){
 
     }else{
         #if !defined(TECHLIB_LIST_DISABLE_ERRORS)
-        printf("%s\n",list_error_incorrect_type_initialization);
+        printf("%s\n",LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
         #endif
         return; 
     }

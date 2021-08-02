@@ -11,9 +11,9 @@
 #include <stdarg.h>
 
     // ERROR PRINTING //
-    #if defined(TECHLIB_CHARSET_ASCII)
+    #if !defined(TECHLIB_LOG_CHARSET_UTF)
         
-        #ifndef TECHLIB_SOCKET_DISABLE_ERRORS
+        #ifndef TECHLIB_DISABLE_ERRORS
 
             #define PANIC(str,ret) { printf("PANIC: %s\n",str); return ret;}
             #define PANIC_FATAL(str,ret){ printf("PANIC: %s\n",str); printf("%s\n",strerror(errno)); exit(ret);}
@@ -27,12 +27,9 @@
         #endif
 
 
-    #define 
+    #else
 
-
-    #elif defined(TECHLIB_CHARSET_UTF)
-
-        #ifndef TECHLIB_SOCKET_DISABLE_ERRORS
+        #ifndef TECHLIB_DISABLE_ERRORS
 
             #define PANIC(str,ret) { wprintf(L"PANIC: %s\n",str); return ret;}
             #define PANIC_FATAL(str,ret){ wprintf(L"PANIC: %s\n",str); wprintf(L"%s\n",strerror(errno)); exit(ret);}
@@ -72,10 +69,10 @@
 
 
     // LOGGING //
-#if defined(TECHLIB_CHARSET_ASCII)
-    void LOG(const char* display_string, ...)
-#elif defined(TECHLIB_CHARSET_UTF)
+#if defined(TECHLIB_LOG_CHARSET_UTF)
     void LOG(const wchar_t* display_string, ...)
+#else
+    void LOG(const char* display_string, ...)
 #endif
 {
         va_list va;

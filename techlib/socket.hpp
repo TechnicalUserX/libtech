@@ -12,7 +12,9 @@
 #include "log.h"
 
 
-#define TECHLIB_SOCKET_MAX_BUFFER_SIZE 1024
+
+namespace techlib{
+    namespace sockets{
 
 
 class socket_connection_t{
@@ -38,6 +40,7 @@ class socket_t{
 private:
 
     struct sockaddr_in  socket_address;
+    
     int         socket_descriptor;
     // Domain and Family are same things
     int         domain; 
@@ -51,19 +54,17 @@ private:
 public:
     socket_t(int domain,int type,int protocol, uint16_t port, std::string ip);
     socket_t();
-    int socket_create(int domain,int type,int protocol, uint16_t port, std::string ip);
-    int socket_bind();
-    int socket_listen(int queue_count);
-    socket_connection_t socket_accept();
-    socket_connection_t socket_connect();
-    int socket_shutdown(int how);
+    int                     socket_create(int domain,int type,int protocol, uint16_t port, std::string ip);
+    int                     socket_bind();
+    int                     socket_listen(int queue_count);
+    socket_connection_t     socket_accept();
+    socket_connection_t     socket_connect();
+    int                     socket_shutdown(int how);
     
 };
 
 
 // "socket_t" Functions
-
-
 
 socket_t::socket_t(int domain,int type,int protocol, uint16_t port, std::string ip){
     
@@ -79,7 +80,7 @@ socket_t::socket_t(){
 int socket_t::socket_create(int domain, int type, int protocol,uint16_t port, std::string ip){
 
     if( (this->socket_descriptor = socket(domain,type,protocol)) == -1)
-        PANIC_FATAL("socket_create()",-1);
+        PANIC_RETURN("socket_create()",-1);
 
     this->socket_address.sin_family = domain;
     this->socket_address.sin_port = htons(port);
@@ -94,7 +95,7 @@ int socket_t::socket_create(int domain, int type, int protocol,uint16_t port, st
 int socket_t::socket_bind(){
 
     if( bind(this->socket_descriptor, (struct sockaddr*)&this->socket_address, this->socket_length ))
-        PANIC_FATAL("socket_bind()",-1);
+        PANIC_RETURN("socket_bind()",-1);
 
     return 0;
 }
@@ -102,13 +103,13 @@ int socket_t::socket_bind(){
 int socket_t::socket_listen(int queue_count){
     this->is_listen_socket = true;
     if(listen(this->socket_descriptor,queue_count) == -1)
-        PANIC_FATAL("socket_listen()",-1);
+        PANIC_RETURN("socket_listen()",-1);
     return 0;
 }
 
 int socket_t::socket_shutdown(int how){
     if(shutdown(this->socket_descriptor,how) == -1)
-        PANIC_FATAL("socket_shutdown()",-1);
+        PANIC_RETURN("socket_shutdown()",-1);
 
     return 0;
 }
@@ -124,7 +125,7 @@ int socket_connection_t::con_shutdown(int how){
      * 
      */
     if(shutdown(this->socket_descriptor,how) == -1)
-        PANIC_THROW_ERROR("shutdown()",-1);
+        PANIC_THROW("shutdown()",-1);
 
     return 0;
 }
@@ -136,7 +137,7 @@ socket_connection_t socket_t::socket_connect(){
     
 
     if(connect(this->socket_descriptor,(struct sockaddr*)&this->socket_address,this->socket_length) == -1)
-        PANIC_THROW_ERROR("socket_connect()",-1);
+        PANIC_THROW("socket_connect()",-1);
     
     
     
@@ -162,7 +163,7 @@ socket_connection_t socket_t::socket_accept(){
     
     
     if(client_socket_descriptor == -1)
-        PANIC_THROW_ERROR("accept()",-1);
+        PANIC_THROW("accept()",-1);
     
 
     new_connection.family = client_info.sin_family;
@@ -193,6 +194,7 @@ ssize_t socket_connection_t::con_send(void* buffer, size_t buffer_size, int flag
     return send_bytes;
 }
 
-
+    };
+};
 
 #endif

@@ -27,33 +27,22 @@
  //===================================================================================================//
 
 
+// INCLUDE //
 
-
-
-
-#ifndef _STDIO_H
 #include <stdio.h>
-#endif
-
-#ifndef _STRING_H
 #include <string.h>
-#endif
-
-#ifndef __STDBOOL_H
 #include <stdbool.h>
-#endif
-
-#ifndef _STDLIB_H
 #include <stdlib.h>
-#endif
 
 #ifndef _TECHLIB_LIST_H
 #define _TECHLIB_LIST_H
 
+
 #define LIST_GET_STRING_RETURN_NULL "(NULL)"
 
-// Error messages //
 
+
+// Error messages //
 
 #define LIST_ERROR_ALLOCATION                       "List Error: Memory couldn't have been allocated."
 #define LIST_ERROR_GET_OUT_OF_RANGE                 "List Error: get() index out of range."
@@ -161,18 +150,18 @@ typedef struct list_insert{
 
 
 typedef struct list_get{
-    int (*_int_)(struct list* l, int index);
-    unsigned int (*_uint_)(struct list* l, int index);
-    short (*_short_)(struct list* l, int index);
-    unsigned short (*_ushort_)(struct list* l, int index);
-    long long (*_longlong_)(struct list* l, int index);
-    unsigned long long (*_ulonglong_)(struct list* l, int index);
-    float (*_float_)(struct list* l, int index);
-    double (*_double_)(struct list* l, int index);
-    long double (*_longdouble_)(struct list* l, int index);
-    char (*_char_)(struct list* l, int index);
-    unsigned char (*_uchar_)(struct list* l, int index);
-    char* (*_string_)(struct list* l, int index);
+    int                 (*_int_)(struct list* l, int index);
+    unsigned int        (*_uint_)(struct list* l, int index);
+    short               (*_short_)(struct list* l, int index);
+    unsigned short      (*_ushort_)(struct list* l, int index);
+    long long           (*_longlong_)(struct list* l, int index);
+    unsigned long long  (*_ulonglong_)(struct list* l, int index);
+    float               (*_float_)(struct list* l, int index);
+    double              (*_double_)(struct list* l, int index);
+    long double         (*_longdouble_)(struct list* l, int index);
+    char                (*_char_)(struct list* l, int index);
+    unsigned char       (*_uchar_)(struct list* l, int index);
+    char*               (*_string_)(struct list* l, int index);
 }list_get;
 
 typedef struct list_set{
@@ -3868,7 +3857,7 @@ void list_print_all(list* l){
 }
 
 int list_sort(list* l, list_sort_type t){
-    list_object_type dummy = -1;
+    list_object_type dummy = (list_object_type)-1;
 
     // Returns 0 when the list is empty
     if(l->size < 2)
@@ -4009,7 +3998,7 @@ int list_sort(list* l, list_sort_type t){
                             break;   
 
                             case LIST_STRING:
-                            if( strcmp(swap_element,current_element) > 0 ){
+                            if( strcmp((char*)swap_element,(char*)current_element) > 0 ){
                                 swap_element = current_element;
                                 swap_index = j;
                             }
@@ -4108,7 +4097,7 @@ int list_sort(list* l, list_sort_type t){
                             break;   
 
                             case LIST_STRING:
-                            if( strcmp(swap_element,current_element) < 0 ){
+                            if( strcmp((char*)swap_element,(char*)current_element) < 0 ){
                                 swap_element = current_element;
                                 swap_index = j;
                             }

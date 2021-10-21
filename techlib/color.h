@@ -1,10 +1,7 @@
-
-
-
 #ifndef _TECHLIB_COLOR_H
-#define _TECHLIB_COLOR_H 1
+#define _TECHLIB_COLOR_H
 
-#if defined(TECHLIB_WINDOWS) && !defined(TECHLIB_LINUX)
+#if defined(TECHLIB_COLOR_WINDOWS) && !defined(TECHLIB_COLOR_LINUX)
 	#include <windows.h>
 	
 	WORD WHITE_B = BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
@@ -54,7 +51,7 @@
     }
 	
 #endif
-#if defined(TECHLIB_LINUX) && !defined(TECHLIB_WINDOWS)
+#if defined(TECHLIB_COLOR_LINUX) && !defined(TECHLIB_COLOR_WINDOWS)
 
 	#define COLOR "\033["
 	#define RESET "0;"
@@ -75,6 +72,8 @@
 	#define CYAN "36m"
 	#define WHITE "37m"
 	
+	#define COLOR256 "38;5;"
+
 	#define BLACK_B "40;"
 	#define RED_B "41;"
 	#define GREEN_B "42;"
@@ -91,6 +90,26 @@
 	#define LPURPLE "105;"
 	#define TEAL_B "106;"
 	
+	void techlib_color_test_256_colors(void){
+		for(int i = 0; i < 256; i++){
+			char buf[256] = {0};
+			strcpy(buf,"");
+			strcat(buf,COLOR "38;5;");
+			char code[16] = {0};
+			sprintf(code,"%d",i);
+			strcat(buf,code);
+			strcat(buf,"m");
+			printf("%s",buf);
+			printf("%d\t",i);
+			printf(CLEAR);
+			if((i+1) % 16 == 0 && i != 0)
+				printf("\n");
+
+		}
+    	printf("\n");
+	}
+
+
 #endif
 
 

@@ -10,7 +10,7 @@
 
 
 // CUSTOM //
-int is_prime_2(long long n){
+int techlib_math_isprime(long long n){
 
     if(n < 2)
         return 0;
@@ -29,39 +29,20 @@ int is_prime_2(long long n){
     return 1;
 }
 
-// CUSTOM //
-/**
- * Based on that prime numbers follow the same rule after the number "3"
- * Rule: 6*k +- 1
- */
-int is_prime(long long n){
-
-    if(n % 2 == 0)
-        return 0;
-    
-    
-
-    for(long long i = 1; (6*i+1 < n && 6*i-1 < n)  ; i++)
-        if( (n % (6*i+1) == 0 || n % (6*i-1) == 0) && (6*i+1 !=n && 6*i-1 !=n) )
-            return 0;
-    
-    return 1;
-}
 
 
-
-long long random_number_range(long long min, long long max){
+long long techlib_math_random_number_range(long long min, long long max){
     long long dif = max-min;
     return (rand() % (dif+1)) + min;
 }
 
-long long random_prime_range(long long min, long long max){
+long long techlib_math_random_prime_range(long long min, long long max){
     long long dif = max-min;
     long long num = (rand() % (dif+1)) + min; 
 
 
 
-    if(is_prime_2(num))
+    if(techlib_math_isprime(num))
         return num;
     else{
 
@@ -69,7 +50,7 @@ long long random_prime_range(long long min, long long max){
 
         do{
             num += 2;
-        }while(!is_prime_2(num));
+        }while(!techlib_math_isprime(num));
         return num;
     }
 
@@ -80,7 +61,7 @@ long long random_prime_range(long long min, long long max){
 
 
 // Euclidian Algorithm //
-long long gcd(long long a, long long h)
+long long techlib_math_gcd(long long a, long long h)
 {
     while(1)
     {
@@ -99,7 +80,7 @@ long long gcd(long long a, long long h)
 
 
 // CUSTOM //
-unsigned long long lcm(int count, ...)
+unsigned long long techlib_math_lcm(int count, ...)
 {
     int n = count;
 
@@ -191,36 +172,46 @@ unsigned long long lcm(int count, ...)
 
 
 
-// CUSTOM //
-long long fast_factorial_modulus(long long fact,long long modulo){
+// Recursive factorial modulus
+long long techlib_math_fast_factorial_modulus(long long fact,long long modulo){
 
-    int m = fact % modulo;
+    long long m = fact % modulo;
 
     if(fact == 2)
         return m;
 
-    long long next = fast_factorial_modulus(fact-1,modulo);
+    long long next = techlib_math_fast_factorial_modulus(fact-1,modulo);
 
     return (m*next) % modulo;
 }
 
+// Iterative factorial modulus
+long long techlib_math_fast_factorial_modulus_2(long long fact, long long modulo){
+
+    long long final_number = 1;
+    for(long long i = fact; i > 0; i--){
+        final_number = (final_number * i) % modulo;
+    }
+    return final_number;
+}
 
 
-// CUSTOM //
-long long fast_exponential_modulus(long long base, long long exp, long long modulo){
+
+// Recursive exponential modulus
+long long techlib_math_fast_exponential_modulus(long long base, long long exp, long long modulo){
 
     int m = base % modulo;
 
     if(exp == 1)
         return m;
 
-    long long next = fast_exponential_modulus(base,exp-1,modulo);
+    long long next = techlib_math_fast_exponential_modulus(base,exp-1,modulo);
 
     return (m * next) % modulo;
 }
 
-// CUSTOM //
-long long fast_exponential_modulus_2(long long base, long long exp, long long modulo){
+// Iterative exponential modulus
+long long techlib_math_fast_exponential_modulus_2(long long base, long long exp, long long modulo){
 
     long long m = 1;
     for(long long i = 0; i < exp; i++){
@@ -231,8 +222,7 @@ long long fast_exponential_modulus_2(long long base, long long exp, long long mo
 }
 
 
-// CUSTOM //
-long long fast_multiplication_modulus(long long x, long long y, long long modulo){
+long long techlib_math_fast_multiplication_modulus(long long x, long long y, long long modulo){
 
 
     return ((x % modulo) * (y % modulo)) % modulo;

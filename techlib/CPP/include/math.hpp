@@ -1,3 +1,17 @@
+ //===================================================================================================//
+/**
+ *  WRITER: TechnicaluserX
+ * 
+ *  VERSION: 1.0.0
+ *  
+ *  DESCRIPTION: Consist of basic mathematical functions. More will be added over time.
+ *  
+ *  LICENSE: This library is not currently under any license and it is free to modify/distribute. 
+ * 
+ */
+ //===================================================================================================//
+
+
 #ifndef _TECHLIB_MATH_HPP
 #define _TECHLIB_MATH_HPP
 

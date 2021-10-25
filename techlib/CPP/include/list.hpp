@@ -1,18 +1,13 @@
-//===================================================================================================//
+ //===================================================================================================//
 /**
- *  VERSION: techlib::list 1.0.0 
- * 
  *  WRITER: TechnicaluserX
+ * 
+ *  VERSION: 1.0.0
  *  
- *  C++ Dynamic Memory Based List Implementation
- *  Please note that this library is intended mainly for C++.
+ *  DESCRIPTION: C++ Dynamic Memory Based List Implementation.
  *  
  *  LICENSE: This library is currently not under any license and it is free to modify/distribute. 
  * 
- *  ERRORS: If you want to disable list error messages, #define TECHLIB_LIST_DISABLE_ERRORS
- *  You can change the null return value of list_get_string function by changing
- *  TECHLIB_LIST_GET_STRING_RETURN_NULL down below. 
- *  
  */
  //===================================================================================================//
 

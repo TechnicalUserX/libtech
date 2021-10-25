@@ -1,3 +1,17 @@
+ //===================================================================================================//
+/**
+ *  WRITER: TechnicaluserX
+ * 
+ *  VERSION: 1.0.0
+ *  
+ *  DESCRIPTION: Turns the "C Linux Socket API" into object oriented form for ease of use.
+ *  
+ *  LICENSE: This library is not currently under any license and it is free to modify/distribute. 
+ * 
+ */
+ //===================================================================================================//
+
+
 #ifndef _TECHLIB_SOCKET_HPP
 #define _TECHLIB_SOCKET_HPP
 

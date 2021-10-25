@@ -1,3 +1,17 @@
+ //===================================================================================================//
+/**
+ *  WRITER: TechnicaluserX
+ * 
+ *  VERSION: 1.0.0
+ *  
+ *  DESCRIPTION: Handles errors with various program termination methods.
+ *  
+ *  LICENSE: This library is not currently under any license and it is free to modify/distribute. 
+ * 
+ */
+ //===================================================================================================//
+
+
 #ifndef _TECHLIB_PANIC_HPP
 #define _TECHLIB_PANIC_HPP
 

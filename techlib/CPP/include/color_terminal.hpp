@@ -1,3 +1,17 @@
+ //===================================================================================================//
+/**
+ *  WRITER: TechnicaluserX
+ * 
+ *  VERSION: 1.0.0
+ *  
+ *  DESCRIPTION: Prints colorful output to the UNIX/Linux terminal.
+ *  
+ *  LICENSE: This library is not currently under any license and it is free to modify/distribute. 
+ * 
+ */
+ //===================================================================================================//
+
+
 #ifndef _TECHLIB_COLOR_TERMINAL_HPP
 #define _TECHLIB_COLOR_TERMINAL_HPP
 

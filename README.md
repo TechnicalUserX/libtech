@@ -11,7 +11,7 @@ There are 2 ways of using this library
 ### 1) Using raw source files
 You can give the source files to the compiler directly alongside including their correspoing header files.
 ```cpp
-#include "techlib/CPP/list.hpp"
+#include "techlib/CPP/list.hpp" // Pay attention to double quotes, this is the relative path to your main.cpp file
 int main(){
   // Your code here
   return 0;

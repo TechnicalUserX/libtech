@@ -7,3 +7,7 @@ Library will be updated when there is a need.
 
 ## Installation
 ### Debian Based Linux Distros
+```bash
+git clone a
+
+```

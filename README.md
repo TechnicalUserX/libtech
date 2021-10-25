@@ -52,3 +52,9 @@ g++ main.cpp -ltechcpp -o main.out
 
 gcc main.c -ltechc -o main.out
 ```
+IMPORTANT: If you encounter a problem like `undefined reference to sqrtl`, compile your code as follows:
+It is highly probable that you will encounter this error while trying to compile `C` code.
+```bash
+gcc main.c -ltechc -lm -o main.out
+```
+`-lm` specifies the math library. 

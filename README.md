@@ -23,7 +23,7 @@ This applies to both C and C++.
 ### 2) Using Shared Object Files
 This will make the library available from anywhere and you will be able to use `<lib.h>` notation.
 #### Requirements:
-  1. GNU Compiler Collection (gcc)
+  1. GNU Compiler Collection (gcc) (g++)
   2. GNU Make (make)
 You can query wheter your working Linux distribution satisfies the prerequisites by:
 ```bash

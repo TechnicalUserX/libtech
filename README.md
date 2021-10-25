@@ -89,12 +89,22 @@ Compilation tools with ease.
 #### Click on `Install`
 ![](/images/mingw/mingw_2.png)
 
-#### Leave everything as is, if you wish to change the `Installation Directory`, it is your responsibility to handle all path changes.
+#### Leave everything as is. If you wish to change the `Installation Directory`, it is your responsibility to handle all path changes.
 ![](/images/mingw/mingw_3.png)
+
+#### Click on `Continue`
 ![](/images/mingw/mingw_4.png)
+
+#### Locate the option `mingw32-gcc-g++` and right click on it.
 ![](/images/mingw/mingw_5.png)
+
+#### Click on `Mark for Installation`
 ![](/images/mingw/mingw_6.png)
 ![](/images/mingw/mingw_7.png)
+
+#### Click on `Installation` tab at the top left corner an click on `Apply Changes`
 ![](/images/mingw/mingw_8.png)
+
+#### Finally, click on `Appply` and when it finishes, you can close all windows.
 ![](/images/mingw/mingw_9.png)
 

@@ -49,4 +49,6 @@ C        | -ltechc
 
 ```bash
 g++ main.cpp -ltechcpp -o main.out
+
+gcc main.c -ltechc -o main.out
 ```

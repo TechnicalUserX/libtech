@@ -41,7 +41,7 @@ sudo apt-get install gcc g++ make
 git clone https://github.com/TechnicalUserX/TECHLIB.git
 cd TECHLIB
 make
-make install
+sudo make install
 ```
 After successful installation, usage is as follows.
 ```c

@@ -29,3 +29,24 @@ cd TECHLIB
 make
 make install
 ```
+After successful installation, usage is as follows.
+```c
+#include <techlib/C/log.h>
+
+int main(){
+  
+  techlib_log_ascii("Printing log message");
+
+  return 0;
+}
+```
+In order to access to the `function definition`, compiler flag `-l` must be specified.
+Language | Compiler flag appearance
+-------- | ------------------------
+C++      | -ltechcpp
+C        | -ltechc
+
+
+```bash
+g++ main.cpp -ltechcpp -o main.out
+```

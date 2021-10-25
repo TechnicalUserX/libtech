@@ -74,3 +74,15 @@ gcc main.c -ltechc -lm -o main.out
 `-lm` specifies the math library. 
 
 ## Installing To Windows
+
+!!! This 
+
+
+
+
+
+
+
+
+
+

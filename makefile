@@ -49,8 +49,8 @@ else
 	@mkdir ${LIB_DIR}/techlib
 	@cp ./techlib/C/lib/libtechc.so.${VERSION} ${LIB_DIR}/techlib;
 	@cp ./techlib/CPP/lib/libtechcpp.so.${VERSIONXX} ${LIB_DIR}/techlib;
-	@ln ${LIB_DIR}/techlib/libtechc.so.${VERSION} ${LIB_DIR}/libtechc.so
-	@ln ${LIB_DIR}/techlib/libtechcpp.so.${VERSIONXX} ${LIB_DIR}/libtechcpp.so
+	@ln -s ${LIB_DIR}/techlib/libtechc.so.${VERSION} ${LIB_DIR}/libtechc.so
+	@ln -s ${LIB_DIR}/techlib/libtechcpp.so.${VERSIONXX} ${LIB_DIR}/libtechcpp.so
 	@echo "Creating 'techlib' file inside '${INCLUDE_DIR}'..."
 	@mkdir ${INCLUDE_DIR}/techlib
 	@mkdir ${INCLUDE_DIR}/techlib/C
@@ -75,8 +75,8 @@ else
 	@mkdir ${LIB_DIR}/techlib
 	@cp ./techlib/C/lib/libtechc.so.${VERSION} ${LIB_DIR}/techlib;
 	@cp ./techlib/CPP/lib/libtechcpp.so.${VERSIONXX} ${LIB_DIR}/techlib;
-	@ln ${LIB_DIR}/techlib/libtechc.so.${VERSION} ${LIB_DIR}/libtechc.so
-	@ln ${LIB_DIR}/techlib/libtechcpp.so.${VERSIONXX} ${LIB_DIR}/libtechcpp.so
+	@ln -s ${LIB_DIR}/techlib/libtechc.so.${VERSION} ${LIB_DIR}/libtechc.so
+	@ln -s ${LIB_DIR}/techlib/libtechcpp.so.${VERSIONXX} ${LIB_DIR}/libtechcpp.so
 	@echo "Creating 'techlib' file inside '${INCLUDE_DIR}'..."
 	@mkdir ${INCLUDE_DIR}/techlib
 	@mkdir ${INCLUDE_DIR}/techlib/C

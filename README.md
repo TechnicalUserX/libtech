@@ -123,3 +123,7 @@ setx PATH C:\MinGW\bin
 > They should be accessible anywhere in the Windows system.
 
 > ℹ️ `setx` command does not modify the system `PATH` variable, it creates a local variable which also works like `PATH`, so any mistake using this command will not affect the system variable.
+
+### 3) Running TECHLIB Setup Utility (setup.cmd)
+
+

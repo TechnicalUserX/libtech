@@ -115,12 +115,10 @@ Compilation tools with ease.
 `Installation Directory` must be inserted into the `PATH` environment variable inside Windows system.
 To modify `PATH`, you must open a command prompt and type this command.
 ```cmd
-setx PATH {Installation Directory}\bin
-```
-Since the default `Installation Directory` is `C:\MinGW`, the command should correspond to the command below:
-```cmd
 setx PATH C:\MinGW\bin
 ```
+> ⚠️ Default direcotyr is `C:\MinGW`, it is your responsibility to handle changes for `Installation Directory`.
+
 > ⚠️ The reason you should specify `\bin` folder is the `gcc` and `g++` and many other tools are located inside this folder.
 > They should be accessible anywhere in the Windows system.
 

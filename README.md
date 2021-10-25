@@ -120,3 +120,5 @@ setx PATH C:\MinGW\bin
 ```
 > ⚠️ The reason you should specify `\bin` folder is the `gcc` and `g++` and many other tools are located inside this folder.
 > They should be accessible anywhere in the Windows system.
+
+> ℹ️ `setx` command does not modify the system `PATH` variable, it creates a local variable which also works like `PATH`, so any mistake using this command will not affect the system variable.

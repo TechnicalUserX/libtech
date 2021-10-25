@@ -80,7 +80,7 @@ gcc main.c -ltechc -lm -o main.out
 > ℹ️ MinGW is a toolset, which consists of many language compilers and tools, must be installed to proceed library installation.
 If you have the MinGW already installed and gcc is accessible from the Windows Command Prompt, you are free to skip this step.
 
-### Installing MinGW
+### 1) Installing MinGW
 Go to [sourceforge.net](https://sourceforge.net/projects/mingw/) and install the MinGW Get software. This tool is used for installing
 Compilation tools with ease.
 

@@ -5,7 +5,7 @@ This library is created for the sake of assistance for personal projects.
 Library will be updated when there is a need.
 
 # Installation
-## Debian Based Linux Distros
+## Installing To Debian Based Linux Distros
 ### 1) Using Raw Source Files
 You can give the source files to the compiler directly alongside including their correspoing header files.
 ```cpp
@@ -22,6 +22,19 @@ g++ main.cpp list.cpp -o main.out
 This applies to both C and C++.
 ### 2) Using Shared Object Files
 This will make the library available from anywhere and you will be able to use `<lib.h>` notation.
+#### Requirements:
+  1. GNU Compiler Collection (gcc)
+  2. GNU Make (make)
+You can query wheter your working Linux distribution satisfies the prerequisites by:
+```bash
+apt-cache policy gcc g++ make
+```
+In order to install required packages if you don't have:
+```bash
+sudo apt-get install gcc g++ make
+```
+
+
 Execute these commands in order.
 ```bash
 git clone https://github.com/TechnicalUserX/TECHLIB.git
@@ -58,3 +71,5 @@ It is highly probable that you will encounter this error while trying to compile
 gcc main.c -ltechc -lm -o main.out
 ```
 `-lm` specifies the math library. 
+
+## Installing To Windows

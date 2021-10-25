@@ -83,13 +83,13 @@ If you have the MinGW already installed and `gcc`/`g++` is accessible from the W
 ### 1) Installing MinGW
 Go to [sourceforge.net](https://sourceforge.net/projects/mingw/) and install the MinGW Get software. This tool is used for installing
 Compilation tools with ease.
-![](/images/mingw_1.png)
-![](/images/mingw_2.png)
-![](/images/mingw_3.png)
-![](/images/mingw_4.png)
-![](/images/mingw_5.png)
-![](/images/mingw_6.png)
-![](/images/mingw_7.png)
-![](/images/mingw_8.png)
-![](/images/mingw_9.png)
+![](/images/mingw/mingw_1.png)
+![](/images/mingw/mingw_2.png)
+![](/images/mingw/mingw_3.png)
+![](/images/mingw/mingw_4.png)
+![](/images/mingw/mingw_5.png)
+![](/images/mingw/mingw_6.png)
+![](/images/mingw/mingw_7.png)
+![](/images/mingw/mingw_8.png)
+![](/images/mingw/mingw_9.png)
 

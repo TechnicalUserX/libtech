@@ -17,7 +17,7 @@ int main(){
 ```
 And...
 ```bash
-$ g++ main.cpp list.cpp -o main.out
+g++ main.cpp list.cpp -o main.out
 ```
 This applies to both C and C++.
 ### 2) Using Shared Object Files

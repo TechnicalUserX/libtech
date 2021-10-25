@@ -75,15 +75,15 @@ gcc main.c -ltechc -lm -o main.out
 
 ## Installing To Windows
 
-> ⚠️ This installation process deals with MinGW.
+> ⚠️ This installation process deals with MinGW. It is your responsibility to handle other toolsets by yourself.
 
-> ℹ️ MinGW is a toolset, which consists of many language compilers and tools, must be installed to proceed library installation.
+> ℹ️ MinGW `(Minimalist GNU For Windows)` is a toolset, which consists of many language compilers and tools, must be installed to proceed library installation.
 If you have the MinGW already installed and `gcc`/`g++` is accessible from the Windows Command Prompt, you are free to skip this step.
 
 ### 1) Installing MinGW
 Go to [sourceforge.net](https://sourceforge.net/projects/mingw/) and install the MinGW Get software. This tool is used for installing
 Compilation tools with ease.
-![](/images/mingw_1.png)
+![](/images/mingw_1.png = 100x100 )
 
 
 

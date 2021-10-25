@@ -85,5 +85,5 @@ Go to [sourceforge.net](https://sourceforge.net/projects/mingw/) and install the
 Compilation tools with ease.
 ![](/images/mingw_1.png | width=100 )
 
-
+![](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png =250x250)
 

@@ -118,4 +118,5 @@ Since the default `Installation Directory` is `C:\MinGW`, the command should cor
 ```cmd
 setx PATH C:\MinGW\bin
 ```
-
+> ⚠️ The reason you should specify `\bin` folder is the `gcc` and `g++` and many other tools are located inside this folder.
+> They should be accessible anywhere in the Windows system.

@@ -7,7 +7,4 @@ Library will be updated when there is a need.
 
 ## Installation
 ### Debian Based Linux Distros
-```bash
-git clone a
-
-```
+There are 2 ways of using this library

@@ -22,3 +22,10 @@ $ g++ main.cpp list.cpp -o main.out
 This applies to both C and C++.
 ### 2) Using Shared Object Files
 This will make the library available from anywhere and you will be able to use `<lib.h>` notation.
+Execute these commands in order.
+```bash
+git clone a
+cd TECHLIB
+make
+make install
+```

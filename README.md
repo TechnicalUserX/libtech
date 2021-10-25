@@ -109,3 +109,13 @@ Compilation tools with ease.
 ![](/images/mingw/mingw_9.png)
 
 ### 2) Setting Up `PATH` Environment Variable
+`Installation Directory` must be inserted into the `PATH` environment variable inside Windows system.
+To modify `PATH`, you must open a command prompt and type this command.
+```cmd
+setx PATH `Installation Directory`\bin
+```
+Since the default `Installation Directory` is `C:\MinGW`, the command should correspond to the command below:
+```cmd
+setx PATH C:\MinGW\bin
+```
+

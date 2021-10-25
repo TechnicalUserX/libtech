@@ -75,7 +75,7 @@ gcc main.c -ltechc -lm -o main.out
 
 ## Installing To Windows
 
-!!! This 
+> ⚠️ This installation process deals with MinGW.
 
 
 

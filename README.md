@@ -24,7 +24,7 @@ This applies to both C and C++.
 This will make the library available from anywhere and you will be able to use `<lib.h>` notation.
 Execute these commands in order.
 ```bash
-git clone a
+git clone https://github.com/TechnicalUserX/TECHLIB.git
 cd TECHLIB
 make
 make install

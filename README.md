@@ -117,7 +117,7 @@ To modify `PATH`, you must open a command prompt and type this command.
 ```cmd
 setx PATH C:\MinGW\bin
 ```
-> ⚠️ Default direcotyr is `C:\MinGW`, it is your responsibility to handle changes for `Installation Directory`.
+> ⚠️ Default directory is `C:\MinGW`, it is your responsibility to handle changes for `Installation Directory`.
 
 > ⚠️ The reason you should specify `\bin` folder is the `gcc` and `g++` and many other tools are located inside this folder.
 > They should be accessible anywhere in the Windows system.

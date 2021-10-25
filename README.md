@@ -108,3 +108,4 @@ Compilation tools with ease.
 #### Finally, click on `Appply` and when it finishes, you can close all windows.
 ![](/images/mingw/mingw_9.png)
 
+### 2) Setting Up `PATH` Environment Variable

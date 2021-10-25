@@ -1,3 +1,17 @@
+ //===================================================================================================//
+/**
+ *  WRITER: TechnicaluserX
+ * 
+ *  VERSION: 1.0.0
+ *  
+ *  DESCRIPTION: Prints text onto the screen with time stamps.
+ *  
+ *  LICENSE: This library is not currently under any license and it is free to modify/distribute. 
+ * 
+ */
+ //===================================================================================================//
+
+
 #ifndef _TECHLIB_LOG_H
 #define _TECHLIB_LOG_H
 

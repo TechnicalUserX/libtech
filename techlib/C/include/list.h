@@ -1,26 +1,13 @@
  //===================================================================================================//
 /**
  *  WRITER: TechnicaluserX
+ * 
+ *  VERSION: 1.0.0
  *  
- *  C Dynamic Memory Based List Implementation
+ *  DESCRIPTION: C Dynamic Memory Based List Implementation
  *  
- *  LICENSE: This library is currently not under any license and it is free to modify/distribute. 
+ *  LICENSE: This library is not currently under any license and it is free to modify/distribute. 
  * 
- * 
- *  IMPORTANT: This library uses the name "list" in order to represent the list data type.
- *  This might cause conflicts with the C++ data type "list", please do not use both types together.
- *  If you are using C++, proceed with caution.
- *  
- * 
- *  ERRORS: If you want to disable list error messages, #define TECHLIB_LIST_DISABLE_ERRORS
- *  You can change the null return value of list_get_string function by changing
- *  LIST_GET_STRING_RETURN_NULL down below. 
- * 
- * 
- *  Please do not forget to de-allocate the memory reserved for the list with the list_clear() function,
- *  you can also use the "function pointer" version of this function.
- * 
- *  
  */
  //===================================================================================================//
 

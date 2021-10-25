@@ -77,9 +77,8 @@ gcc main.c -ltechc -lm -o main.out
 
 > ⚠️ This installation process deals with MinGW.
 
-> ℹ️ MinGW: Minimalist GNU for Windows
-
-
+> ℹ️ MinGW is a toolset, which consists of many language compilers and tools, must be installed to proceed library installation.
+If you have the MinGW already installed and gcc is accessible from the Windows Command Prompt, you are free to skip this step.
 
 
 

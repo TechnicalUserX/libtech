@@ -76,6 +76,7 @@ gcc main.c -ltechc -lm -o main.out
 ## Installing To Windows
 
 > ⚠️ This installation process deals with MinGW.
+
 > ℹ️ MinGW: Minimalist GNU for Windows
 
 

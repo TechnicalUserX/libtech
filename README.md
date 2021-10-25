@@ -90,6 +90,8 @@ Compilation tools with ease.
 ![](/images/mingw/mingw_2.png)
 
 #### Leave everything as is. If you wish to change the `Installation Directory`, it is your responsibility to handle all path changes.
+> ⚠️ All of the library files will be copied into `Installation Directory`, please be aware that when you change this location to something else
+> you should modify `mingw_directory` variable inside `setup.bat` file. 
 ![](/images/mingw/mingw_3.png)
 
 #### Click on `Continue`

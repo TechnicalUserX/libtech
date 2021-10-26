@@ -131,14 +131,16 @@ setx PATH %PATH%;C:\MinGW\bin
 ### 3) Running TECHLIB Setup Utility (setup.cmd)
 After setting up MinGW, you must run the `setup.cmd` command as an administrator.
 
-This menu should pop up after you run the `setup.cmd`.
+i) Run `setup.cmd`, this menu should pop up after you run the `setup.cmd`.
+
 ![](/images/setupcmd/setupcmd_1.png)
 
-i) Enter `build` to build `libtechc` and `libtechcpp`
+ii) Enter `build` to build `libtechc` and `libtechcpp`
+
 ![](/images/setupcmd/setupcmd_2.png)
 
-ii) Enter `instal` to place headers and libraries to Windows machine.
-![](/images_setupcmd/setupcmd_3.png)
+iii) Enter `instal` to place headers and libraries to Windows machine.
+![](/images/setupcmd/setupcmd_3.png)
 
 
 

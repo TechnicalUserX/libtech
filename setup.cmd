@@ -7,7 +7,7 @@ title TECHLIB Setup Utility
 :: ************************************
 ::	MinGW Location 
 :: 
-set MINGW_DIR=C:\Program Files\MinGW
+set MINGW_DIR=C:\MinGW
 ::
 ::
 :: ************************************

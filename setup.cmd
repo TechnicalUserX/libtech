@@ -1,13 +1,13 @@
 @echo off
 setlocal EnableDelayedExpansion
-mode con: cols=100 lines=20
+mode con: cols=110 lines=20
 color 0f
 title TECHLIB Setup Utility
 
 :: ************************************
 ::	MinGW Location 
 :: 
-set MINGW_DIR=C:\MinGW
+set MINGW_DIR=C:\Program Files\MinGW
 ::
 ::
 :: ************************************
@@ -44,7 +44,9 @@ set MINGW_GPP_EXISTS=0
 
 
 :: MINGW DIRECTORY EXISTANCE CHECK
-if exist %MINGW_DIR% set MINGW_EXISTS=1
+if exist %MINGW_DIR% (
+	set MINGW_EXISTS=1
+)
 if %MINGW_EXISTS%==0 (
 	echo.
 	call :color /0b " TECHLIB Setup Utility"
@@ -62,9 +64,12 @@ if %MINGW_EXISTS%==0 (
 
 :: COMPILER EXISTANCE CHECK
 
-if exist %MINGW_DIR%\bin\gcc.exe set MINGW_GCC_EXISTS=1 
-if exist %MINGW_DIR%\bin\g^+^+.exe set MINGW_GPP_EXISTS=1 
-
+if exist %MINGW_DIR%\bin\gcc.exe (
+	set MINGW_GCC_EXISTS=1 
+)
+if exist %MINGW_DIR%\bin\g^+^+.exe (
+	set MINGW_GPP_EXISTS=1 
+)
 
 if %MINGW_GCC_EXISTS%==0 (
 	echo.
@@ -122,8 +127,9 @@ set SRCXX=list.cpp log.cpp math.cpp color_cmd.cpp
 
 
 :: TECHLIB EXISTANCE CHECK
-if exist %MINGW_DIR%\include\techlib set TECHLIB_EXISTS=1
-
+if exist %MINGW_DIR%\include\techlib (
+	set TECHLIB_EXISTS=1
+)
 
 
 
@@ -149,6 +155,7 @@ if %MINGW_PATH_EXISTS%==1 (
 	echo  !MINGW_DIR!\bin must be inside PATH to proceed installation.
 	echo  Do you want to add the location here? [y/n]
 	echo.
+	:check_input_for_path_inclusion
 	call :input
 	set /p choice=
 	if !choice!==y (
@@ -156,7 +163,7 @@ if %MINGW_PATH_EXISTS%==1 (
 		call :color /0a "!MINGW_DIR!\bin"
 		call :color /0f " to the PATH..."
 		echo.
-		setx PATH !PATH!;!MINGW_DIR!\bin
+		setx PATH "!PATH!;!MINGW_DIR!\bin"
 		echo  Added!
 		echo  Restart the setup utility.
 		pause
@@ -168,6 +175,8 @@ if %MINGW_PATH_EXISTS%==1 (
 		timeout /t 2 >nul
 		exit
 	)
+	goto :check_input_for_path_inclusion
+	
 )
 
 :skip_path_inclusion

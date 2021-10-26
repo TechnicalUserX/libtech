@@ -4,14 +4,6 @@ Created By TechnicalUserX
 This library is created for the sake of assistance for personal projects.
 Library will be updated when there is a need.
 
-## Table Of Contents
-Contents  |
-----------
-![Installing To Linux](## Installing To Debian Based Linux Distros)
-![Installing To Windows](## Installing To Windows)
-
-
-
 # Installation
 ## Installing To Debian Based Linux Distros
 ### 1) Using Raw Source Files

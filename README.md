@@ -111,12 +111,17 @@ Compilation tools with ease.
 #### Finally, click on `Appply` and when it finishes, you can close all windows.
 ![](/images/mingw/mingw_9.png)
 
-### 2) Setting Up `PATH` Environment Variable
+### 2) Setting Up `PATH` Environment Variable Manually (OPTIONAL)
 `Installation Directory` must be inserted into the `PATH` environment variable inside Windows system.
-To modify `PATH`, you must open a command prompt and type this command.
+If you don't know how to add directories to the PATH variable, you can let `setup.cmd` handle this job in the next step; otherwise, insert the correct
+location to the path as your Windows system demands.
+
+
+To modify `PATH` from comma you must open a command prompt and type this command.
 ```cmd
-setx PATH C:\MinGW\bin
+setx PATH %PATH%;C:\MinGW\bin
 ```
+
 > ⚠️ Default directory is `C:\MinGW`, it is your responsibility to handle changes for `Installation Directory`.
 
 > ⚠️ The reason you should specify `\bin` folder is the `gcc` and `g++` and many other tools are located inside this folder.

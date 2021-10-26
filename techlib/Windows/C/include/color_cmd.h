@@ -1,8 +1,13 @@
-#ifndef _TECHLIB_COLOR_H
-#define _TECHLIB_COLOR_H
+#ifndef _TECHLIB_COLOR_CMD_H
+#define _TECHLIB_COLOR_CMD_H
 
-#if defined(TECHLIB_COLOR_WINDOWS) && !defined(TECHLIB_COLOR_LINUX)
+#define TECHLIB_WINDLL_API __declspec(dllexport)
+
+
 	#include <windows.h>
+
+
+
 	
 	WORD WHITE_B = BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
 	WORD WHITE = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
@@ -44,73 +49,6 @@
 	WORD LPURPLE_B = BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_INTENSITY;
 	WORD LPURPLE = FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
 
-    void color(WORD color){
-        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-        SetConsoleTextAttribute(hConsole, color);
-        return;
-    }
+    TECHLIB_WINDLL_API void color(WORD color);
 	
-#endif
-#if defined(TECHLIB_COLOR_LINUX) && !defined(TECHLIB_COLOR_WINDOWS)
-
-	#define COLOR "\033["
-	#define RESET "0;"
-	#define BOLD "1;"
-	#define UNDERLINE "4;"
-	#define INVERSE "7;"
-	#define BOLDOFF "21;"
-	#define UNDERLINEOFF "24;"
-	#define INVERSEOFF "27;"
-	#define CLEAR "\033[0m"
-	
-	#define BLACK "30m"
-	#define RED "31m"
-	#define GREEN "32m"
-	#define YELLOW "33m"
-	#define BLUE "34m"
-	#define MAGENTA "35m"
-	#define CYAN "36m"
-	#define WHITE "37m"
-	
-	#define COLOR256 "38;5;"
-
-	#define BLACK_B "40;"
-	#define RED_B "41;"
-	#define GREEN_B "42;"
-	#define YELLOW_B "43;"
-	#define BLUE_B "44;"
-	#define MAGENTA_B "45;"
-	#define CYAN_B "46;"
-	#define WHITE_B "47;"
-	#define GRAY_B "100;"
-	#define LRED_B "101;"
-	#define LGREEN_B "102;"
-	#define LYELLOW_B "103;"
-	#define LBLUE_B "104;"
-	#define LPURPLE "105;"
-	#define TEAL_B "106;"
-	
-	void techlib_color_test_256_colors(void){
-		for(int i = 0; i < 256; i++){
-			char buf[256] = {0};
-			strcpy(buf,"");
-			strcat(buf,COLOR "38;5;");
-			char code[16] = {0};
-			sprintf(code,"%d",i);
-			strcat(buf,code);
-			strcat(buf,"m");
-			printf("%s",buf);
-			printf("%d\t",i);
-			printf(CLEAR);
-			if((i+1) % 16 == 0 && i != 0)
-				printf("\n");
-
-		}
-    	printf("\n");
-	}
-
-
-#endif
-
-
 #endif

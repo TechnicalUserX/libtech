@@ -1,16 +1,7 @@
-
-#ifndef _TECHLIB_MATH_H
-#define _TECHLIB_MATH_H
-
-#include <stdio.h>
-#include <stdarg.h>
-#include <unistd.h>
-#include <math.h>
-#define TECHLIB_MATH_PRIME_MAX_CHECK 10000
+#include "../include/math.hpp"
 
 
-// CUSTOM //
-int techlib_math_isprime(long long n){
+TECHLIB_WINDLL_API int techlib::math::isprime(long long n){
 
     if(n < 2)
         return 0;
@@ -29,20 +20,18 @@ int techlib_math_isprime(long long n){
     return 1;
 }
 
-
-
-long long techlib_math_random_number_range(long long min, long long max){
+TECHLIB_WINDLL_API long long techlib::math::random_number_range(long long min, long long max){
     long long dif = max-min;
     return (rand() % (dif+1)) + min;
 }
 
-long long techlib_math_random_prime_range(long long min, long long max){
+TECHLIB_WINDLL_API long long techlib::math::random_prime_range(long long min, long long max){
     long long dif = max-min;
     long long num = (rand() % (dif+1)) + min; 
 
 
 
-    if(techlib_math_isprime(num))
+    if( techlib::math::isprime(num))
         return num;
     else{
 
@@ -50,7 +39,7 @@ long long techlib_math_random_prime_range(long long min, long long max){
 
         do{
             num += 2;
-        }while(!techlib_math_isprime(num));
+        }while(!techlib::math::isprime(num));
         return num;
     }
 
@@ -58,10 +47,8 @@ long long techlib_math_random_prime_range(long long min, long long max){
 
 
 
-
-
 // Euclidian Algorithm //
-long long techlib_math_gcd(long long a, long long h)
+TECHLIB_WINDLL_API long long techlib::math::gcd(long long a, long long h)
 {
     while(1)
     {
@@ -74,19 +61,13 @@ long long techlib_math_gcd(long long a, long long h)
 }
 
 
-
-
-
-
-
-// CUSTOM //
-unsigned long long techlib_math_lcm(int count, ...)
+TECHLIB_WINDLL_API unsigned long long techlib::math::lcm(int count, ...)
 {
     int n = count;
 
     va_list list;
     va_start(list,count);
-    int check_unique_prime_numbers[TECHLIB_MATH_PRIME_MAX_CHECK] = {0};
+    int check_unique_prime_numbers[techlib::math::PRIME_MAX_CHECK] = {0};
 
     unsigned long long A[n];
 
@@ -150,7 +131,7 @@ unsigned long long techlib_math_lcm(int count, ...)
 
 
     unsigned long long lcm = 1;
-    for (int i = 2; i<TECHLIB_MATH_PRIME_MAX_CHECK;i++){
+    for (int i = 2; i<techlib::math::PRIME_MAX_CHECK;i++){
 
         if (check_unique_prime_numbers[i]){
             int multiply=1;
@@ -173,20 +154,20 @@ unsigned long long techlib_math_lcm(int count, ...)
 
 
 // Recursive factorial modulus
-long long techlib_math_fast_factorial_modulus(long long fact,long long modulo){
+TECHLIB_WINDLL_API long long techlib::math::fast_factorial_modulus(long long fact,long long modulo){
 
     long long m = fact % modulo;
 
     if(fact == 2)
         return m;
 
-    long long next = techlib_math_fast_factorial_modulus(fact-1,modulo);
+    long long next = techlib::math::fast_factorial_modulus(fact-1,modulo);
 
     return (m*next) % modulo;
 }
 
 // Iterative factorial modulus
-long long techlib_math_fast_factorial_modulus_2(long long fact, long long modulo){
+TECHLIB_WINDLL_API long long techlib::math::fast_factorial_modulus_2(long long fact, long long modulo){
 
     long long final_number = 1;
     for(long long i = fact; i > 0; i--){
@@ -198,20 +179,20 @@ long long techlib_math_fast_factorial_modulus_2(long long fact, long long modulo
 
 
 // Recursive exponential modulus
-long long techlib_math_fast_exponential_modulus(long long base, long long exp, long long modulo){
+TECHLIB_WINDLL_API long long techlib::math::fast_exponential_modulus(long long base, long long exp, long long modulo){
 
     int m = base % modulo;
 
     if(exp == 1)
         return m;
 
-    long long next = techlib_math_fast_exponential_modulus(base,exp-1,modulo);
+    long long next = techlib::math::fast_exponential_modulus(base,exp-1,modulo);
 
     return (m * next) % modulo;
 }
 
 // Iterative exponential modulus
-long long techlib_math_fast_exponential_modulus_2(long long base, long long exp, long long modulo){
+TECHLIB_WINDLL_API long long techlib::math::fast_exponential_modulus_2(long long base, long long exp, long long modulo){
 
     long long m = 1;
     for(long long i = 0; i < exp; i++){
@@ -222,10 +203,8 @@ long long techlib_math_fast_exponential_modulus_2(long long base, long long exp,
 }
 
 
-long long techlib_math_fast_multiplication_modulus(long long x, long long y, long long modulo){
+TECHLIB_WINDLL_API long long techlib::math::fast_multiplication_modulus(long long x, long long y, long long modulo){
 
 
     return ((x % modulo) * (y % modulo)) % modulo;
 }
-
-#endif

@@ -114,14 +114,14 @@ Compilation tools with ease.
 ### 2) Setting Up `PATH` Environment Variable Manually (OPTIONAL)
 `Installation Directory` must be inserted into the `PATH` environment variable inside Windows system.
 If you don't know how to add directories to the PATH variable, you can let `setup.cmd` handle this job in the next step; otherwise, insert the correct
-location to the path as your Windows system demands iva Graphical User Interface.
+location to the path as your Windows system demands via Graphical User Interface.
 
 If you want to use Command Line Interface to accomplish this task, enter the following command to Windows Command Prompt
 ```cmd
 setx PATH %PATH%;C:\MinGW\bin
 ```
 
-> ⚠️ Default directory is `C:\MinGW`, it is your responsibility to handle changes for `Installation Directory`.
+> ⚠️ Default `Installation Directory` while installing MinGW is `C:\MinGW`, it is your responsibility to handle changes for `Installation Directory`.
 
 > ⚠️ The reason you should specify `\bin` folder is the `gcc` and `g++` and many other tools are located inside this folder.
 > They should be accessible anywhere in the Windows system.
@@ -129,5 +129,8 @@ setx PATH %PATH%;C:\MinGW\bin
 > ℹ️ `setx` command does not modify the system `PATH` variable, it creates a local variable which also works like `PATH`, so any mistake using this command will not affect the system variable.
 
 ### 3) Running TECHLIB Setup Utility (setup.cmd)
+After setting up MinGW, you must run the `setup.cmd` command as an administrator.
+
+This menu should pop up after you run the `setup.cmd`.
 
 

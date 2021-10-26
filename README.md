@@ -114,10 +114,9 @@ Compilation tools with ease.
 ### 2) Setting Up `PATH` Environment Variable Manually (OPTIONAL)
 `Installation Directory` must be inserted into the `PATH` environment variable inside Windows system.
 If you don't know how to add directories to the PATH variable, you can let `setup.cmd` handle this job in the next step; otherwise, insert the correct
-location to the path as your Windows system demands.
+location to the path as your Windows system demands iva Graphical User Interface.
 
-
-To modify `PATH` from comma you must open a command prompt and type this command.
+If you want to use Command Line Interface to accomplish this task, enter the following command to Windows Command Prompt
 ```cmd
 setx PATH %PATH%;C:\MinGW\bin
 ```

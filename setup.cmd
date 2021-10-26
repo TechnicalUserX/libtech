@@ -158,8 +158,10 @@ if %MINGW_PATH_EXISTS%==1 (
 		echo.
 		setx PATH !PATH!;!MINGW_DIR!\bin
 		echo  Added!
-		timeout /t 2 >nul
-		goto :skip_path_inclusion
+		echo  Restart the setup utility.
+		pause
+		exit
+		
 	)
 	if !choice!==n (
 		call :color /0e " Exiting..."

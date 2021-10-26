@@ -285,18 +285,18 @@ goto :eof
 	call :coor /0a "!MINGW_DIR!\lib"
 	call :color /0f "..."
 	echo.
-	copy .\techlib\Windows\C\lib\libtechc.dll !MINGW_DIR!\lib
-	copy .\techlib\Windows\CPP\lib\libtechcpp.dll !MINGW_DIR!\lib
+	copy ".\techlib\Windows\C\lib\libtechc.dll" "!MINGW_DIR!\lib"
+	copy ".\techlib\Windows\CPP\lib\libtechcpp.dll" "!MINGW_DIR!\lib"
 
-	mkdir !MINGW_DIR!\include\techlib
-	mkdir !MINGW_DIR!\include\techlib\C
-	mkdir !MINGW_DIR!\include\techlib\CPP
+	mkdir "!MINGW_DIR!\include\techlib"
+	mkdir "!MINGW_DIR!\include\techlib\C"
+	mkdir "!MINGW_DIR!\include\techlib\CPP"
 	call :color /0f " Copying header files to "
 	call :color /0a "!MINGW_DIR!\include\techlib"
 	call :color /0f "..."
 	echo.
-	copy .\techlib\Windows\C\include\* !MINGW_DIR!\include\techlib\C
-	copy .\techlib\Windows\CPP\include\* !MINGW_DIR!\include\techlib\CPP
+	copy ".\techlib\Windows\C\include\*" "!MINGW_DIR!\include\techlib\C"
+	copy ".\techlib\Windows\CPP\include\*" "!MINGW_DIR!\include\techlib\CPP"
 	set TECHLIB_EXISTS=1
 	call :color /0a " Done!"
 	echo.
@@ -307,11 +307,11 @@ goto :eof
 :uninstall
 	call :color /0c " Uninstalling..."
 	echo.
-	del /F /Q /S !MINGW_DIR!\include\techlib
-	del /F /Q !MINGW_DIR!\lib\libtech*
-	rmdir !MINGW_DIR!\include\techlib\C
-	rmdir !MINGW_DIR!\include\techlib\CPP
-	rmdir !MINGW_DIR!\include\techlib
+	del /F /Q /S "!MINGW_DIR!\include\techlib"
+	del /F /Q "!MINGW_DIR!\lib\libtech*"
+	rmdir "!MINGW_DIR!\include\techlib\C"
+	rmdir "!MINGW_DIR!\include\techlib\CPP"
+	rmdir "!MINGW_DIR!\include\techlib"
 	set TECHLIB_EXISTS=0
 	call :color /0e " Done!"
 	echo.

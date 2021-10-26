@@ -66,8 +66,9 @@ g++ main.cpp -ltechcpp -o main.out
 
 gcc main.c -ltechc -o main.out
 ```
-IMPORTANT: If you encounter a problem like `undefined reference to sqrtl`, compile your code as follows:
-It is highly probable that you will encounter this error while trying to compile `C` code.
+> ⚠️ If you encounter a problem like `undefined reference to sqrtl`, compile your code as follows:
+> It is highly probable that you will encounter this error while trying to compile `C` code.
+
 ```bash
 gcc main.c -ltechc -lm -o main.out
 ```
@@ -131,22 +132,60 @@ setx PATH %PATH%;C:\MinGW\bin
 ### 3) Running TECHLIB Setup Utility (setup.cmd)
 After setting up MinGW, you must run the `setup.cmd` command as an administrator.
 
-i) Run `setup.cmd`, this menu should pop up after you run the `setup.cmd`.
+#### i) Run `setup.cmd`, this menu should pop up after you run the `setup.cmd`.
 
 ![](/images/setupcmd/setupcmd_1.png)
 
-ii) Enter `build` to build `libtechc` and `libtechcpp`
+#### ii) Enter `build` to build `libtechc` and `libtechcpp`
 
 ![](/images/setupcmd/setupcmd_2.png)
 
-iii) Enter `instal` to place headers and libraries to Windows machine.
+#### iii) Enter `instal` to place headers and libraries to Windows machine.
+
 ![](/images/setupcmd/setupcmd_3.png)
 
+> ℹ️ Everything should be set after `install`, you can later enter `uninstall` to remove libraries and header files from your system.
+> ℹ️ `update` only removes old filese and replaces them with the ones inside techlib folder. Use this when you think a header file or a library
+> is corrupted to exchange it with the working one.
 
+### 4) Using TECHLIB In Your Program
 
+You must first include the header you want with `#include` directive.
+TECHLIB library hierarchy is as follows:
 
+> techlib/`<language>`/`header`
 
+Example:
+```c
+#include <techlib/C/math.h>
 
+int main(){
+  
+  printf("%d\n", techlib_math_isprime(13));
+  
+  return 0;
+}
+```
+
+In order to access to the `function definition`, compiler flag `-l` must be specified.
+Language | Compiler flag appearance
+-------- | ------------------------
+C++      | -ltechcpp
+C        | -ltechc
+
+```bash
+g++.exe main.cpp -ltechcpp -o main.exe
+
+gcc.exe main.c -ltechc -o main.exe
+```
+
+> ⚠️ If you encounter a problem like `undefined reference to sqrtl`, compile your code as follows:
+> It is highly probable that you will encounter this error while trying to compile `C` code.
+
+```bash
+gcc main.c -ltechc -lm -o main.out
+```
+`-lm` specifies the math library. 
 
 
 

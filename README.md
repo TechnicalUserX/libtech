@@ -77,6 +77,8 @@ gcc main.c -ltechc -lm -o main.out
 > ⚠️ Using `libtechc (C library)` with C++ source file AND using `libtechcpp (C++ library)` with C source files may not work.
 > Use libraries with their source file correspondences.
 
+
+
 ## Installing To Windows
 
 > ⚠️ This installation process deals with MinGW. It is your responsibility to handle other toolsets by yourself.

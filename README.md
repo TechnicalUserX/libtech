@@ -26,7 +26,7 @@ This will make the library available from anywhere and you will be able to use `
   1. GNU Compiler Collection (gcc) (g++)
   2. GNU Make (make)
 
-You can query wheter your working Linux distribution satisfies the prerequisites by:
+You can query whether your working Linux distribution satisfies the prerequisites by:
 ```bash
 apt-cache policy gcc g++ make
 ```

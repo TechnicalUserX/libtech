@@ -148,6 +148,7 @@ After setting up MinGW, you must run the `setup.cmd` command as an administrator
 ![](/images/setupcmd/setupcmd_3.png)
 
 > ℹ️ Everything should be set after `install`, you can later enter `uninstall` to remove libraries and header files from your system.
+
 > ℹ️ `update` only removes old filese and replaces them with the ones inside techlib folder. Use this when you think a header file or a library
 > is corrupted to exchange it with the working one.
 

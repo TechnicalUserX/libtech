@@ -95,7 +95,7 @@ Compilation tools with ease.
 
 #### Leave everything as is. If you wish to change the `Installation Directory`, it is your responsibility to handle all path changes.
 > ⚠️ All of the library files will be copied into `Installation Directory`. Please be aware that when you change this location to something else,
-> you should modify `mingw_directory` variable inside `setup.cmd` file. 
+> you should modify `MINGW_DIR` variable inside `setup.cmd` file. 
 
 ![](/images/mingw/mingw_3.png)
 

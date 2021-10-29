@@ -138,13 +138,23 @@ if exist %MINGW_DIR%\include\techlib (
 
 
 :: PATH CHECK
-set MINGW_PATH_EXISTS=1
+
 
 echo !path! | findstr /L "!MINGW_DIR!\bin"
 cls
-set MINGW_PATH_EXISTS=%errorlevel%
+set MINGW_PATH_BIN_EXISTS=%errorlevel%
 
-if %MINGW_PATH_EXISTS%==1 (
+
+
+echo !path! | findstr /L "!MINGW_DIR!\lib"
+cls
+set MINGW_PATH_LIB_EXISTS=%errorlevel%
+
+
+set RESTART_REQUIRED=0
+
+
+if %MINGW_PATH_BIN_EXISTS%==1 (
 	echo.
 	call :color /0b " TECHLIB Setup Utility"
 	echo.
@@ -155,7 +165,7 @@ if %MINGW_PATH_EXISTS%==1 (
 	echo  !MINGW_DIR!\bin must be inside PATH to proceed installation.
 	echo  Do you want to add the location here? [y/n]
 	echo.
-	:check_input_for_path_inclusion
+	:check_path_bin_inclusion
 	call :input
 	set /p choice=
 	if !choice!==y (
@@ -165,9 +175,10 @@ if %MINGW_PATH_EXISTS%==1 (
 		echo.
 		setx PATH "!PATH!;!MINGW_DIR!\bin"
 		echo  Added!
-		echo  Restart the setup utility.
+		set RESTART_REQUIRED=1
 		pause
-		exit
+		cls
+		goto :end_of_check_path_bin_inclusion
 		
 	)
 	if !choice!==n (
@@ -175,11 +186,62 @@ if %MINGW_PATH_EXISTS%==1 (
 		timeout /t 2 >nul
 		exit
 	)
-	goto :check_input_for_path_inclusion
+	goto :check_path_bin_inclusion
 	
 )
+:end_of_check_path_bin_inclusion
+cls
 
-:skip_path_inclusion
+if %MINGW_PATH_LIB_EXISTS%==1 (
+	echo.
+	call :color /0b " TECHLIB Setup Utility"
+	echo.
+	echo.
+	call :color /0c " !MINGW_DIR!\lib directory is  ^not found inside ^PATH"
+	echo.
+	echo.
+	echo  !MINGW_DIR!\lib must be inside PATH to proceed installation.
+	echo  Do you want to add the location here? [y/n]
+	echo.
+	:check_path_lib_inclusion
+	call :input
+	set /p choice=
+	if !choice!==y (
+		call :color /0f " Adding "
+		call :color /0a "!MINGW_DIR!\lib"
+		call :color /0f " to the PATH..."
+		echo.
+		setx PATH "!PATH!;!MINGW_DIR!\lib"
+		echo  Added!
+		set RESTART_REQUIRED=0		
+		pause
+		cls
+		goto :end_of_check_path_lib_inclusion
+	)
+	if !choice!==n (
+		call :color /0e " Exiting..."
+		timeout /t 2 >nul
+		exit
+	)
+	goto :check_path_lib_inclusion
+	
+)
+:end_of_check_path_lib_inclusion
+
+
+if %RESTART_REQUIRED%==1 (
+	echo.
+	call :color /0e " Restart required..."
+	echo.
+	echo.
+	echo  Press any key to exit...
+	pause >nul
+	exit
+
+)
+
+
+
 
 
 
@@ -282,7 +344,7 @@ goto :eof
 
 :install
 	call :color /0e " Copying library files to " 
-	call :coor /0a "!MINGW_DIR!\lib"
+	call :color /0a "!MINGW_DIR!\lib"
 	call :color /0f "..."
 	echo.
 	copy ".\techlib\Windows\C\lib\libtechc.dll" "!MINGW_DIR!\lib"

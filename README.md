@@ -124,13 +124,13 @@ location to the path as your Windows system demands via Graphical User Interface
 
 If you want to use Command Line Interface to accomplish this task, enter the following command to Windows Command Prompt
 ```cmd
-setx PATH %PATH%;C:\MinGW\bin
+setx PATH %PATH%;C:\MinGW\bin;C:\MinGW\lib
 ```
 
 > ⚠️ Default `Installation Directory` while installing MinGW is `C:\MinGW`, it is your responsibility to handle changes for `Installation Directory`.
 
 > ⚠️ The reason you should specify `\bin` folder is the `gcc` and `g++` and many other tools are located inside this folder.
-> They should be accessible anywhere in the Windows system.
+> They should be accessible anywhere in the Windows system. `\lib`, on the other hand, responsible for keeping shared library files.
 
 > ℹ️ `setx` command does not modify the system `PATH` variable, it creates a local variable which also works like `PATH`, so any mistake using this command will not affect the system variable.
 

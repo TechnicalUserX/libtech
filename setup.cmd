@@ -213,7 +213,7 @@ if %MINGW_PATH_LIB_EXISTS%==1 (
 		echo.
 		setx PATH "!PATH!;!MINGW_DIR!\lib"
 		echo  Added!
-		set RESTART_REQUIRED=0		
+		set RESTART_REQUIRED=1		
 		pause
 		cls
 		goto :end_of_check_path_lib_inclusion

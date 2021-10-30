@@ -75,7 +75,7 @@ gcc main.c -ltechc -lm -o main.out
 `-lm` specifies the math library. 
 
 > ⚠️ Using `libtechc (C library)` with C++ source file AND using `libtechcpp (C++ library)` with C source files may not work.
-> Use libraries with their source file correspondences.
+> Use libraries with their source file correspondents.
 
 
 
@@ -194,7 +194,7 @@ gcc main.c -ltechc -lm -o main.out
 `-lm` specifies the math library. 
 
 > ⚠️ Using `libtechc (C library)` with C++ source file AND using `libtechcpp (C++ library)` with C source files may not work.
-> Use libraries with their source file correspondences.
+> Use libraries with their source file correspondents.
 
 
 

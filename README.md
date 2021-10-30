@@ -158,7 +158,7 @@ set MINGW_DIR=C:\MinGW
 set PWD=%~dp0
 
 ```
-> ℹ️ Change `MINGW_DIR` to a suitable MINGW installation inside your Windows machine.
+> ℹ️ Change `MINGW_DIR` to a suitable MINGW installation directory inside your Windows machine.
 
 > ℹ️ If `setup.cmd` was able to find MinGW folder at `MINGW_DIR`, it will stop continuing. 
 

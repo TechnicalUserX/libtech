@@ -347,7 +347,7 @@ goto :eof
 	mkdir "!MINGW_DIR!\include\techlib"
 	mkdir "!MINGW_DIR!\include\techlib\C"
 	mkdir "!MINGW_DIR!\include\techlib\CPP"
-	call :color /0f " Copying header files to "
+	call :color /0e " Copying header files to "
 	call :color /0a "!MINGW_DIR!\include\techlib"
 	call :color /0f "..."
 	echo.

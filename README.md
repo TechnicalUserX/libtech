@@ -159,7 +159,7 @@ After setting up MinGW, you must run the `setup.cmd` command as an administrator
 You must first include the header you want with `#include` directive.
 TECHLIB library hierarchy is as follows:
 
-> techlib/`<language>`/`header`
+> techlib/`<language>`/`<header>`
 
 Example:
 ```c

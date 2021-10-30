@@ -54,7 +54,7 @@ if %MINGW_EXISTS%==0 (
 	echo.
 	call :color /0c " MinGW does not exists!"
 	echo.
-	call :color /0e " Please install MinGW or specify the Installation Directory currently"
+	call :color /0e " Please install MinGW or specify the Installation Directory"
 	echo.
 	echo  Press any key to exit...
 	pause >nul

@@ -135,7 +135,35 @@ setx PATH %PATH%;C:\MinGW\bin;C:\MinGW\lib
 > ℹ️ `setx` command does not modify the system `PATH` variable, it creates a local variable which also works like `PATH`, so any mistake using this command will not affect the system variable.
 
 ### 3) Running TECHLIB Setup Utility (setup.cmd)
-After setting up MinGW, you must run the `setup.cmd` command as an administrator.
+
+> ℹ️ If you already have a MinGW installation, you must edit the `MINGW_DIR` variable inside `setup.cmd` like the example below...
+
+Inside of setup.cmd:
+```batchfile
+@echo off
+setlocal EnableDelayedExpansion
+mode con: cols=110 lines=20
+color 0f
+title TECHLIB Setup Utility
+
+:: ************************************
+::	MinGW Location 
+:: 
+set MINGW_DIR=C:\MinGW 
+::
+::
+:: ************************************
+
+
+set PWD=%~dp0
+
+```
+> ℹ️ Change MINGW_DIR to a suitable MINGW installation inside your Windows machine.
+
+> ℹ️ If `setup.cmd` was able to find MinGW folder at `MINGW_DIR`, it will stop continuing. 
+
+
+You must run the `setup.cmd` command as an administrator.
 
 #### i) Run `setup.cmd`, this menu should pop up after you run the `setup.cmd`.
 

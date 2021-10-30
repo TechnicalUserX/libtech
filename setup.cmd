@@ -140,99 +140,93 @@ if exist %MINGW_DIR%\include\techlib (
 :: PATH CHECK
 
 
+set PATH_MODIFICATION_REQUIRED=0
+
 echo !path! | findstr /L "!MINGW_DIR!\bin"
 cls
 set MINGW_PATH_BIN_EXISTS=%errorlevel%
 
+if %MINGW_PATH_BIN_EXISTS%==1 (
+
+	set PATH_MODIFICATION_REQUIRED=1
+)
 
 
 echo !path! | findstr /L "!MINGW_DIR!\lib"
 cls
 set MINGW_PATH_LIB_EXISTS=%errorlevel%
 
-
-set RESTART_REQUIRED=0
-
-
-if %MINGW_PATH_BIN_EXISTS%==1 (
-	echo.
-	call :color /0b " TECHLIB Setup Utility"
-	echo.
-	echo.
-	call :color /0c " !MINGW_DIR!\bin directory is  ^not found inside ^PATH"
-	echo.
-	echo.
-	echo  !MINGW_DIR!\bin must be inside PATH to proceed installation.
-	echo  Do you want to add the location here? [y/n]
-	echo.
-	:check_path_bin_inclusion
-	call :input
-	set /p choice=
-	if !choice!==y (
-		call :color /0f " Adding "
-		call :color /0a "!MINGW_DIR!\bin"
-		call :color /0f " to the PATH..."
-		echo.
-		setx PATH "!PATH!;!MINGW_DIR!\bin"
-		echo  Added!
-		set RESTART_REQUIRED=1
-		pause
-		cls
-		goto :end_of_check_path_bin_inclusion
-		
-	)
-	if !choice!==n (
-		call :color /0e " Exiting..."
-		timeout /t 2 >nul
-		exit
-	)
-	goto :check_path_bin_inclusion
-	
-)
-:end_of_check_path_bin_inclusion
-cls
-
 if %MINGW_PATH_LIB_EXISTS%==1 (
+
+	set PATH_MODIFICATION_REQUIRED=1
+)
+
+
+
+
+if %PATH_MODIFICATION_REQUIRED%==1 (
 	echo.
 	call :color /0b " TECHLIB Setup Utility"
 	echo.
 	echo.
-	call :color /0c " !MINGW_DIR!\lib directory is  ^not found inside ^PATH"
+	call :color /0c " Following values are needed as a directory inside PATH varibale."
 	echo.
 	echo.
-	echo  !MINGW_DIR!\lib must be inside PATH to proceed installation.
+	if %MINGW_PATH_BIN_EXISTS%==1 (
+		call :color /0e " !MINGW_DIR!\bin"
+		echo.	
+	)
+	if %MINGW_PATH_LIB_EXISTS%==1 (
+
+		call :color /0e " !MINGW_DIR!\lib"
+		echo.		
+	)
+	
+	:check_path_inclusion
+	echo.
 	echo  Do you want to add the location here? [y/n]
 	echo.
-	:check_path_lib_inclusion
 	call :input
 	set /p choice=
 	if !choice!==y (
-		call :color /0f " Adding "
-		call :color /0a "!MINGW_DIR!\lib"
-		call :color /0f " to the PATH..."
-		echo.
-		setx PATH "!PATH!;!MINGW_DIR!\lib"
-		echo  Added!
-		set RESTART_REQUIRED=1		
-		pause
-		cls
-		goto :end_of_check_path_lib_inclusion
+	
+		set "PATH_ADD_STRING="
+	
+		if %MINGW_PATH_BIN_EXISTS%==1 (
+			set "PATH_ADD_STRING=!PATH_ADD_STRING!;!MINGW_DIR!\bin"
+		)
+		
+		if %MINGW_PATH_LIB_EXISTS%==1 (
+			set "PATH_ADD_STRING=!PATH_ADD_STRING!;!MINGW_DIR!\lib"
+		)		
+	
+
+
+		setx PATH "!PATH!!PATH_ADD_STRING!"
+		timeout /t 2 >nul
+		goto :skip_path_inclusion
+	
+	
 	)
+
 	if !choice!==n (
 		call :color /0e " Exiting..."
 		timeout /t 2 >nul
 		exit
 	)
-	goto :check_path_lib_inclusion
-	
+	echo.
+	goto :check_path_inclusion
+
 )
-:end_of_check_path_lib_inclusion
 
 
-if %RESTART_REQUIRED%==1 (
+:skip_path_inclusion
+if %PATH_MODIFICATION_REQUIRED%==1 (
+	cls
 	echo.
 	call :color /0e " Restart required..."
 	echo.
+	echo  Restart system.cmd to proceed installation.
 	echo.
 	echo  Press any key to exit...
 	pause >nul

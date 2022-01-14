@@ -2,7 +2,7 @@
 /**
  *  WRITER: TechnicaluserX
  * 
- *  VERSION: 1.0.0
+ *  VERSION: 1.1.0
  *  
  *  DESCRIPTION: C++ Dynamic Memory Based List Implementation.
  *  
@@ -25,11 +25,11 @@
 #include <typeinfo>
 #include <string>
 #include <cstring>
-#include "panic.hpp"
+#include "exception.hpp"
 
 namespace techlib{
 namespace list{
-            
+
 
 
 #define TECHLIB_LIST_ERROR_ALLOCATION                       "List Error: Memory couldn't have been allocated."
@@ -51,10 +51,7 @@ namespace list{
 
 
 
-#ifdef TECHLIB_LIST_DISABLE_ERRORS
-    #define TECHLIB_PANIC_DISABLE_ERRORS
-#endif
-#define LIST_PANIC(reason,ret) TECHLIB_PANIC_RETURN(reason,ret)
+
 
 
     typedef enum list_type{
@@ -98,7 +95,8 @@ namespace list{
         class list_object*      prev;
         list_object_type        type;
         std::size_t             hash_code;
-        
+        template <typename list_set_type>       list_set_type operator=(list_set_type element);
+
     };
 
     typedef class list_t{
@@ -116,10 +114,13 @@ namespace list{
             template <typename list_prepend_type>   int prepend(list_prepend_type element);
             template <typename list_insert_type>    int insert(list_insert_type element,int index);
 
-            list_object* operator[](int index);
+            list_object* list_get_pointer_to_object(int index);
+            list_object& operator[](int index);
+
 
             template <typename list_get_type>       list_get_type get(int index);
             template <typename list_set_type>       int set(list_set_type element, int index);
+            
 
             // Miscallenous
             int clear();
@@ -155,7 +156,7 @@ namespace list{
                 this->objects = new_object_list;
             }
             else
-                LIST_PANIC(TECHLIB_LIST_ERROR_ALLOCATION,-1);
+                throw techlib::exception::bad_allocation(TECHLIB_LIST_ERROR_ALLOCATION);
             
             list_object new_object;
             new_object.data = new_data;
@@ -204,7 +205,7 @@ namespace list{
 
             return 0;
         }else
-            LIST_PANIC(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION,-1);
+            throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
 
 
 
@@ -235,7 +236,7 @@ namespace list{
 
 
             }else
-                LIST_PANIC(TECHLIB_LIST_ERROR_ALLOCATION,-1);
+                throw techlib::exception::bad_allocation(TECHLIB_LIST_ERROR_ALLOCATION);
 
             list_object new_object;
             new_object.data = (void*)new_data;
@@ -297,7 +298,7 @@ namespace list{
     template <typename list_insert_type>    int             techlib::list::list_t::insert(list_insert_type element,int index){
 
         if(index < -1)
-            LIST_PANIC(TECHLIB_LIST_ERROR_INSERT_OUT_OF_RANGE,-1);
+            throw techlib::exception::out_of_range(TECHLIB_LIST_ERROR_INSERT_OUT_OF_RANGE);
 
         if(index == -1 || this->size <= index){
             this->append<list_insert_type>(element);
@@ -342,7 +343,7 @@ namespace list{
 
 
             }else
-                LIST_PANIC(TECHLIB_LIST_ERROR_ALLOCATION,-1);
+                throw techlib::exception::bad_allocation(TECHLIB_LIST_ERROR_ALLOCATION);
 
 
         }else if(this->type == LIST_TYPE_SINGLE_LINKED || this->type == LIST_TYPE_DOUBLE_LINKED){
@@ -373,7 +374,7 @@ namespace list{
             return 0;
 
         }else
-            LIST_PANIC(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION,-1);
+            throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
 
 
         return 0;
@@ -382,12 +383,12 @@ namespace list{
     template <typename list_get_type>       list_get_type   techlib::list::list_t::get(int index){
 
     if(this->size <=index || index < 0)
-            LIST_PANIC(TECHLIB_LIST_ERROR_GET_OUT_OF_RANGE,list_get_type());
+            throw techlib::exception::out_of_range(TECHLIB_LIST_ERROR_GET_OUT_OF_RANGE);
 
         if(this->type == LIST_TYPE_SEQUENTIAL){
 
             if(this->objects[index].hash_code != typeid(list_get_type).hash_code())
-                LIST_PANIC(TECHLIB_LIST_ERROR_GET_TYPE_MISMATCH,list_get_type());
+                throw techlib::exception::type_mismatch(TECHLIB_LIST_ERROR_GET_TYPE_MISMATCH);
 
 
 
@@ -403,13 +404,13 @@ namespace list{
             
 
             if(current_object->hash_code != typeid(list_get_type).hash_code())
-                LIST_PANIC(TECHLIB_LIST_ERROR_GET_TYPE_MISMATCH,list_get_type());
+                throw techlib::exception::type_mismatch(TECHLIB_LIST_ERROR_GET_TYPE_MISMATCH);
 
 
             return *((list_get_type*)current_object->data);
 
         }else
-            LIST_PANIC(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION,list_get_type());
+            throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
 
         return list_get_type();
     }
@@ -420,7 +421,7 @@ namespace list{
         *new_data = element;
 
     if(this->size <=index || index < 0)
-            LIST_PANIC(TECHLIB_LIST_ERROR_GET_OUT_OF_RANGE,-1);
+            throw techlib::exception::out_of_range(TECHLIB_LIST_ERROR_GET_OUT_OF_RANGE);
 
         if(this->type == LIST_TYPE_SEQUENTIAL){
 
@@ -448,7 +449,7 @@ namespace list{
 
 
         }else
-            LIST_PANIC(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION,-1);
+            throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
 
     }
 
@@ -463,7 +464,7 @@ namespace list{
     if(this->type == LIST_TYPE_SEQUENTIAL){
         for(int i = 0; i < this->size; i++){
             if(this->objects[i].type != dummy){
-                LIST_PANIC(TECHLIB_LIST_ERROR_SORT_TYPE_INCONSISTENT,-1);
+                throw techlib::exception::type_inconsistency(TECHLIB_LIST_ERROR_SORT_TYPE_INCONSISTENT);
             }
 
         }
@@ -475,7 +476,7 @@ namespace list{
         for(iterator = this->objects; ;iterator = iterator->next){
 
             if(iterator->type != dummy){
-                LIST_PANIC(TECHLIB_LIST_ERROR_SORT_TYPE_INCONSISTENT,-1);
+                throw techlib::exception::type_inconsistency(TECHLIB_LIST_ERROR_SORT_TYPE_INCONSISTENT);
             }
             if(iterator->next == NULL)
                 break;
@@ -483,20 +484,20 @@ namespace list{
         }
 
     }else
-        LIST_PANIC(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION,-1);        
+        throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);        
 
 
 
         for(int i = 0; i < this->size-1; i++){
 
             int swap_index = i;
-            list_sort_type swap_element = *((list_sort_type*)(this->operator[](i)->data));
+            list_sort_type swap_element = *((list_sort_type*)(this->list_get_pointer_to_object(i)->data));
 
 
 
             for(int j = i + 1; j < this->size; j++){
 
-                list_sort_type current_element = *((list_sort_type*)(this->operator[](j)->data));
+                list_sort_type current_element = *((list_sort_type*)(this->list_get_pointer_to_object(j)->data));
                 
                 switch((int)method){
                     case LIST_SORT_METHOD_ASCENDING:
@@ -521,8 +522,8 @@ namespace list{
             if(swap_index == i)
                 continue;
             
-            void* temp = (this->operator[](i))->data;
-            this->modify_data(i,(this->operator[](swap_index))->data);
+            void* temp = (this->list_get_pointer_to_object(i))->data;
+            this->modify_data(i,(this->list_get_pointer_to_object(swap_index))->data);
             this->modify_data(swap_index,temp);
 
 
@@ -540,6 +541,18 @@ namespace list{
 
 
 }
+
+    template <typename list_set_type>       list_set_type techlib::list::list_object::operator=(list_set_type element){
+
+        list_set_type* new_data = new list_set_type;
+        *new_data = element;
+
+        delete(this->data);
+        this->data = new_data;
+        this->hash_code = typeid(list_set_type).hash_code();
+        this->type = list_runtime_get_type(typeid(list_set_type).hash_code());
+        return element;
+    }
 
 
 };

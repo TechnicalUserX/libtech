@@ -26,7 +26,6 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <cerrno>
-#include "panic.hpp"
 
 namespace techlib{
 namespace sockets{
@@ -72,8 +71,8 @@ public:
     int                     socket_create(int domain,int type,int protocol, uint16_t port, std::string ip);
     int                     socket_bind();
     int                     socket_listen(int queue_count);
-    socket_connection_t     socket_accept();
-    socket_connection_t     socket_connect();
+    int                     socket_accept(techlib::sockets::socket_connection_t& connection);
+    int                     socket_connect(techlib::sockets::socket_connection_t& connection);
     int                     socket_shutdown(int how);
     
 };

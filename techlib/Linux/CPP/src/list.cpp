@@ -96,10 +96,10 @@ int techlib::list::list_t::clear(){
     return 0;
 }
 
-techlib::list::list_object* techlib::list::list_t::operator[](int index){
+techlib::list::list_object* techlib::list::list_t::list_get_pointer_to_object(int index){
 
     if(this->size <=index || index < 0)
-        LIST_PANIC(TECHLIB_LIST_ERROR_GET_OUT_OF_RANGE,nullptr);
+        throw techlib::exception::out_of_range(TECHLIB_LIST_ERROR_GET_OUT_OF_RANGE);
 
 
     if(this->type == LIST_TYPE_SEQUENTIAL){
@@ -115,7 +115,7 @@ techlib::list::list_object* techlib::list::list_t::operator[](int index){
         return current_object;
 
     }else
-        LIST_PANIC(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION,NULL);
+        throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
 
     
 
@@ -124,11 +124,11 @@ techlib::list::list_object* techlib::list::list_t::operator[](int index){
 
 int techlib::list::list_t::print(int index){
 
-    
+
     list_object_type temp_type;
 
     if(this->size <=index || index < 0)
-        LIST_PANIC(TECHLIB_LIST_ERROR_GET_OUT_OF_RANGE,-1);
+        throw techlib::exception::out_of_range(TECHLIB_LIST_ERROR_GET_OUT_OF_RANGE);
 
     if(this->type == LIST_TYPE_SEQUENTIAL){
 
@@ -143,7 +143,7 @@ int techlib::list::list_t::print(int index){
         temp_type = current_object->type;
 
     }else
-        LIST_PANIC(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION,-1);
+        throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
 
     switch(temp_type){
         case LIST_INT:
@@ -228,7 +228,7 @@ int techlib::list::list_t::remove(int index){
     int converted_index = (index == -1) ? this->size -1 : index;
 
     if(this->size <= converted_index || index < -1)
-        LIST_PANIC(TECHLIB_LIST_ERROR_REMOVE_OUT_OF_RANGE,-1);
+        throw techlib::exception::out_of_range(TECHLIB_LIST_ERROR_REMOVE_OUT_OF_RANGE);
 
 
 
@@ -305,7 +305,7 @@ int techlib::list::list_t::remove(int index){
 
 
     }else
-        LIST_PANIC(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION,-1);
+        throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
 
 
 
@@ -314,7 +314,7 @@ int techlib::list::list_t::remove(int index){
 int techlib::list::list_t::modify_data(int index, void* element){
 
 if(index >= (long long)this->size || index < -1)
-LIST_PANIC(TECHLIB_LIST_ERROR_SET_OUT_OF_RANGE,-1);
+    throw techlib::exception::out_of_range(TECHLIB_LIST_ERROR_SET_OUT_OF_RANGE);
 
 
 
@@ -324,16 +324,19 @@ this->objects[index].data = element;
 }
 else if(this->type == LIST_TYPE_SINGLE_LINKED || this->type == LIST_TYPE_DOUBLE_LINKED){
 
-int converted_index = (index == -1) ? this->size -1 : index;
-list_object* current_object;
-int i;
+    int converted_index = (index == -1) ? this->size -1 : index;
+    list_object* current_object;
+    int i;
 for(current_object = this->objects,i=0; i != converted_index; current_object=current_object->next,i++);
 
-current_object->data = element;
+    current_object->data = element;
 
 }else
-LIST_PANIC(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION,-1);
+    throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);
 
 return 0;
 }
 
+techlib::list::list_object& techlib::list::list_t::operator[](int index){
+    return *(list_get_pointer_to_object(index));
+}

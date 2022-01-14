@@ -14,7 +14,7 @@ techlib::sockets::socket_t::socket_t(){
 int techlib::sockets::socket_t::socket_create(int domain, int type, int protocol,uint16_t port, std::string ip){
 
     if( (this->socket_descriptor = socket(domain,type,protocol)) == -1)
-        TECHLIB_PANIC_RETURN("socket_create()",-1);
+        return -1;
 
     this->socket_address.sin_family = domain;
     this->socket_address.sin_port = htons(port);
@@ -27,29 +27,16 @@ int techlib::sockets::socket_t::socket_create(int domain, int type, int protocol
 }
 
 int techlib::sockets::socket_t::socket_bind(){
-
-    if( bind(this->socket_descriptor, (struct sockaddr*)&this->socket_address, this->socket_length ))
-        TECHLIB_PANIC_RETURN("socket_bind()",-1);
-
-    return 0;
+    return bind(this->socket_descriptor, (struct sockaddr*)&this->socket_address, this->socket_length);
 }
 
 int techlib::sockets::socket_t::socket_listen(int queue_count){
     this->is_listen_socket = true;
-    if(listen(this->socket_descriptor,queue_count) == -1)
-        TECHLIB_PANIC_RETURN("socket_listen()",-1);
-    return 0;
+    return listen(this->socket_descriptor,queue_count);
 }
+
 
 int techlib::sockets::socket_t::socket_shutdown(int how){
-    if(shutdown(this->socket_descriptor,how) == -1)
-        TECHLIB_PANIC_RETURN("socket_shutdown()",-1);
-
-    return 0;
-}
-
-int techlib::sockets::socket_connection_t::con_shutdown(int how){
-    
     /*
      * Shutdown methods:
      *
@@ -58,20 +45,30 @@ int techlib::sockets::socket_connection_t::con_shutdown(int how){
      *  SHUT_RDWR   -   Shuts down both read and write 
      * 
      */
-    if(shutdown(this->socket_descriptor,how) == -1)
-        TECHLIB_PANIC_THROW("shutdown()",-1);
-
-    return 0;
+    return shutdown(this->socket_descriptor,how);
 }
 
-techlib::sockets::socket_connection_t techlib::sockets::socket_t::socket_connect(){
+int techlib::sockets::socket_connection_t::con_shutdown(int how){
+    /*
+     * Shutdown methods:
+     *
+     *  SHUT_RD     -   Shuts down read
+     *  SHUT_WR     -   Shuts down write
+     *  SHUT_RDWR   -   Shuts down both read and write 
+     * 
+     */
+    return shutdown(this->socket_descriptor,how);
+
+}
+
+int techlib::sockets::socket_t::socket_connect(techlib::sockets::socket_connection_t& connection){
     
     socket_connection_t new_connection;
 
     
 
     if(connect(this->socket_descriptor,(struct sockaddr*)&this->socket_address,this->socket_length) == -1)
-        TECHLIB_PANIC_THROW("socket_connect()",-1);
+        return -1;
     
     
     
@@ -85,10 +82,12 @@ techlib::sockets::socket_connection_t techlib::sockets::socket_t::socket_connect
     new_connection.socket_info = this->socket_address;
     
 
-    return new_connection;
+    connection = new_connection;
+
+    return 0;
 }
 
-techlib::sockets::socket_connection_t techlib::sockets::socket_t::socket_accept(){
+int techlib::sockets::socket_t::socket_accept(techlib::sockets::socket_connection_t& connection){
 
     struct sockaddr_in client_info;
     socket_connection_t new_connection;
@@ -97,7 +96,7 @@ techlib::sockets::socket_connection_t techlib::sockets::socket_t::socket_accept(
     
     
     if(client_socket_descriptor == -1)
-        TECHLIB_PANIC_THROW("accept()",-1);
+        return -1;
     
 
     new_connection.family = client_info.sin_family;
@@ -108,12 +107,13 @@ techlib::sockets::socket_connection_t techlib::sockets::socket_t::socket_accept(
     new_connection.ip = std::string(buffer);
     new_connection.port = ntohs(client_info.sin_port);
     
-    return new_connection;
+    connection = new_connection;
+
+    return 0;
 }
 
 
 // "socket_connection_t" Functions
-
 ssize_t techlib::sockets::socket_connection_t::con_receive(void* buffer, size_t buffer_size, int flags){
 
     ssize_t read_bytes = recv(this->socket_descriptor,buffer,buffer_size,flags);

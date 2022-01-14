@@ -113,7 +113,7 @@ set CXXFLAGS=-fPIC -shared
 set INCLUDE_DIR=%MINGW_DIR%\include
 set LIB_DIR=%MINGW_DIR%\lib
 
-set VERSION=1.1.0
+set VERSION=1.0.0
 set VERSIONXX=1.1.0
 
 set SRC=list.c log.c math.c color_cmd.c

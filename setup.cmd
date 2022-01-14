@@ -54,7 +54,7 @@ if %MINGW_EXISTS%==0 (
 	echo.
 	call :color /0c " MinGW does not exists!"
 	echo.
-	call :color /0e " Please install MinGW or specify the Installation Directory"
+	call :color /0e " Please install MinGW or specify the Installation Directory currently"
 	echo.
 	echo  Press any key to exit...
 	pause >nul
@@ -114,10 +114,10 @@ set INCLUDE_DIR=%MINGW_DIR%\include
 set LIB_DIR=%MINGW_DIR%\lib
 
 set VERSION=1.0.0
-set VERSIONXX=1.0.0
+set VERSIONXX=1.1.0
 
 set SRC=list.c log.c math.c color_cmd.c
-set SRCXX=list.cpp log.cpp math.cpp color_cmd.cpp
+set SRCXX=list.cpp log.cpp math.cpp color_cmd.cpp exception.cpp
 
 
 
@@ -347,7 +347,7 @@ goto :eof
 	mkdir "!MINGW_DIR!\include\techlib"
 	mkdir "!MINGW_DIR!\include\techlib\C"
 	mkdir "!MINGW_DIR!\include\techlib\CPP"
-	call :color /0e " Copying header files to "
+	call :color /0f " Copying header files to "
 	call :color /0a "!MINGW_DIR!\include\techlib"
 	call :color /0f "..."
 	echo.

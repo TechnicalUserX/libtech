@@ -1,17 +1,17 @@
 #include "../include/list.hpp"
 
 
-TECHLIB_WINDLL_API techlib::list::list_t::list_t(techlib::list::list_type type){
+techlib::list::list_t::list_t(techlib::list::list_type type){
     this->size = 0;
     this->type = type;
     this->objects = NULL;
 }
 
-TECHLIB_WINDLL_API techlib::list::list_t::~list_t(){
+techlib::list::list_t::~list_t(){
     this->clear();
 }
 
-TECHLIB_WINDLL_API techlib::list::list_object_type techlib::list::list_runtime_get_type(const std::size_t hash){
+techlib::list::list_object_type techlib::list::list_runtime_get_type(const std::size_t hash){
 
     
     if(hash == typeid(int).hash_code())
@@ -51,7 +51,7 @@ TECHLIB_WINDLL_API techlib::list::list_object_type techlib::list::list_runtime_g
 
 }
 
-TECHLIB_WINDLL_API int techlib::list::list_t::clear(){
+int techlib::list::list_t::clear(){
 
 
 
@@ -96,7 +96,7 @@ TECHLIB_WINDLL_API int techlib::list::list_t::clear(){
     return 0;
 }
 
-TECHLIB_WINDLL_API techlib::list::list_object* techlib::list::list_t::list_get_pointer_to_object(int index){
+techlib::list::list_object* techlib::list::list_t::list_get_pointer_to_object(int index){
 
     if(this->size <=index || index < 0)
         throw techlib::exception::out_of_range(TECHLIB_LIST_ERROR_GET_OUT_OF_RANGE);
@@ -122,7 +122,7 @@ TECHLIB_WINDLL_API techlib::list::list_object* techlib::list::list_t::list_get_p
 
 }
 
-TECHLIB_WINDLL_API int techlib::list::list_t::print(int index){
+int techlib::list::list_t::print(int index){
 
 
     list_object_type temp_type;
@@ -204,7 +204,7 @@ TECHLIB_WINDLL_API int techlib::list::list_t::print(int index){
     return 0;
 }
 
-TECHLIB_WINDLL_API int techlib::list::list_t::print_all(){
+int techlib::list::list_t::print_all(){
 
     std::cout << "[";
     for(int i = 0; i < this->size; i++){
@@ -219,7 +219,7 @@ TECHLIB_WINDLL_API int techlib::list::list_t::print_all(){
     return 0;
 }
 
-TECHLIB_WINDLL_API int techlib::list::list_t::remove(int index){
+int techlib::list::list_t::remove(int index){
 
     if(this->size == 0)
         return 0;
@@ -311,7 +311,7 @@ TECHLIB_WINDLL_API int techlib::list::list_t::remove(int index){
 
 }
 
-TECHLIB_WINDLL_API int techlib::list::list_t::modify_data(int index, void* element){
+int techlib::list::list_t::modify_data(int index, void* element){
 
 if(index >= (long long)this->size || index < -1)
     throw techlib::exception::out_of_range(TECHLIB_LIST_ERROR_SET_OUT_OF_RANGE);
@@ -337,6 +337,6 @@ for(current_object = this->objects,i=0; i != converted_index; current_object=cur
 return 0;
 }
 
-TECHLIB_WINDLL_API techlib::list::list_object& techlib::list::list_t::operator[](int index){
+techlib::list::list_object& techlib::list::list_t::operator[](int index){
     return *(list_get_pointer_to_object(index));
 }

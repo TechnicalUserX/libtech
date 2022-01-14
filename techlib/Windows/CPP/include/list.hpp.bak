@@ -134,7 +134,7 @@ namespace list{
 
     }list_t;
 
-    TECHLIB_WINDLL_API list_object_type list_runtime_get_type(const std::size_t hash);
+    list_object_type list_runtime_get_type(const std::size_t hash);
 
     template <typename list_append_type>    int             techlib::list::list_t::append(list_append_type element){
 

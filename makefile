@@ -6,6 +6,10 @@ CXX = g++
 INCLUDE_DIR = "/usr/include"
 LIB_DIR = "/usr/lib"
 
+INCLUDE_DIR_TERMUX = "/data/data/com.termux/files/usr/include"
+LIB_DIR_TERMUX = "/data/data/com.termux/files/usr/lib"
+
+
 CFLAGS = -fPIC -shared
 CXXFLAGS = -fPIC -shared
 
@@ -98,3 +102,54 @@ else
 	@rm ${LIB_DIR}/libtech*
 	@echo "Uninstall completed!"
 endif
+
+
+
+
+install-termux: ./techlib/Linux/C/lib/libtechc.so.${VERSION} ./techlib/Linux/CPP/lib/libtechcpp.so.${VERSIONXX}
+ifeq ($(IS_INSTALLED),1)
+	@echo "Libraries has been already installed";
+	@echo "If you want to update, run: 'make update-termux'";
+else
+	@echo "Copying TECHLIB library files to '${LIB_DIR_TERMUX}/techlib'...";
+	@mkdir ${LIB_DIR_TERMUX}/techlib
+	@cp ./techlib/Linux/C/lib/libtechc.so.${VERSION} ${LIB_DIR_TERMUX}/techlib;
+	@cp ./techlib/Linux/CPP/lib/libtechcpp.so.${VERSIONXX} ${LIB_DIR_TERMUX}/techlib;
+	@ln -s ${LIB_DIR_TERMUX}/techlib/libtechc.so.${VERSION} ${LIB_DIR_TERMUX}/libtechc.so
+	@ln -s ${LIB_DIR_TERMUX}/techlib/libtechcpp.so.${VERSIONXX} ${LIB_DIR_TERMUX}/libtechcpp.so
+	@echo "Creating 'techlib' file inside '${INCLUDE_DIR_TERMUX}'..."
+	@mkdir ${INCLUDE_DIR_TERMUX}/techlib
+	@mkdir ${INCLUDE_DIR_TERMUX}/techlib/C
+	@mkdir ${INCLUDE_DIR_TERMUX}/techlib/CPP
+	@echo "Copying header files to ${INCLUDE_DIR_TERMUX}/techlib'..."
+	@cp  ./techlib/Linux/C/include/* ${INCLUDE_DIR_TERMUX}/techlib/C
+	@cp  ./techlib/Linux/CPP/include/* ${INCLUDE_DIR_TERMUX}/techlib/CPP
+	@echo "Installation completed."
+endif
+
+update-termux:
+	@echo "Removing current headers and libraries..."
+	@rm -r ${INCLUDE_DIR_TERMUX}/techlib
+	@rm ${LIB_DIR_TERMUX}/libtech*
+	@rm -r ${LIB_DIR_TERMUX}/techlib
+	@echo "Copying TECHLIB library files to '${LIB_DIR_TERMUX}/techlib'...";
+	@mkdir ${LIB_DIR_TERMUX}/techlib
+	@cp ./techlib/Linux/C/lib/libtechc.so.${VERSION} ${LIB_DIR_TERMUX}/techlib;
+	@cp ./techlib/Linux/CPP/lib/libtechcpp.so.${VERSIONXX} ${LIB_DIR_TERMUX}/techlib;
+	@ln -s ${LIB_DIR_TERMUX}/techlib/libtechc.so.${VERSION} ${LIB_DIR_TERMUX}/libtechc.so
+	@ln -s ${LIB_DIR_TERMUX}/techlib/libtechcpp.so.${VERSIONXX} ${LIB_DIR_TERMUX}/libtechcpp.so
+	@echo "Creating 'techlib' file inside '${INCLUDE_DIR_TERMUX}'..."
+	@mkdir ${INCLUDE_DIR_TERMUX}/techlib
+	@mkdir ${INCLUDE_DIR_TERMUX}/techlib/C
+	@mkdir ${INCLUDE_DIR_TERMUX}/techlib/CPP
+	@echo "Copying header files to ${INCLUDE_DIR_TERMUX}/techlib'..."
+	@cp  ./techlib/Linux/C/include/* ${INCLUDE_DIR_TERMUX}/techlib/C
+	@cp  ./techlib/Linux/CPP/include/* ${INCLUDE_DIR_TERMUX}/techlib/CPP
+	@echo "Update completed."	
+
+uninstall-termux:
+	@echo "Uninstalling TECHLIB..."
+	@rm -r ${INCLUDE_DIR_TERMUX}/techlib
+	@rm -r ${LIB_DIR_TERMUX}/techlib
+	@rm ${LIB_DIR_TERMUX}/libtech*
+	@echo "Uninstall completed!"

@@ -1,8 +1,6 @@
  //===================================================================================================//
 /**
  *  WRITER: TechnicaluserX
- * 
- *  VERSION: 1.0.0
  *  
  *  DESCRIPTION: Turns the "C Linux Socket API" into object oriented form for ease of use.
  *  

@@ -1,8 +1,6 @@
  //===================================================================================================//
 /**
  *  WRITER: TechnicaluserX
- * 
- *  VERSION: 1.0.0
  *  
  *  DESCRIPTION: C Dynamic Memory Based List Implementation
  *  

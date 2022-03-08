@@ -1,8 +1,6 @@
  //===================================================================================================//
 /**
  *  WRITER: TechnicaluserX
- * 
- *  VERSION: 1.0.0
  *  
  *  DESCRIPTION: Defines exception handling capabilities for C++ programs.
  *  

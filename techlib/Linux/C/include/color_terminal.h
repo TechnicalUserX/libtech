@@ -1,8 +1,6 @@
  //===================================================================================================//
 /**
  *  WRITER: TechnicaluserX
- * 
- *  VERSION: 1.0.0
  *  
  *  DESCRIPTION: Prints colorful output to the UNIX/Linux terminal.
  *  

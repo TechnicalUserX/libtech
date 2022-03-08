@@ -1,8 +1,6 @@
  //===================================================================================================//
 /**
  *  WRITER: TechnicaluserX
- * 
- *  VERSION: 1.0.0
  *  
  *  DESCRIPTION: Optimized data type for repeatedly inserting bytes into a stream.
  *  

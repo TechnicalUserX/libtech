@@ -1,3 +1,15 @@
+ //===================================================================================================//
+/**
+ *  WRITER: TechnicaluserX
+ *  
+ *  DESCRIPTION: C Library for color text printing.
+ *  
+ *  LICENSE: This library is not currently under any license and it is free to modify/distribute. 
+ * 
+ */
+ //===================================================================================================//
+
+
 #ifndef _TECHLIB_COLOR_CMD_H
 #define _TECHLIB_COLOR_CMD_H
 

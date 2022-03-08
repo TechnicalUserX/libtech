@@ -14,7 +14,7 @@ CFLAGS = -fPIC -shared
 CXXFLAGS = -fPIC -shared
 
 VERSION = 1.0.0
-VERSIONXX = 1.1.0
+VERSIONXX = 1.0.0
 
 SRC = color_terminal.c list.c log.c math.c
 SRCXX = color_terminal.cpp list.cpp log.cpp math.cpp sockets.cpp exception.cpp expandingbytes.cpp

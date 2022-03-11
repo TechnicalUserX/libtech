@@ -39,7 +39,7 @@ namespace color{
 	#define CYAN "36m"
 	#define WHITE "37m"
 	
-	#define COLOR256 "38;5;"
+	#define COLOR256(code) "38;5;"#code"m"
 
 	#define BLACK_B "40;"
 	#define RED_B "41;"

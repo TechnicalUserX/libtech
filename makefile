@@ -13,8 +13,8 @@ LIB_DIR_TERMUX = "/data/data/com.termux/files/usr/lib"
 CFLAGS = -fPIC -shared
 CXXFLAGS = -fPIC -shared
 
-VERSION = 1.1.0
-VERSIONXX = 1.1.0
+VERSION = 1.2.0
+VERSIONXX = 1.2.0
 
 SRC = color_terminal.c list.c log.c math.c
 SRCXX = color_terminal.cpp list.cpp log.cpp math.cpp sockets.cpp exception.cpp expandingbytes.cpp

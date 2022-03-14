@@ -37,6 +37,9 @@
 	
 	#define COLOR256(code) "38;5;"#code"m"
 
+	#define RGB(r,g,b) "38;2;"#r";"#g";"#b"m"
+	#define RGB_B(r,g,b) "48;2;"#r";"#g";"#b";"
+
 	#define BLACK_B "40;"
 	#define RED_B "41;"
 	#define GREEN_B "42;"

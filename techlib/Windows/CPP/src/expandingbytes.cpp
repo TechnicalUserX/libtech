@@ -81,7 +81,7 @@ TECHLIB_WINDLL_API int techlib::expandingbytes::expandingbytes_t::expand(void* b
         for(size_t i = this->current_byte_size, j = 0; j < byte_count; i++,j++){
             new_address[i] = ((byte_t*)byte_address)[j];
         }
-        delete(this->bytes);
+        delete[](this->bytes);
         this->bytes = new_address;
         this->current_byte_size += byte_count;
         return 0;
@@ -90,6 +90,7 @@ TECHLIB_WINDLL_API int techlib::expandingbytes::expandingbytes_t::expand(void* b
         for(size_t i = 0; i < byte_count; i++){
             this->bytes[this->current_byte_size+i] = ((byte_t*)byte_address)[i];
         }
+        this->current_byte_size += byte_count;
         return 0;
     }
 
@@ -147,5 +148,8 @@ TECHLIB_WINDLL_API techlib::expandingbytes::expandingbytes_t::expandingbytes_t(c
 }
 
 TECHLIB_WINDLL_API void techlib::expandingbytes::expandingbytes_t::clear(){
+    if(this->bytes == NULL)
+        return;
     delete[](this->bytes);
+    this->bytes = NULL;
 }

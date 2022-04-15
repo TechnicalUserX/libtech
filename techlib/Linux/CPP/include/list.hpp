@@ -481,8 +481,9 @@ namespace list{
 
         }
 
-    }else
+    }else{
         throw techlib::exception::bad_initialization(TECHLIB_LIST_ERROR_INCORRECT_TYPE_INITIALIZATION);        
+    }
 
 
 

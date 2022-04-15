@@ -10,11 +10,11 @@ INCLUDE_DIR_TERMUX = "/data/data/com.termux/files/usr/include"
 LIB_DIR_TERMUX = "/data/data/com.termux/files/usr/lib"
 
 
-CFLAGS = -fPIC -shared
-CXXFLAGS = -fPIC -shared
+CFLAGS = -fPIC -shared 
+CXXFLAGS = -fPIC -shared 
 
-VERSION = 2022.03.14
-VERSIONXX = 2022.03.14
+VERSION = 2022.04.15
+VERSIONXX = 2022.04.15
 
 SRC = color_terminal.c list.c log.c math.c
 SRCXX = color_terminal.cpp list.cpp log.cpp math.cpp sockets.cpp exception.cpp expandingbytes.cpp

@@ -4,7 +4,7 @@ Created By TechnicalUserX
 This library is created for the sake of assistance for personal projects.
 Library will be updated when there is a need.
 
-> ℹ️ `This library is only intended for Linux based operating systems`
+> ℹ️ This library is only intended for Linux based operating systems
 
 
 # Installation

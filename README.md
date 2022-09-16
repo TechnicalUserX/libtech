@@ -38,8 +38,8 @@ sudo apt-get install gcc g++ make
 
 #### Execute these commands in order to install the library.
 ```bash
-git clone https://github.com/TechnicalUserX/TECHLIB.git
-cd TECHLIB
+git clone https://github.com/TechnicalUserX/techlib.git
+cd techlib
 make
 sudo make install
 ```

@@ -4,6 +4,8 @@ Created By TechnicalUserX
 This library is created for the sake of assistance for personal projects.
 Library will be updated when there is a need.
 
+`This library is only intended for Linux based operating systems`
+
 # Installation
 ## Installing To Debian Based Linux Distros
 ### 1) Using Raw Source Files

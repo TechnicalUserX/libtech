@@ -15,7 +15,7 @@ This library is created for the sake of assistance for personal projects.
 
 You can query whether your working Linux distribution satisfies the prerequisites by:
 ```bash
-apt-cache policy gcc  make
+apt-cache policy gcc make
 ```
 In order to install required packages if you don't have:
 ```bash

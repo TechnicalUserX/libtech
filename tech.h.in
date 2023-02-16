@@ -1,0 +1,18 @@
+/**
+ * @author TechnicalUserX
+ * @brief 
+ * @version @TECH_VERSION_CONFIGURATION@
+ * 
+ */
+
+#ifndef TECH_H
+#define TECH_H
+
+#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_terminal.h>
+#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_error.h>
+#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_log.h>
+#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_thread.h>
+#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_tool.h>
+
+
+#endif

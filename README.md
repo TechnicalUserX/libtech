@@ -50,6 +50,7 @@ C        | -ltech
 ```bash
 gcc main.c -ltech -o main.out
 ```
+
 > ⚠️ If you encounter a problem like `undefined reference to sqrtl`, compile your code as follows:
 
 ```bash

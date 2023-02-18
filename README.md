@@ -36,7 +36,7 @@ After successful installation, usage is as follows.
 
 int main(){
   
-  tech_log("Printing log message");
+  tech_log(stdout,TECH_LOG_STYLE_CLOCK,"Hello");
 
   return 0;
 }

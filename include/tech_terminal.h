@@ -91,6 +91,7 @@
 #define TECH_TERMINAL_KEY_LEFT          4
 #define TECH_TERMINAL_KEY_BACKSPACE     5
 #define TECH_TERMINAL_KEY_ENTER         6
+#define TECH_TERMINAL_KEY_DELETE        7
 
 // General design idea for this lock is to make this lock 'non-blocking'
 // Functions which use this should be pseudo-non-blocking
@@ -197,7 +198,7 @@ tech_return_t tech_terminal_stdin_buffer_consume(void);
 
 // Thread-safe(STDIN)
 // This function does not initially set the cursor position
-tech_return_t tech_terminal_stdin_get_string( tech_terminal_char_t* terminal_string,tech_size_t size);
+tech_return_t tech_terminal_stdin_get_string(uint16_t row, uint16_t col, tech_terminal_char_t* terminal_string,tech_size_t size);
 
 
 // Thread-safe(STDOUT)
@@ -207,7 +208,7 @@ tech_return_t tech_terminal_stdout_print_char(uint16_t row, uint16_t col, tech_t
 
 // Thread-safe(STDOUT)
 // Printf but tech library compliant
-tech_return_t tech_terminal_stdout_printf(const char* format, ...);
+tech_return_t tech_terminal_stdout_printf(uint16_t row, uint16_t col, const char* format, ...);
 
 
 // 'destination' might not have the sufficient size when the 'source' is converted to multi-byte char string

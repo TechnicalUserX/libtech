@@ -19,7 +19,7 @@ apt-cache policy gcc make
 ```
 In order to install required packages if you don't have:
 ```bash
-sudo apt-get install gcc  make
+sudo apt-get install gcc make
 ```
 
 

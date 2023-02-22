@@ -32,6 +32,8 @@ const char *tech_error_what(enum tech_error_t error)
         return "Terminal mode cannot be retrieved";
     case TECH_ERROR_TERMINAL_CURSOR_POSITION_CANNOT_GET:
         return "Terminal cannot get cursor position";
+    case TECH_ERROR_TERMINAL_ATTRIBUTE_CANNOT_SET:
+        return "Terminal attribute cannot be set";
     case TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT:
         return "Thread exited unexpectedly";
     case TECH_ERROR_THREAD_SAFE_BLOCK_GLOBAL_CANNOT_LOCK:

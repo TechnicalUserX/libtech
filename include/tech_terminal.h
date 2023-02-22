@@ -9,45 +9,52 @@
 #include "../shared/tech_types.h"
 
 
-#define TECH_BOLD           "\033[1m"
-#define TECH_UNDERLINE      "\033[4m"
-#define TECH_BLINK          "\033[5m"
-#define TECH_INVERSE        "\033[7m"
-#define TECH_CLEAR          "\033[0m"
+#define TECH_TERMINAL_ATTRIBUTE_BOLD           "\033[1m"
+#define TECH_TERMINAL_ATTRIBUTE_DIM            "\033[2m"
+#define TECH_TERMINAL_ATTRIBUTE_ITALIC         "\033[3m"
+#define TECH_TERMINAL_ATTRIBUTE_UNDERLINE      "\033[4m"
+#define TECH_TERMINAL_ATTRIBUTE_BLINK          "\033[5m"
+#define TECH_TERMINAL_ATTRIBUTE_FAST_BLINK     "\033[6m"
+#define TECH_TERMINAL_ATTRIBUTE_INVERSE        "\033[7m"
+#define TECH_TERMINAL_ATTRIBUTE_HIDDEN         "\033[8m"
+#define TECH_TERMINAL_ATTRIBUTE_STRIKETHROUGH  "\033[9m"
+#define TECH_TERMINAL_ATTRIBUTE_CLEAR          "\033[0m"
 
-#define TECH_BLACK          "\033[30m"
-#define TECH_RED            "\033[31m"
-#define TECH_GREEN          "\033[32m"
-#define TECH_YELLOW         "\033[33m"
-#define TECH_BLUE           "\033[34m"
-#define TECH_MAGENTA        "\033[35m"
-#define TECH_CYAN           "\033[36m"
-#define TECH_WHITE          "\033[37m"
+#define TECH_TERMINAL_ATTRIBUTE_BRIGHT TECH_TERMINAL_ATTRIBUTE_BOLD
+
+#define TECH_TERMINAL_ATTRIBUTE_BLACK          "\033[30m"
+#define TECH_TERMINAL_ATTRIBUTE_RED            "\033[31m"
+#define TECH_TERMINAL_ATTRIBUTE_GREEN          "\033[32m"
+#define TECH_TERMINAL_ATTRIBUTE_YELLOW         "\033[33m"
+#define TECH_TERMINAL_ATTRIBUTE_BLUE           "\033[34m"
+#define TECH_TERMINAL_ATTRIBUTE_MAGENTA        "\033[35m"
+#define TECH_TERMINAL_ATTRIBUTE_CYAN           "\033[36m"
+#define TECH_TERMINAL_ATTRIBUTE_WHITE          "\033[37m"
 
 
-#define TECH_256COLOR(c)    "\033[38;5;"#c"m"
-#define TECH_256COLOR_BG(c) "\033[48;5;"#c"m"
-
-#define TECH_RGB(r,g,b)     "\033[38;2;"#r";"#g";"#b"m"
-#define TECH_RGB_BG(r,g,b)  "\033[48;2;"#r";"#g";"#b"m"
+#define TECH_TERMINAL_ATTRIBUTE_256COLOR(c)    "\033[38;5;"#c"m"
+#define TECH_TERMINAL_ATTRIBUTE_256COLOR_BG(c) "\033[48;5;"#c"m"
 
 
+#define TECH_TERMINAL_ATTRIBUTE_RGB(r,g,b)     "\033[38;2;"#r";"#g";"#b"m"
+#define TECH_TERMINAL_ATTRIBUTE_RGB_BG(r,g,b)  "\033[48;2;"#r";"#g";"#b"m"
 
-#define TECH_BLACK_BG       "\033[40m"
-#define TECH_RED_BG         "\033[41m"
-#define TECH_GREEN_BG       "\033[42m"
-#define TECH_YELLOW_BG      "\033[43m"
-#define TECH_BLUE_BG        "\033[44m"
-#define TECH_MAGENTA_BG     "\033[45m"
-#define TECH_CYAN_BG        "\033[46m"
-#define TECH_WHITE_BG       "\033[47m"
-#define TECH_GRAY_BG        "\033[100m"
-#define TECH_LRED_BG        "\033[101m"
-#define TECH_LGREEN_BG      "\033[102m"
-#define TECH_LYELLOW_BG     "\033[103m"
-#define TECH_LBLUE_BG       "\033[104m"
-#define TECH_LPURPLE_BG     "\033[105m"
-#define TECH_TEAL_BG        "\033[106m"
+
+#define TECH_TERMINAL_ATTRIBUTE_BLACK_BG       "\033[40m"
+#define TECH_TERMINAL_ATTRIBUTE_RED_BG         "\033[41m"
+#define TECH_TERMINAL_ATTRIBUTE_GREEN_BG       "\033[42m"
+#define TECH_TERMINAL_ATTRIBUTE_YELLOW_BG      "\033[43m"
+#define TECH_TERMINAL_ATTRIBUTE_BLUE_BG        "\033[44m"
+#define TECH_TERMINAL_ATTRIBUTE_MAGENTA_BG     "\033[45m"
+#define TECH_TERMINAL_ATTRIBUTE_CYAN_BG        "\033[46m"
+#define TECH_TERMINAL_ATTRIBUTE_WHITE_BG       "\033[47m"
+#define TECH_TERMINAL_ATTRIBUTE_GRAY_BG        "\033[100m"
+#define TECH_TERMINAL_ATTRIBUTE_LRED_BG        "\033[101m"
+#define TECH_TERMINAL_ATTRIBUTE_LGREEN_BG      "\033[102m"
+#define TECH_TERMINAL_ATTRIBUTE_LYELLOW_BG     "\033[103m"
+#define TECH_TERMINAL_ATTRIBUTE_LBLUE_BG       "\033[104m"
+#define TECH_TERMINAL_ATTRIBUTE_LPURPLE_BG     "\033[105m"
+#define TECH_TERMINAL_ATTRIBUTE_TEAL_BG        "\033[106m"
 
 
 #define TECH_TERMINAL_CONTROL_CHAR_NULL    0
@@ -108,24 +115,42 @@
 #define TECH_TERMINAL_CHAR_BYTES_MAX_SIZE 8
 
 
+#define TECH_TERMINAL_CHAR_NULL_TERMINATOR (tech_terminal_char_t){.byte_size = 1,.bytes[0 ... (TECH_TERMINAL_CHAR_BYTES_MAX_SIZE-1)] = 0,.is_control = true,.is_escape_sequence = false,.is_printable = false,.is_utf_8 = false}
+
 #ifdef __cplusplus
     extern "C" {
 #endif
 
 
-static sem_t tech_terminal_access;
+typedef enum tech_terminal_type_enum_t{
+    TECH_TERMINAL_TYPE_UNKNOWN, 
+    TECH_TERMINAL_TYPE_XTERM,
+    TECH_TERMINAL_TYPE_XTERM256,
+    TECH_TERMINAL_TYPE_TRUECOLOR,
+    TECH_TERMINAL_TYPE_24BIT = TECH_TERMINAL_TYPE_TRUECOLOR
+}tech_terminal_type_t;
 
-enum tech_terminal_mode_directive_enum_t{
+
+typedef enum tech_terminal_encoding_enum_t{
+    TECH_TERMINAL_ENCODING_UNKNOWN,
+    TECH_TERMINAL_ENCODING_ASCII,
+    TECH_TERMINAL_ENCODING_UTF_8
+}tech_terminal_encoding_t;
+
+
+typedef enum tech_terminal_mode_directive_enum_t{
     TECH_TERMINAL_MODE_DIRECTIVE_GET = 0,
     TECH_TERMINAL_MODE_DIRECTIVE_SET,
     TECH_TERMINAL_MODE_DIRECTIVE_SAVE
-};
+}tech_terminal_mode_directive_t;
 
-enum tech_terminal_mode_enum_t{
+
+typedef enum tech_terminal_mode_enum_t{
     TECH_TERMINAL_MODE_ORIGINAL = 0, // This is the terminal's initial state, before the program started
     TECH_TERMINAL_MODE_RAW,
     TECH_TERMINAL_MODE_SAVED
-};
+}tech_terminal_mode_t;
+
 
 /**
  * Types of terminal chars
@@ -135,26 +160,58 @@ enum tech_terminal_mode_enum_t{
  * -> Escape sequence (is also a control char)
  * 
  */
-struct tech_terminal_char_struct_t{
+typedef struct tech_terminal_char_struct_t{
     tech_byte_t bytes[TECH_TERMINAL_CHAR_BYTES_MAX_SIZE];    
     uint8_t byte_size;
     bool is_printable;
     bool is_control;
     bool is_escape_sequence;
     bool is_utf_8; // If 0, assumed ASCII
-};
+}tech_terminal_char_t;
 
 
-typedef struct tech_terminal_char_struct_t tech_terminal_char_t;
+typedef struct tech_terminal_attribute_struct_t{
+    bool set_fg;
+    struct fg_struct{
+        tech_byte_t red;
+        tech_byte_t green;
+        tech_byte_t blue;
+    }fg;
+    bool set_bg;
+    struct bg_struct{
+        tech_byte_t red;
+        tech_byte_t green;
+        tech_byte_t blue;
+    }bg;
+
+    bool set_underline;
+    bool set_bold;
+    bool set_italic;
+    bool set_inverse;
+    bool set_strikethrough;
+
+}tech_terminal_attribute_t;
+
 
 typedef uint16_t tech_terminal_key_t;
 
-typedef enum tech_terminal_mode_directive_enum_t tech_terminal_mode_directive_t;
 
-typedef enum tech_terminal_mode_enum_t tech_terminal_mode_t;
+// Returning unkown type is equivalent to returning TECH_RETURN_FAILURE
+tech_terminal_type_t tech_terminal_get_type(void);
+
+
+// Returning unkown type is equivalent to returning TECH_RETURN_FAILURE
+tech_terminal_encoding_t tech_terminal_get_encoding(void);
+
+
+// Thread-safe(STDOUT)
+// Changes terminal attributes
+tech_return_t tech_terminal_attribute_set(tech_terminal_attribute_t* attribute);
+
 
 // Not thread-safe
 tech_terminal_key_t tech_terminal_key_translate(tech_terminal_char_t terminal_char);
+
 
 // Thread-safe(STDOUT)
 // Sets cursor position
@@ -163,10 +220,11 @@ tech_terminal_key_t tech_terminal_key_translate(tech_terminal_char_t terminal_ch
 tech_return_t tech_terminal_cursor_set_position(uint16_t row, uint16_t col);
 
 
-// Thread-safe(STDIN & STDOUT)
+// Thread-safe(STDIN)
 // Gets cursor position
 // Origin at (1,1)
 tech_return_t tech_terminal_cursor_get_position(uint16_t *row, uint16_t *col);
+
 
 // Thread-safe(STDIN)
 // Set terminal mode

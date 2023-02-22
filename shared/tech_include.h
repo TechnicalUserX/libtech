@@ -18,30 +18,32 @@
 #endif
 
 #ifdef __cplusplus
-#include <atomic>
-#include <cstdarg>
-#include <cstdio>
-#include <cstdint>
-#include <cstring>
-#include <cstdlib>
-#include <cstdbool>
-#include <cwchar>
-#include <ctime>
-#include <cerrno>
-#include <thread>
-#include <cassert>
+    #include <atomic>
+    #include <cstdarg>
+    #include <cstdio>
+    #include <cstdint>
+    #include <cstring>
+    #include <cstdlib>
+    #include <cstdbool>
+    #include <cwchar>
+    #include <ctime>
+    #include <cerrno>
+    #include <thread>
+    #include <cassert>
+    #include <clocale>
 #else
-#include <stdatomic.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <wchar.h>
-#include <time.h>
-#include <errno.h>
-#include <assert.h>
+    #include <stdatomic.h>
+    #include <stdarg.h>
+    #include <stdbool.h>
+    #include <stdio.h>
+    #include <stdint.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <wchar.h>
+    #include <time.h>
+    #include <errno.h>
+    #include <assert.h>
+    #include <locale.h>
 #endif
 
 #endif

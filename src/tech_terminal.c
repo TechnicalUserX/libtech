@@ -522,8 +522,169 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_cursor_set_pos
     }
 }
 
-tech_terminal_key_t tech_terminal_key_translate(tech_terminal_char_t terminal_char)
+
+tech_terminal_type_t tech_terminal_get_type(void)
 {
+
+    const char *colorterm = getenv("COLORTERM");
+
+    if (colorterm)
+    {
+        if ((strcmp(colorterm, "truecolor") == 0 || strcmp(colorterm, "24bit") == 0))
+        {
+            return TECH_TERMINAL_TYPE_TRUECOLOR;
+        }
+    }
+
+    const char *term = getenv("TERM");
+
+    if (term == NULL)
+    {
+        return TECH_TERMINAL_TYPE_UNKNOWN;
+    }
+    else
+    {
+        if (strcmp(term, "xterm-256color") == 0)
+        {
+            return TECH_TERMINAL_TYPE_XTERM256;
+        }
+        else if (strcmp(term, "xterm") == 0)
+        {
+            return TECH_TERMINAL_TYPE_XTERM;
+        }
+        else
+        {
+            return TECH_TERMINAL_TYPE_UNKNOWN;
+        }
+    }
+}
+
+
+tech_terminal_encoding_t tech_terminal_get_encoding(void)
+{
+
+    const char *encoding_check_1 = nl_langinfo(CODESET);
+    if (!encoding_check_1)
+    {
+        return TECH_TERMINAL_TYPE_UNKNOWN;
+    }
+    if (strcmp(encoding_check_1, "UTF-8") == 0)
+    {
+        return TECH_TERMINAL_ENCODING_UTF_8;
+    }
+
+    const char *encoding_check_2 = setlocale(LC_ALL, NULL);
+
+    if (!encoding_check_2)
+    {
+        return TECH_TERMINAL_ENCODING_UNKNOWN;
+    }
+
+    if (strcmp(encoding_check_2, "C") == 0 || strcmp(encoding_check_2, "POSIX") == 0)
+    {
+        return TECH_TERMINAL_ENCODING_ASCII;
+    }
+
+    return TECH_TERMINAL_ENCODING_UNKNOWN;
+}
+
+
+tech_return_t tech_terminal_attribute_set(tech_terminal_attribute_t *attribute)
+{
+
+    tech_terminal_type_t type = tech_terminal_get_type();
+
+    if(type == TECH_TERMINAL_TYPE_UNKNOWN){
+        tech_error_number = TECH_ERROR_TERMINAL_ATTRIBUTE_CANNOT_SET;
+        return TECH_RETURN_FAILURE;
+    }
+
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK)
+
+    if (attribute == NULL)
+    {
+        tech_terminal_stdout_printf_reserved(0, 0, NULL, TECH_TERMINAL_ATTRIBUTE_CLEAR);
+        tech_error_number = TECH_SUCCESS;
+        return TECH_RETURN_SUCCESS;
+    }
+
+    // Needs to check color compatibility
+    if (attribute->set_fg)
+    {
+
+        switch(type){
+            
+            case TECH_TERMINAL_TYPE_TRUECOLOR: // Also 24BIT
+            {
+                tech_terminal_stdout_printf_reserved(0,0, NULL, "\033[38;%u;%u;%um]",attribute->fg.red,attribute->fg.green,attribute->fg.blue);
+                tech_error_number = TECH_SUCCESS;
+            }
+            break;
+
+
+            case TECH_TERMINAL_TYPE_XTERM256:
+            {
+                tech_byte_t downgraded_color_256 = tech_tool_convert_truecolor_to_xterm256(attribute->fg.red,attribute->fg.green,attribute->fg.blue);
+                tech_terminal_stdout_printf_reserved(0,0, NULL, "\033[38;5;%um]",downgraded_color_256);
+                tech_error_number = TECH_SUCCESS;
+
+            }
+            break;
+
+
+            case TECH_TERMINAL_TYPE_XTERM:
+            {
+                tech_byte_t downgraded_color_256 = tech_tool_convert_truecolor_to_xterm256(attribute->fg.red,attribute->fg.green,attribute->fg.blue);
+                tech_byte_t downgraded_color_16 = tech_tool_convert_xterm256_to_xterm16(downgraded_color_256);
+
+                tech_terminal_stdout_printf_reserved(0,0, NULL, "\033[38;5;%um]",downgraded_color_16);
+                
+                tech_error_number = TECH_SUCCESS;
+
+            }
+            break;
+
+        }
+
+
+    }
+
+    // Needs to check color compatibility
+    if (attribute->set_bg)
+    {
+
+    }
+
+    if (attribute->set_underline)
+    {
+        tech_terminal_stdout_printf_reserved(0, 0, NULL, TECH_TERMINAL_ATTRIBUTE_UNDERLINE);
+    }
+
+    if (attribute->set_bold)
+    {
+        tech_terminal_stdout_printf_reserved(0, 0, NULL, TECH_TERMINAL_ATTRIBUTE_BOLD);
+    }
+
+    if (attribute->set_italic)
+    {
+        tech_terminal_stdout_printf_reserved(0, 0, NULL, TECH_TERMINAL_ATTRIBUTE_ITALIC);
+    }
+
+    if (attribute->set_inverse)
+    {
+        tech_terminal_stdout_printf_reserved(0, 0, NULL, TECH_TERMINAL_ATTRIBUTE_INVERSE);
+    }
+
+    if (attribute->set_strikethrough)
+    {
+        tech_terminal_stdout_printf_reserved(0, 0, NULL, TECH_TERMINAL_ATTRIBUTE_STRIKETHROUGH);
+    }
+
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDIN_LOCK)
+}
+
+
+tech_terminal_key_t tech_terminal_key_translate(tech_terminal_char_t terminal_char){
 
     if (terminal_char.byte_size == 0)
     {
@@ -580,9 +741,9 @@ tech_terminal_key_t tech_terminal_key_translate(tech_terminal_char_t terminal_ch
     }
 }
 
+
 // Uses reserved function
-tech_return_t tech_terminal_cursor_get_position(uint16_t *row, uint16_t *col)
-{
+tech_return_t tech_terminal_cursor_get_position(uint16_t *row, uint16_t *col){
 
     tech_return_t ret;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDIN_LOCK);
@@ -597,9 +758,9 @@ tech_return_t tech_terminal_cursor_get_position(uint16_t *row, uint16_t *col)
     return ret;
 }
 
+
 // Uses reserved function
-tech_return_t tech_terminal_cursor_set_position(uint16_t row, uint16_t col)
-{
+tech_return_t tech_terminal_cursor_set_position(uint16_t row, uint16_t col){
 
     tech_return_t ret;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK)
@@ -614,9 +775,9 @@ tech_return_t tech_terminal_cursor_set_position(uint16_t row, uint16_t col)
     return ret;
 }
 
+
 // Uses reserved function
-tech_return_t tech_terminal_mode(tech_terminal_mode_directive_t directive, ...)
-{
+tech_return_t tech_terminal_mode(tech_terminal_mode_directive_t directive, ...){
 
     tech_return_t ret;
 
@@ -659,9 +820,9 @@ tech_return_t tech_terminal_mode(tech_terminal_mode_directive_t directive, ...)
     return ret;
 }
 
+
 // Uses reserved function
-tech_return_t tech_terminal_stdin_get_byte(tech_byte_t *byte)
-{
+tech_return_t tech_terminal_stdin_get_byte(tech_byte_t *byte){
 
     tech_return_t ret;
 
@@ -677,9 +838,9 @@ tech_return_t tech_terminal_stdin_get_byte(tech_byte_t *byte)
     return ret;
 }
 
+
 // Uses reserved function
-tech_return_t tech_terminal_stdin_get_char(tech_terminal_char_t *terminal_char)
-{
+tech_return_t tech_terminal_stdin_get_char(tech_terminal_char_t *terminal_char){
 
     tech_return_t ret;
 
@@ -695,9 +856,9 @@ tech_return_t tech_terminal_stdin_get_char(tech_terminal_char_t *terminal_char)
     return ret;
 }
 
+
 // Uses reserved function
-tech_return_t tech_terminal_stdin_buffer_check(bool *check)
-{
+tech_return_t tech_terminal_stdin_buffer_check(bool *check){
 
     tech_return_t ret;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDIN_LOCK)
@@ -712,9 +873,9 @@ tech_return_t tech_terminal_stdin_buffer_check(bool *check)
     return ret;
 }
 
+
 // Uses reserved function
-tech_return_t tech_terminal_stdin_buffer_consume(void)
-{
+tech_return_t tech_terminal_stdin_buffer_consume(void){
 
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDIN_LOCK);
 
@@ -757,8 +918,8 @@ tech_return_t tech_terminal_stdin_buffer_consume(void)
     }
 }
 
-tech_return_t tech_terminal_stdin_get_string(uint16_t row, uint16_t col, tech_terminal_char_t *terminal_string, tech_size_t size)
-{
+
+tech_return_t tech_terminal_stdin_get_string(uint16_t row, uint16_t col, tech_terminal_char_t *terminal_string, tech_size_t size){
 
     if (size == 0)
     {
@@ -955,16 +1116,16 @@ tech_return_t tech_terminal_stdin_get_string(uint16_t row, uint16_t col, tech_te
     }
 }
 
+
 // Uses reserved function
-tech_return_t tech_terminal_stdout_print_char(uint16_t row, uint16_t col, tech_terminal_char_t terminal_char)
-{
+tech_return_t tech_terminal_stdout_print_char(uint16_t row, uint16_t col, tech_terminal_char_t terminal_char){
 
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK)
 
     tech_terminal_cursor_set_position_reserved(row, col);
     fprintf(stdout, "%s", (char *)terminal_char.bytes);
     fflush(stdout);
-
+    tech_error_number = TECH_SUCCESS;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK)
 
     TECH_THREAD_SAFE_BLOCK_FAIL_START
@@ -981,9 +1142,9 @@ tech_return_t tech_terminal_stdout_print_char(uint16_t row, uint16_t col, tech_t
     }
 }
 
+
 // Uses reserved function
-tech_return_t tech_terminal_stdout_printf(uint16_t row, uint16_t col, const char *format, ...)
-{
+tech_return_t tech_terminal_stdout_printf(uint16_t row, uint16_t col, const char *format, ...){
 
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK)
     va_list args;
@@ -995,8 +1156,8 @@ tech_return_t tech_terminal_stdout_printf(uint16_t row, uint16_t col, const char
     TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK)
 }
 
-tech_return_t tech_terminal_convert_to_char_array(char *destination, tech_size_t destination_size, tech_terminal_char_t *source, tech_size_t source_size)
-{
+
+tech_return_t tech_terminal_convert_to_char_array(char *destination, tech_size_t destination_size, tech_terminal_char_t *source, tech_size_t source_size){
 
     if (destination == NULL || source == NULL)
     {

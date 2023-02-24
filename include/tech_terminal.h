@@ -210,7 +210,7 @@ tech_terminal_encoding_t tech_terminal_get_encoding(void);
 
 // Thread-safe(STDOUT)
 // Changes terminal attributes
-tech_return_t tech_terminal_attribute_set(tech_terminal_attribute_t* attribute);
+tech_return_t tech_terminal_set_attribute(tech_terminal_attribute_t* attribute);
 
 
 // Not thread-safe
@@ -275,7 +275,7 @@ tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, te
 
 // 'destination' might not have the sufficient size when the 'source' is converted to multi-byte char string
 // For %100 guaranteed conversion, destination size could be set to 4 times the source size, (wide char = 4 x char)
-tech_return_t tech_terminal_convert_to_char_stream(char* destination, tech_size_t destination_size, tech_terminal_char_t* source, tech_size_t source_size);
+tech_return_t tech_terminal_char_convert_to_char_stream(char* destination, tech_size_t destination_size, tech_terminal_char_t* source, tech_size_t source_size);
 
 tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t* terminal_char, const char* stream, tech_size_t stream_size);
 

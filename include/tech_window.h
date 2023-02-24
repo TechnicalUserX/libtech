@@ -73,6 +73,8 @@ tech_return_t tech_window_print(tech_window_t *win, tech_window_position_t row, 
 
 void tech_window_free(tech_window_t **win);
 
+void tech_window_border(tech_window_t* win,tech_terminal_attribute_t* attribute);
+
 
 #ifdef __cplusplus
     }

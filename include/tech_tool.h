@@ -22,6 +22,7 @@ tech_byte_t tech_tool_convert_truecolor_to_xterm256(int r, int g, int b);
 
 tech_byte_t tech_tool_convert_xterm256_to_xterm16(tech_byte_t color);
 
+tech_size_t tech_tool_multibyte_length(const char* stream);
 
 
 #ifdef __cplusplus

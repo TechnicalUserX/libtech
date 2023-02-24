@@ -132,3 +132,53 @@ tech_byte_t tech_tool_convert_xterm256_to_xterm16(tech_byte_t color){
 
 }
 
+tech_size_t tech_tool_multibyte_length(const char* stream){
+
+
+	tech_size_t size = 0;
+	tech_byte_t initial_byte;
+
+	const char* iterator = stream;
+
+
+	while(1){
+		tech_size_t current_byte_size = 0;
+
+		initial_byte = iterator[0];
+
+		if(initial_byte == '\0'){
+			return size;
+		}
+
+		if ((initial_byte & 0b11111000) == 0b11110000)
+		{ // 1111 0000
+			// 4 Byte UTF-8 Character
+			current_byte_size = 4;
+		}
+		else if ((initial_byte & 0b11110000) == 0b11100000)
+		{ // 1110 0000
+			// 3 Byte UTF-8 Character
+			current_byte_size = 3;
+		}
+		else if ((initial_byte & 0b11100000) == 0b11000000)
+		{ // 1100 0000
+			// 2 Byte UTF-8 Character
+			current_byte_size = 2;
+		}
+		else if ((initial_byte & 0b11000000) == 0b10000000)
+		{ // 1000 0000
+			// 1 Byte UTF-8 Character
+			current_byte_size = 1;
+		}
+		else
+		{
+			// 1 Byte ASCII Character
+			current_byte_size = 1;
+		}
+
+		iterator += current_byte_size;
+		size += 1;
+
+	}
+}
+

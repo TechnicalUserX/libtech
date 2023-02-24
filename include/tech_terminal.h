@@ -105,6 +105,8 @@
 // Printing must be pseudo-atomic
 #define TECH_TERMINAL_STDOUT_LOCK tech_thread_safe_block_global_terminal_stdout_lock
 
+#define TECH_TERMINAL_STDOUT_PRINT_INTERNAL_BUFFER_SIZE 10000
+
 
 // General design idea for this lock is to make this lock 'blocking'
 // Functions using this lock shall prevent others from getting input
@@ -195,6 +197,8 @@ typedef struct tech_terminal_attribute_struct_t{
 
 typedef uint16_t tech_terminal_key_t;
 
+typedef uint16_t tech_terminal_cursor_position_t; // 1-indexed
+
 
 // Returning unkown type is equivalent to returning TECH_RETURN_FAILURE
 tech_terminal_type_t tech_terminal_get_type(void);
@@ -217,13 +221,13 @@ tech_terminal_key_t tech_terminal_key_translate(tech_terminal_char_t terminal_ch
 // Sets cursor position
 // Origin at (1,1)
 // Value 0 is being rounded to 1
-tech_return_t tech_terminal_cursor_set_position(uint16_t row, uint16_t col);
+tech_return_t tech_terminal_cursor_set_position(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col);
 
 
 // Thread-safe(STDIN)
 // Gets cursor position
 // Origin at (1,1)
-tech_return_t tech_terminal_cursor_get_position(uint16_t *row, uint16_t *col);
+tech_return_t tech_terminal_cursor_get_position(tech_terminal_cursor_position_t *row, tech_terminal_cursor_position_t *col);
 
 
 // Thread-safe(STDIN)
@@ -256,23 +260,24 @@ tech_return_t tech_terminal_stdin_buffer_consume(void);
 
 // Thread-safe(STDIN)
 // This function does not initially set the cursor position
-tech_return_t tech_terminal_stdin_get_string(uint16_t row, uint16_t col, tech_terminal_char_t* terminal_string,tech_size_t size);
+tech_return_t tech_terminal_stdin_get_string(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, tech_terminal_char_t* terminal_string,tech_size_t size);
 
 
 // Thread-safe(STDOUT)
 // Prints a terminal char at the given location
-tech_return_t tech_terminal_stdout_print_char(uint16_t row, uint16_t col, tech_terminal_char_t terminal_char);
+tech_return_t tech_terminal_stdout_print_char(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, tech_terminal_char_t terminal_char);
 
 
 // Thread-safe(STDOUT)
 // Printf but tech library compliant
-tech_return_t tech_terminal_stdout_printf(uint16_t row, uint16_t col, const char* format, ...);
+tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, const char* format, ...);
 
 
 // 'destination' might not have the sufficient size when the 'source' is converted to multi-byte char string
 // For %100 guaranteed conversion, destination size could be set to 4 times the source size, (wide char = 4 x char)
-tech_return_t tech_terminal_convert_to_char_array(char* destination, tech_size_t destination_size, tech_terminal_char_t* source, tech_size_t source_size);
+tech_return_t tech_terminal_convert_to_char_stream(char* destination, tech_size_t destination_size, tech_terminal_char_t* source, tech_size_t source_size);
 
+tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t* terminal_char, const char* stream, tech_size_t stream_size);
 
 
 #ifdef __cplusplus

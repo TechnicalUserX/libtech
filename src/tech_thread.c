@@ -51,6 +51,26 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
         struct lock_memory_t *next;
     } *lock_memory = NULL;
 
+
+
+    if(directive == TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_FREE){
+
+        struct lock_memory_t* memory_iterator = lock_memory;
+
+        while(memory_iterator != NULL){
+
+            struct lock_memory_t* memory_iterator_next = memory_iterator->next;
+            free(memory_iterator);
+            memory_iterator = memory_iterator_next;
+        }
+
+        return TECH_RETURN_SUCCESS;
+    }
+
+
+
+
+
     struct lock_memory_t *detected_lock_memory = NULL;
 
     TECH_THREAD_SAFE_BLOCK_LOCAL_START
@@ -91,6 +111,7 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
                 new_memory->next = NULL;
                 memory_iterator->next = new_memory;
                 detected_lock_memory = new_memory;
+                break;
             }
         }
     }
@@ -117,7 +138,7 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
     TECH_THREAD_SAFE_BLOCK_LOCAL_END
 
     TECH_THREAD_SAFE_BLOCK_FAIL_START
-    tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
+        tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
     TECH_THREAD_SAFE_BLOCK_FAIL_END
 
     if (tech_error_number)

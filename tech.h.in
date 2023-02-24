@@ -13,6 +13,7 @@
 #include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_log.h>
 #include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_thread.h>
 #include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_tool.h>
+#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_window.h>
 
 
 #endif

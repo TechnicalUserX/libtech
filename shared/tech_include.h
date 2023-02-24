@@ -31,6 +31,7 @@
     #include <thread>
     #include <cassert>
     #include <clocale>
+    #include <cctype>
 #else
     #include <stdatomic.h>
     #include <stdarg.h>
@@ -44,6 +45,7 @@
     #include <errno.h>
     #include <assert.h>
     #include <locale.h>
+    #include <ctype.h>
 #endif
 
 #endif

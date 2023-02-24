@@ -31,7 +31,8 @@ extern "C"
     enum tech_thread_safe_block_global_directive_enum_t
     {
         TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_LOCK,
-        TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_UNLOCK
+        TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_UNLOCK,
+        TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_FREE
     };
 
     typedef enum tech_thread_safe_block_exit_status_enum_t tech_thread_safe_block_exit_status_t;
@@ -57,48 +58,33 @@ extern "C"
         static atomic_bool tech_thread_safe_block_mutex_initialized_further = ATOMIC_VAR_INIT(false);                                                                                                                                       \
         atomic_bool tech_thread_safe_block_mutex_initialized_expected_value = ATOMIC_VAR_INIT(false);                                                                                                                                       \
         atomic_bool tech_thread_safe_block_mutex_initialized_desired_value = ATOMIC_VAR_INIT(true);                                                                                                                                         \
-        static pthread_mutex_t *tech_thread_safe_block_mutex = NULL;                                                                                                                                                                        \
-        static pthread_mutexattr_t *tech_thread_safe_block_mutex_attribute = NULL;                                                                                                                                                          \
-        static pthread_cond_t *tech_thread_safe_block_mutex_condition = NULL;                                                                                                                                                               \
+        static pthread_mutex_t tech_thread_safe_block_mutex;                                                                                                                                                                                \
+        static pthread_mutexattr_t tech_thread_safe_block_mutex_attribute;                                                                                                                                                                  \
         static atomic_bool tech_thread_safe_block_mutex_unexpected_exit = ATOMIC_VAR_INIT(false);                                                                                                                                           \
         atomic_int tech_thread_safe_block_mutex_lock_ret;                                                                                                                                                                                   \
         tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN;                                                                                                                                                           \
         if (__atomic_compare_exchange(&tech_thread_safe_block_mutex_initialized, &tech_thread_safe_block_mutex_initialized_expected_value, &tech_thread_safe_block_mutex_initialized_desired_value, 0, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)) \
         {                                                                                                                                                                                                                                   \
-            if (!tech_thread_safe_block_mutex)                                                                                                                                                                                              \
-                tech_thread_safe_block_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));                                                                                                                                          \
-            if (!tech_thread_safe_block_mutex_attribute)                                                                                                                                                                                    \
-                tech_thread_safe_block_mutex_attribute = (pthread_mutexattr_t *)malloc(sizeof(pthread_mutexattr_t));                                                                                                                        \
-            if (!tech_thread_safe_block_mutex_condition)                                                                                                                                                                                    \
-                tech_thread_safe_block_mutex_condition = (pthread_cond_t *)malloc(sizeof(pthread_cond_t));                                                                                                                                  \
-            pthread_mutexattr_init(tech_thread_safe_block_mutex_attribute);                                                                                                                                                                 \
-            pthread_mutexattr_setrobust(tech_thread_safe_block_mutex_attribute, PTHREAD_MUTEX_ROBUST);                                                                                                                                      \
-            pthread_mutex_init(tech_thread_safe_block_mutex, tech_thread_safe_block_mutex_attribute);                                                                                                                                       \
-            pthread_cond_init(tech_thread_safe_block_mutex_condition, NULL);                                                                                                                                                                \
+            pthread_mutexattr_init(&tech_thread_safe_block_mutex_attribute);                                                                                                                                                                \
+            pthread_mutexattr_setrobust(&tech_thread_safe_block_mutex_attribute, PTHREAD_MUTEX_ROBUST);                                                                                                                                     \
+            pthread_mutex_init(&tech_thread_safe_block_mutex, &tech_thread_safe_block_mutex_attribute);                                                                                                                                     \
             tech_thread_safe_block_mutex_initialized_further = true;                                                                                                                                                                        \
         }                                                                                                                                                                                                                                   \
         while (!tech_thread_safe_block_mutex_initialized_further)                                                                                                                                                                           \
         {                                                                                                                                                                                                                                   \
             usleep(100); /*Busy-waiting is the only option*/                                                                                                                                                                                \
         }                                                                                                                                                                                                                                   \
-        int tech_thread_safe_block_mutex_trylock_ret = pthread_mutex_trylock(tech_thread_safe_block_mutex);                                                                                                                                 \
+        int tech_thread_safe_block_mutex_trylock_ret = pthread_mutex_trylock(&tech_thread_safe_block_mutex);                                                                                                                                \
         if (tech_thread_safe_block_mutex_unexpected_exit && tech_thread_safe_block_mutex_trylock_ret == EOWNERDEAD)                                                                                                                         \
         {                                                                                                                                                                                                                                   \
             tech_thread_safe_block_mutex_unexpected_exit = false;                                                                                                                                                                           \
-            pthread_mutex_consistent(tech_thread_safe_block_mutex);                                                                                                                                                                         \
-            pthread_mutex_unlock(tech_thread_safe_block_mutex);                                                                                                                                                                             \
+            pthread_mutex_consistent(&tech_thread_safe_block_mutex);                                                                                                                                                                        \
+            pthread_mutex_unlock(&tech_thread_safe_block_mutex);                                                                                                                                                                            \
         }                                                                                                                                                                                                                                   \
         else if (tech_thread_safe_block_mutex_unexpected_exit && tech_thread_safe_block_mutex_trylock_ret == ENOTRECOVERABLE)                                                                                                               \
         {                                                                                                                                                                                                                                   \
-            pthread_mutex_destroy(tech_thread_safe_block_mutex);                                                                                                                                                                            \
-            pthread_mutexattr_destroy(tech_thread_safe_block_mutex_attribute);                                                                                                                                                              \
-            pthread_cond_destroy(tech_thread_safe_block_mutex_condition);                                                                                                                                                                   \
-            free(tech_thread_safe_block_mutex_condition);                                                                                                                                                                                   \
-            free(tech_thread_safe_block_mutex_attribute);                                                                                                                                                                                   \
-            free(tech_thread_safe_block_mutex);                                                                                                                                                                                             \
-            tech_thread_safe_block_mutex_condition = NULL;                                                                                                                                                                                  \
-            tech_thread_safe_block_mutex_attribute = NULL;                                                                                                                                                                                  \
-            tech_thread_safe_block_mutex = NULL;                                                                                                                                                                                            \
+            pthread_mutex_destroy(&tech_thread_safe_block_mutex);                                                                                                                                                                           \
+            pthread_mutexattr_destroy(&tech_thread_safe_block_mutex_attribute);                                                                                                                                                             \
             tech_thread_safe_block_mutex_initialized = false;                                                                                                                                                                               \
             tech_thread_safe_block_mutex_initialized_further = false;                                                                                                                                                                       \
             tech_thread_safe_block_mutex_unexpected_exit = false;                                                                                                                                                                           \
@@ -106,11 +92,11 @@ extern "C"
         }                                                                                                                                                                                                                                   \
         else if (tech_thread_safe_block_mutex_trylock_ret == 0)                                                                                                                                                                             \
         {                                                                                                                                                                                                                                   \
-            pthread_mutex_unlock(tech_thread_safe_block_mutex);                                                                                                                                                                             \
+            pthread_mutex_unlock(&tech_thread_safe_block_mutex);                                                                                                                                                                            \
         }                                                                                                                                                                                                                                   \
         if (tech_thread_safe_block_mutex_initialized_further)                                                                                                                                                                               \
         {                                                                                                                                                                                                                                   \
-            tech_thread_safe_block_mutex_lock_ret = pthread_mutex_lock(tech_thread_safe_block_mutex);                                                                                                                                       \
+            tech_thread_safe_block_mutex_lock_ret = pthread_mutex_lock(&tech_thread_safe_block_mutex);                                                                                                                                      \
             if (tech_thread_safe_block_mutex_lock_ret == 0)                                                                                                                                                                                 \
             {                                                                                                                                                                                                                               \
                 tech_thread_safe_block_mutex_unexpected_exit = true;                                                                                                                                                                        \
@@ -118,21 +104,20 @@ extern "C"
 
 #define TECH_THREAD_SAFE_BLOCK_LOCAL_END                                          \
     }                                                                             \
-    ;                                                                             \
-    pthread_mutex_unlock(tech_thread_safe_block_mutex);                           \
+    pthread_mutex_unlock(&tech_thread_safe_block_mutex);                          \
     tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_SUCCESS;     \
     tech_thread_safe_block_mutex_unexpected_exit = false;                         \
     }                                                                             \
     else if (tech_thread_safe_block_mutex_lock_ret == EOWNERDEAD)                 \
     {                                                                             \
-        pthread_mutex_consistent(tech_thread_safe_block_mutex);                   \
-        pthread_mutex_unlock(tech_thread_safe_block_mutex);                       \
+        pthread_mutex_consistent(&tech_thread_safe_block_mutex);                  \
+        pthread_mutex_unlock(&tech_thread_safe_block_mutex);                      \
         tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;  \
     }                                                                             \
     else if (tech_thread_safe_block_mutex_lock_ret == ENOTRECOVERABLE)            \
     {                                                                             \
-        pthread_mutex_destroy(tech_thread_safe_block_mutex);                      \
-        pthread_mutexattr_destroy(tech_thread_safe_block_mutex_attribute);        \
+        pthread_mutex_destroy(&tech_thread_safe_block_mutex);                     \
+        pthread_mutexattr_destroy(&tech_thread_safe_block_mutex_attribute);       \
         tech_thread_safe_block_mutex_initialized = false;                         \
         tech_thread_safe_block_mutex_initialized_further = false;                 \
         tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;  \
@@ -158,113 +143,28 @@ extern "C"
 
 #define TECH_THREAD_SAFE_BLOCK_FAIL_END \
     }                                   \
-    ;                                   \
     }                                   \
     }                                   \
     }
 
-#define TECH_THREAD_SAFE_BLOCK_GLOBAL_START(lock_identifier)                                                                                                                                                                                \
-    {                                                                                                                                                                                                                                       \
-        tech_thread_local_t static tech_thread_safe_block_exit_status_t tech_thread_safe_block_exit_status;                                                                                                                                 \
-        tech_thread_safe_block_exit_status_control(TECH_THREAD_SAFE_BLOCK_EXIT_STATUS_DIRECTIVE_INIT, &tech_thread_safe_block_exit_status);                                                                                                 \
-        static atomic_bool tech_thread_safe_block_mutex_initialized = ATOMIC_VAR_INIT(false);                                                                                                                                               \
-        static atomic_bool tech_thread_safe_block_mutex_initialized_further = ATOMIC_VAR_INIT(false);                                                                                                                                       \
-        atomic_bool tech_thread_safe_block_mutex_initialized_expected_value = ATOMIC_VAR_INIT(false);                                                                                                                                       \
-        atomic_bool tech_thread_safe_block_mutex_initialized_desired_value = ATOMIC_VAR_INIT(true);                                                                                                                                         \
-        static pthread_mutex_t *tech_thread_safe_block_mutex = NULL;                                                                                                                                                                        \
-        static pthread_mutexattr_t *tech_thread_safe_block_mutex_attribute = NULL;                                                                                                                                                          \
-        static pthread_cond_t *tech_thread_safe_block_mutex_condition = NULL;                                                                                                                                                               \
-        static atomic_bool tech_thread_safe_block_mutex_unexpected_exit = ATOMIC_VAR_INIT(false);                                                                                                                                           \
-        atomic_int tech_thread_safe_block_mutex_lock_ret;                                                                                                                                                                                   \
-        tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN;                                                                                                                                                           \
-        if (__atomic_compare_exchange(&tech_thread_safe_block_mutex_initialized, &tech_thread_safe_block_mutex_initialized_expected_value, &tech_thread_safe_block_mutex_initialized_desired_value, 0, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)) \
-        {                                                                                                                                                                                                                                   \
-            if (!tech_thread_safe_block_mutex)                                                                                                                                                                                              \
-                tech_thread_safe_block_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));                                                                                                                                          \
-            if (!tech_thread_safe_block_mutex_attribute)                                                                                                                                                                                    \
-                tech_thread_safe_block_mutex_attribute = (pthread_mutexattr_t *)malloc(sizeof(pthread_mutexattr_t));                                                                                                                        \
-            if (!tech_thread_safe_block_mutex_condition)                                                                                                                                                                                    \
-                tech_thread_safe_block_mutex_condition = (pthread_cond_t *)malloc(sizeof(pthread_cond_t));                                                                                                                                  \
-            pthread_mutexattr_init(tech_thread_safe_block_mutex_attribute);                                                                                                                                                                 \
-            pthread_mutexattr_setrobust(tech_thread_safe_block_mutex_attribute, PTHREAD_MUTEX_ROBUST);                                                                                                                                      \
-            pthread_mutex_init(tech_thread_safe_block_mutex, tech_thread_safe_block_mutex_attribute);                                                                                                                                       \
-            pthread_cond_init(tech_thread_safe_block_mutex_condition, NULL);                                                                                                                                                                \
-            tech_thread_safe_block_mutex_initialized_further = true;                                                                                                                                                                        \
-        }                                                                                                                                                                                                                                   \
-        while (!tech_thread_safe_block_mutex_initialized_further)                                                                                                                                                                           \
-        {                                                                                                                                                                                                                                   \
-            usleep(100); /*Busy-waiting is the only option*/                                                                                                                                                                                \
-        }                                                                                                                                                                                                                                   \
-        int tech_thread_safe_block_mutex_trylock_ret = pthread_mutex_trylock(tech_thread_safe_block_mutex);                                                                                                                                 \
-        if (tech_thread_safe_block_mutex_unexpected_exit && tech_thread_safe_block_mutex_trylock_ret == EOWNERDEAD)                                                                                                                         \
-        {                                                                                                                                                                                                                                   \
-            tech_thread_safe_block_mutex_unexpected_exit = false;                                                                                                                                                                           \
-            pthread_mutex_consistent(tech_thread_safe_block_mutex);                                                                                                                                                                         \
-            pthread_mutex_unlock(tech_thread_safe_block_mutex);                                                                                                                                                                             \
-        }                                                                                                                                                                                                                                   \
-        else if (tech_thread_safe_block_mutex_unexpected_exit && tech_thread_safe_block_mutex_trylock_ret == ENOTRECOVERABLE)                                                                                                               \
-        {                                                                                                                                                                                                                                   \
-            pthread_mutex_destroy(tech_thread_safe_block_mutex);                                                                                                                                                                            \
-            pthread_mutexattr_destroy(tech_thread_safe_block_mutex_attribute);                                                                                                                                                              \
-            pthread_cond_destroy(tech_thread_safe_block_mutex_condition);                                                                                                                                                                   \
-            free(tech_thread_safe_block_mutex_condition);                                                                                                                                                                                   \
-            free(tech_thread_safe_block_mutex_attribute);                                                                                                                                                                                   \
-            free(tech_thread_safe_block_mutex);                                                                                                                                                                                             \
-            tech_thread_safe_block_mutex_condition = NULL;                                                                                                                                                                                  \
-            tech_thread_safe_block_mutex_attribute = NULL;                                                                                                                                                                                  \
-            tech_thread_safe_block_mutex = NULL;                                                                                                                                                                                            \
-            tech_thread_safe_block_mutex_initialized = false;                                                                                                                                                                               \
-            tech_thread_safe_block_mutex_initialized_further = false;                                                                                                                                                                       \
-            tech_thread_safe_block_mutex_unexpected_exit = false;                                                                                                                                                                           \
-            tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;                                                                                                                                                        \
-        }                                                                                                                                                                                                                                   \
-        else if (tech_thread_safe_block_mutex_trylock_ret == 0)                                                                                                                                                                             \
-        {                                                                                                                                                                                                                                   \
-            pthread_mutex_unlock(tech_thread_safe_block_mutex);                                                                                                                                                                             \
-        }                                                                                                                                                                                                                                   \
-        if (tech_thread_safe_block_mutex_initialized_further)                                                                                                                                                                               \
-        {                                                                                                                                                                                                                                   \
-            tech_thread_safe_block_mutex_lock_ret = pthread_mutex_lock(tech_thread_safe_block_mutex);                                                                                                                                       \
-            if (tech_thread_safe_block_mutex_lock_ret == 0)                                                                                                                                                                                 \
-            {                                                                                                                                                                                                                               \
-                tech_thread_safe_block_mutex_unexpected_exit = true;                                                                                                                                                                        \
-                if (tech_thread_safe_block_global_control(TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_LOCK, TECH_TOOL_STRINGIZE(lock_identifier), tech_thread_safe_block_mutex) == TECH_RETURN_SUCCESS)                                         \
-                {                                                                                                                                                                                                                           \
-                    {
+#define TECH_THREAD_SAFE_BLOCK_GLOBAL_START(lock_identifier)                                                                                                                                 \
+    {                                                                                                                                                                                        \
+        TECH_THREAD_SAFE_BLOCK_LOCAL_START                                                                                                                                                   \
+        if (tech_thread_safe_block_global_control(TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_LOCK, TECH_TOOL_STRINGIZE(lock_identifier), &tech_thread_safe_block_mutex) == TECH_RETURN_SUCCESS) \
+        {                                                                                                                                                                                    \
+            {
 
 #define TECH_THREAD_SAFE_BLOCK_GLOBAL_END(lock_identifier)                                                                                                     \
     }                                                                                                                                                          \
-    tech_thread_safe_block_global_control(TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_UNLOCK, TECH_TOOL_STRINGIZE(lock_identifier), tech_thread_safe_block_mutex); \
+    tech_thread_safe_block_global_control(TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_UNLOCK, TECH_TOOL_STRINGIZE(lock_identifier), &tech_thread_safe_block_mutex); \
     tech_error_number = TECH_SUCCESS;                                                                                                                          \
     }                                                                                                                                                          \
     else                                                                                                                                                       \
     {                                                                                                                                                          \
         tech_thread_safe_block_exit_status = TECH_ERROR_THREAD_SAFE_BLOCK_GLOBAL_CANNOT_LOCK;                                                                  \
     }                                                                                                                                                          \
-    pthread_mutex_unlock(tech_thread_safe_block_mutex);                                                                                                        \
-    tech_thread_safe_block_mutex_unexpected_exit = false;                                                                                                      \
-    }                                                                                                                                                          \
-    else if (tech_thread_safe_block_mutex_lock_ret == EOWNERDEAD)                                                                                              \
-    {                                                                                                                                                          \
-        pthread_mutex_consistent(tech_thread_safe_block_mutex);                                                                                                \
-        pthread_mutex_unlock(tech_thread_safe_block_mutex);                                                                                                    \
-        tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;                                                                               \
-    }                                                                                                                                                          \
-    else if (tech_thread_safe_block_mutex_lock_ret == ENOTRECOVERABLE)                                                                                         \
-    {                                                                                                                                                          \
-        pthread_mutex_destroy(tech_thread_safe_block_mutex);                                                                                                   \
-        pthread_mutexattr_destroy(tech_thread_safe_block_mutex_attribute);                                                                                     \
-        tech_thread_safe_block_mutex_initialized = false;                                                                                                      \
-        tech_thread_safe_block_mutex_initialized_further = false;                                                                                              \
-        tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;                                                                               \
-    }                                                                                                                                                          \
-    else                                                                                                                                                       \
-    {                                                                                                                                                          \
-        tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN;                                                                              \
-    }                                                                                                                                                          \
-    }                                                                                                                                                          \
+    TECH_THREAD_SAFE_BLOCK_LOCAL_END                                                                                                                           \
     }
-
 #ifdef __cplusplus
 }
 #endif

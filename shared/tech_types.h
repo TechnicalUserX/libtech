@@ -11,12 +11,13 @@
 
 #define TECH_RETURN_SUCCESS 0
 #define TECH_RETURN_FAILURE 1
+#define TECH_RETURN_NULL    NULL
 
 #include "tech_include.h"
 
 typedef unsigned char tech_byte_t;
 
-typedef char tech_char_t;
+typedef signed char tech_char_t;
 
 typedef int8_t tech_return_t;
 

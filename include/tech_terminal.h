@@ -91,14 +91,51 @@
 #define TECH_TERMINAL_CONTROL_CHAR_US      31
 #define TECH_TERMINAL_CONTROL_CHAR_DEL     127
 
+
 #define TECH_TERMINAL_KEY_NOT_DETECTED  0
-#define TECH_TERMINAL_KEY_UP            1
-#define TECH_TERMINAL_KEY_DOWN          2
-#define TECH_TERMINAL_KEY_RIGHT         3
-#define TECH_TERMINAL_KEY_LEFT          4
-#define TECH_TERMINAL_KEY_BACKSPACE     5
-#define TECH_TERMINAL_KEY_ENTER         6
-#define TECH_TERMINAL_KEY_DELETE        7
+#define TECH_TERMINAL_KEY_PRINTABLE     1
+#define TECH_TERMINAL_KEY_UP            2
+#define TECH_TERMINAL_KEY_DOWN          3
+#define TECH_TERMINAL_KEY_RIGHT         4
+#define TECH_TERMINAL_KEY_LEFT          5
+#define TECH_TERMINAL_KEY_BACKSPACE     6
+#define TECH_TERMINAL_KEY_ENTER         7
+#define TECH_TERMINAL_KEY_DELETE        8
+#define TECH_TERMINAL_KEY_RESIZE        9
+
+
+#define TECH_TERMINAL_SIGNAL_NO                         0
+#define TECH_TERMINAL_SIGNAL_RESIZE                     SIGWINCH
+#define TECH_TERMINAL_SIGNAL_INTERRUPT                  SIGINT
+#define TECH_TERMINAL_SIGNAL_KILL                       SIGKILL
+#define TECH_TERMINAL_SIGNAL_QUIT                       SIGQUIT
+#define TECH_TERMINAL_SIGNAL_HANGUP                     SIGHUP
+#define TECH_TERMINAL_SIGNAL_TRACE_TRAP                 SIGTRAP
+#define TECH_TERMINAL_SIGNAL_ABORT                      SIGABRT
+#define TECH_TERMINAL_SIGNAL_BUS                        SIGBUS
+#define TECH_TERMINAL_SIGNAL_FLOATING_POINT_EXCEPTION   SIGFPE
+#define TECH_TERMINAL_SIGNAL_USER_1                     SIGUSR1
+#define TECH_TERMINAL_SIGNAL_USER_2                     SIGUSR2
+#define TECH_TERMINAL_SIGNAL_SEGMENTATION_FAULT         SIGSEGV
+#define TECH_TERMINAL_SIGNAL_PIPE                       SIGPIPE
+#define TECH_TERMINAL_SIGNAL_ALARM                      SIGALRM
+#define TECH_TERMINAL_SIGNAL_TERMINATION                SIGTERM
+#define TECH_TERMINAL_SIGNAL_STACK_FAULT                SIGSTKFLT
+#define TECH_TERMINAL_SIGNAL_CHILD_STOP_OR_TERMINATE    SIGCHLD
+#define TECH_TERMINAL_SIGNAL_CONTINUE                   SIGCONT
+#define TECH_TERMINAL_SIGNAL_STOP                       SIGSTOP
+#define TECH_TERMINAL_SIGNAL_TERMINAL_STOP              SIGTSTP
+#define TECH_TERMINAL_SIGNAL_BACKGROUND_PROCESS_READ    SIGTTIN
+#define TECH_TERMINAL_SIGNAL_BACKGROUND_PROCESS_WRITE   SIGTTOU
+#define TECH_TERMINAL_SIGNAL_URGENT_ON_SOCKET           SIGURG
+#define TECH_TERMINAL_SIGNAL_CPU_TIME_LIMIT_EXCEED      SIGXFSZ
+#define TECH_TERMINAL_SIGNAL_VIRTUAL_ALARM              SIGVTALRM
+#define TECH_TERMINAL_SIGNAL_PROFILING_TIME_CLOCK       SIGPROF
+#define TECH_TERMINAL_SIGNAL_IO_POSSIBLE                SIGIO
+#define TECH_TERMINAL_SIGNAL_POWER_FAILURE_RESTART      SIGPWR
+#define TECH_TERMINAL_SIGNAL_BAD_SYSTEM_CALL            SIGSYS
+
+
 
 // General design idea for this lock is to make this lock 'non-blocking'
 // Functions which use this should be pseudo-non-blocking
@@ -117,7 +154,7 @@
 #define TECH_TERMINAL_CHAR_BYTES_MAX_SIZE 8
 
 
-#define TECH_TERMINAL_CHAR_NULL_TERMINATOR (tech_terminal_char_t){.byte_size = 1,.bytes[0 ... (TECH_TERMINAL_CHAR_BYTES_MAX_SIZE-1)] = 0,.is_control = true,.is_escape_sequence = false,.is_printable = false,.is_utf_8 = false}
+#define TECH_TERMINAL_CHAR_NULL_TERMINATOR (tech_terminal_char_t){.byte_size = 1,.bytes[0 ... (TECH_TERMINAL_CHAR_BYTES_MAX_SIZE-1)] = 0,.is_control = true,.is_escape_sequence = false,.is_printable = false,.is_utf_8 = false,.is_signal = false}
 
 #ifdef __cplusplus
     extern "C" {
@@ -153,6 +190,11 @@ typedef enum tech_terminal_mode_enum_t{
     TECH_TERMINAL_MODE_SAVED
 }tech_terminal_mode_t;
 
+typedef enum tech_terminal_echo_state_enum_t{
+  TECH_TERMINAL_ECHO_STATE_ON = 0,
+  TECH_TERMINAL_ECHO_STATE_OFF
+}tech_terminal_echo_state_t;
+
 
 /**
  * Types of terminal chars
@@ -169,6 +211,8 @@ typedef struct tech_terminal_char_struct_t{
     bool is_control;
     bool is_escape_sequence;
     bool is_utf_8; // If 0, assumed ASCII
+    bool is_signal;
+
 }tech_terminal_char_t;
 
 
@@ -196,6 +240,8 @@ typedef struct tech_terminal_attribute_struct_t{
 
 
 typedef uint16_t tech_terminal_key_t;
+
+typedef int tech_terminal_signal_t;
 
 typedef uint16_t tech_terminal_cursor_position_t; // 1-indexed
 
@@ -258,6 +304,7 @@ tech_return_t tech_terminal_stdin_buffer_check(bool* check);
 // Empties all waiting bytes in the stdin buffer
 tech_return_t tech_terminal_stdin_buffer_consume(void);
 
+
 // Thread-safe(STDIN)
 // This function does not initially set the cursor position
 tech_return_t tech_terminal_stdin_get_string(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, tech_terminal_char_t* terminal_string,tech_size_t size);
@@ -277,7 +324,14 @@ tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, te
 // For %100 guaranteed conversion, destination size could be set to 4 times the source size, (wide char = 4 x char)
 tech_return_t tech_terminal_char_convert_to_char_stream(char* destination, tech_size_t destination_size, tech_terminal_char_t* source, tech_size_t source_size);
 
+
 tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t* terminal_char, const char* stream, tech_size_t stream_size);
+
+
+// This function prepares handlers for all supported signals by the libtech
+void tech_terminal_signal_init(void);
+
+
 
 
 #ifdef __cplusplus

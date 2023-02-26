@@ -12,10 +12,11 @@
 
 #if defined(_PTHREAD_H) || defined(_SEMAPHORE_H)
 #error "Do not include pthread.h and semaphroe.h before including tech libraries"
-#else
+#endif
+
 #include <pthread.h>
 #include <semaphore.h>
-#endif
+#include <signal.h>
 
 #ifdef __cplusplus
     #include <atomic>

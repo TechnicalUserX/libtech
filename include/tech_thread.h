@@ -154,16 +154,23 @@ extern "C"
         {                                                                                                                                                                                    \
             {
 
-#define TECH_THREAD_SAFE_BLOCK_GLOBAL_END(lock_identifier)                                                                                                     \
-    }                                                                                                                                                          \
-    tech_thread_safe_block_global_control(TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_UNLOCK, TECH_TOOL_STRINGIZE(lock_identifier), &tech_thread_safe_block_mutex); \
-    tech_error_number = TECH_SUCCESS;                                                                                                                          \
-    }                                                                                                                                                          \
-    else                                                                                                                                                       \
-    {                                                                                                                                                          \
-        tech_thread_safe_block_exit_status = TECH_ERROR_THREAD_SAFE_BLOCK_GLOBAL_CANNOT_LOCK;                                                                  \
-    }                                                                                                                                                          \
-    TECH_THREAD_SAFE_BLOCK_LOCAL_END                                                                                                                           \
+#define TECH_THREAD_SAFE_BLOCK_GLOBAL_END(lock_identifier)                                                                                                          \
+    }                                                                                                                                                               \
+    if (tech_thread_safe_block_global_control(TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_UNLOCK, TECH_TOOL_STRINGIZE(lock_identifier), &tech_thread_safe_block_mutex)) \
+    {                                                                                                                                                               \
+        tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_GLOBAL_CANNOT_UNLOCK;                                                                                      \
+        printf("CANNOT UNLOCK\r\n");                                                                                                                                \
+    }                                                                                                                                                               \
+    else                                                                                                                                                            \
+    {                                                                                                                                                               \
+        tech_error_number = TECH_SUCCESS;                                                                                                                           \
+    }                                                                                                                                                               \
+    }                                                                                                                                                               \
+    else                                                                                                                                                            \
+    {                                                                                                                                                               \
+        tech_thread_safe_block_exit_status = TECH_ERROR_THREAD_SAFE_BLOCK_GLOBAL_CANNOT_LOCK;                                                                       \
+    }                                                                                                                                                               \
+    TECH_THREAD_SAFE_BLOCK_LOCAL_END                                                                                                                                \
     }
 #ifdef __cplusplus
 }

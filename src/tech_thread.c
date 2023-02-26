@@ -139,12 +139,10 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
 
     TECH_THREAD_SAFE_BLOCK_FAIL_START
         tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
+        return TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_FAIL_END
 
-    if (tech_error_number)
-    {
-        return TECH_RETURN_FAILURE;
-    }
+
 
     switch (directive)
     {
@@ -153,6 +151,8 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
     {
         if (sem_wait(&detected_lock_memory->semaphore) == 0)
         {
+            // printf("Locked %s\r\n",detected_lock_memory->lock_identifier);
+            // fflush(stdout);
             detected_lock_memory->active_mutex = local_mutex; // Set the active mutex before locking
             tech_error_number = TECH_SUCCESS;
         }
@@ -161,6 +161,8 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
 
     case TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_UNLOCK:
     {
+        // printf("Unlocked %s\r\n",detected_lock_memory->lock_identifier);
+        // fflush(stdout);
         sem_post(&detected_lock_memory->semaphore);
         tech_error_number = TECH_SUCCESS;
     }

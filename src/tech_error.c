@@ -38,6 +38,12 @@ const char *tech_error_what(enum tech_error_t error)
         return "Thread exited unexpectedly";
     case TECH_ERROR_THREAD_SAFE_BLOCK_GLOBAL_CANNOT_LOCK:
         return "Thread global lock cannot be locked";
+    case TECH_ERROR_THREAD_SAFE_BLOCK_GLOBAL_CANNOT_UNLOCK:
+        return "Thread global lock cannot be unlocked";
+    case TECH_ERROR_CANNOT_ALLOC_MEMORY:
+        return "Cannot allocate memory";
+    case TECH_ERROR_TERMINAL_SIGNAL_NOT_FOUND:
+        return "Signal not found";
     default:
         return "Unkown error";
     }

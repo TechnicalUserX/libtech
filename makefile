@@ -1,80 +1,77 @@
 # LIBTECH Makefile | Written by TechnicalUserX
+#!/bin/bash
 
 SHELL := /bin/bash
-
 CC = gcc
 
 INSTALL_INCLUDE_DIR = /usr/include
 INSTALL_LIB_DIR = /usr/lib
 
-SRC=$(shell ls ./src)
-HDR=$(SRC:.c=.h)
-OBJ=$(SRC:.c=.o)
+LOOKUP_DIR=tech
 
-OUT=libtech.so
-
-OBJ_DEP=$(addprefix  ./obj/, ${OBJ})
+CC_INCLUDE_DIR=.
 
 BUILD_DIR=build
-INCLUDE_DIR=include
-SHARED_DIR=shared
-CONFIG_DIR=config
-SRC_DIR=src
-OBJ_DIR=obj
+BUILD_OBJ_DIR = ${BUILD_DIR}/obj
+BUILD_LIB_DIR = ${BUILD_DIR}/lib
 
-CFLAGS = -shared -Wall -std=c11 -fPIC
+MKDIR_P = mkdir -p
+
+TARGET_LIB_SO = libtech.so
+TARGET_LIB_NAME=tech
+TARGET_LIB=libtech
+
+
+CFLAGS = -Wall -Wextra -fPIC -std=c11
 
 VERSION = 0.0.1-beta
 
-IS_INSTALLED = $(shell if [ -e ${INSTALL_INCLUDE_DIR}/tech ]; then echo 1; else echo 0; fi)
-
+IS_INSTALLED = $(shell if [ -e ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME} ]; then echo 1; else echo 0; fi)
 IS_SUPER_USER = $(shell id -u)
 
+SRC = $(shell find $(LOOKUP_DIR) -type f -name "*.c")
+HDR = $(shell find $(LOOKUP_DIR) -type f -name "*.h")
+OBJ = $(patsubst $(LOOKUP_DIR)/%, $(BUILD_OBJ_DIR)/%, $(SRC:.c=.o))
 
 
-libtech: ${OBJ_DEP} 
-	@echo "Compiling '${OUT}.${VERSION}'..."
-	@$(shell if ! [ -d ${BUILD_DIR} ]; then mkdir ${BUILD_DIR}; fi)
-	@${CC} ${OBJ_DEP} ${CFLAGS}  -o ${BUILD_DIR}/${OUT}.${VERSION}
+HDR_DIR=$(dir ${HDR} | sort -u);
+INSTALL_HDR_DIR=$(addprefix  ${INSTALL_INCLUDE_DIR}/,$(dir $(subst ${TARGET_LIB_NAME}/,${TARGET_LIB_NAME}-${VERSION}/, ${HDR})) )
 
 
+${TARGET_LIB}: ${BUILD_LIB_DIR}/$(TARGET_LIB_SO) 
+	@echo Compiled ${TARGET_LIB}
+
+${BUILD_LIB_DIR}/$(TARGET_LIB_SO): $(OBJ)
+	@$(MKDIR_P) ${BUILD_LIB_DIR}
+	@$(CC) -I ${CC_INCLUDE_DIR} -shared $^ -o $@.${VERSION}
+	@echo Created ${TARGET_LIB_SO}
+
+$(BUILD_OBJ_DIR)/%.o: $(LOOKUP_DIR)/%.c 
+	@$(MKDIR_P) $(shell dirname $@)
+	$(CC) -I ${CC_INCLUDE_DIR} $(CFLAGS) -c $< -o $@ 
+
+
+${LOOKUP_DIR}/%.h:
+	@echo fuck
+	@echo $(subst ${TARGET_LIB_NAME}/,${TARGET_LIB_NAME}-${VERSION}/, $@ )
 
 
 config: tech.h
-
-
+	@echo Configuration has ended
 
 tech.h:
-	@sed 's/@TECH_VERSION_CONFIGURATION@/${VERSION}/g' tech.h.in>tech.h
-
-
-
-
-${OBJ_DIR}/%.o: ${SRC_DIR}/%.c ${INCLUDE_DIR}/%.h
-	$(shell if ! [ -d ./${OBJ_DIR} ]; then mkdir ${OBJ_DIR}; fi )
-	${CC} -fPIC -c $< -o $@
-
-
+	@sed 's/@VERSION_CONFIGURATION@/${VERSION}/g' ${TARGET_LIB_NAME}.h.in>${TARGET_LIB_NAME}.h
+	@echo Created generic tech.h file
 
 
 clean:
-	@echo Cleaning object files and compiled library...
-	$(shell if [ -d ${BUILD_DIR} ]; then rm -rf ${BUILD_DIR}/*; fi )
-	$(shell if [ -d ${OBJ_DIR} ]; then rm -rf ${OBJ_DIR}/*; fi )
+	@echo Performing cleanup
+	@rm -rf $(BUILD_DIR)
 	@rm -f tech.h
 
 
 
-
-full-clean: clean
-	@echo Removing directories '${OBJ_DIR}' and '${BUILD_DIR}'...
-	$(shell if [ -d ${BUILD_DIR} ]; then rmdir ${BUILD_DIR}; fi)
-	$(shell if [ -d ${OBJ_DIR} ]; then rmdir ${OBJ_DIR}; fi)
-
-
-
-
-install: ${BUILD_DIR}/${OUT}.${VERSION} config
+install: ${BUILD_LIB_DIR}/${TARGET_LIB_SO} config
 
 ifneq (${IS_SUPER_USER}, 0)
 	@echo "You have to be root to install libraries!"
@@ -85,26 +82,26 @@ ifeq (${IS_INSTALLED},1)
 	@echo "If you want to update, run: 'sudo make update'";
 else
 	@echo "Super user right has been satisfied!";
-	@echo "Copying LIBTECH library files to '${INSTALL_LIB_DIR}/tech'...";
+	@echo "Copying ${TARGET_LIB} library files to '${INSTALL_LIB_DIR}/tech'...";
 
-	$(shell if ! [ -d ${INSTALL_LIB_DIR}/tech ]; then mkdir ${INSTALL_LIB_DIR}/tech; fi)
+# Create lib.so folder inside library folder
+	$(shell if ! [ -d ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION} ]; then mkdir ${INSTALL_LIB_DIR}/tech-${VERSION}; fi)
 
-	@cp ${BUILD_DIR}/${OUT}.${VERSION} ${INSTALL_LIB_DIR}/tech;
-	@ln -s ${INSTALL_LIB_DIR}/tech/${OUT}.${VERSION} ${INSTALL_LIB_DIR}/${OUT}
+	@cp ${BUILD_LIB_DIR}/${TARGET_LIB_SO}.${VERSION} ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}
+	@ln -s ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}/${TARGET_LIB_SO}.${VERSION} ${INSTALL_LIB_DIR}/${TARGET_LIB_SO}
 
 	@echo "Creating 'tech' directory inside '${INSTALL_INCLUDE_DIR}'..."
 
-	$(shell if ! [ -d ${INSTALL_INCLUDE_DIR}/tech ]; then mkdir ${INSTALL_INCLUDE_DIR}/tech; fi)
-	$(shell if ! [ -d ${INSTALL_INCLUDE_DIR}/tech/tech-${VERSION} ]; then mkdir ${INSTALL_INCLUDE_DIR}/tech/tech-${VERSION}; fi)
-	$(shell if ! [ -d ${INSTALL_INCLUDE_DIR}/tech/shared ]; then mkdir ${INSTALL_INCLUDE_DIR}/tech/shared; fi)
-	$(shell if ! [ -d ${INSTALL_INCLUDE_DIR}/tech/config ]; then mkdir ${INSTALL_INCLUDE_DIR}/tech/config; fi)
+# Creating /usr/include/lib-version
+	$(shell if ! [ -d ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION} ]; then mkdir ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}; fi)
+	@ln -s ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION} ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}
+	
+	@echo "Copying header files to ${INSTALL_INCLUDE_DIR}/${TARGET_LIB}/'..."
+	@${MKDIR_P} ${INSTALL_HDR_DIR}
+	@bash -c '$(foreach a,$(HDR),cp ${a} $(subst ${TARGET_LIB_NAME}/,${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}/,$(dir ${a}) ); )'	@echo FINISH
+	@cp tech.h ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
 
 
-	@echo "Copying header files to ${INSTALL_INCLUDE_DIR}/tech/'..."
-	@cp  ${INCLUDE_DIR}/* ${INSTALL_INCLUDE_DIR}/tech/tech-${VERSION}
-	@cp ${SHARED_DIR}/* ${INSTALL_INCLUDE_DIR}/tech/${SHARED_DIR}
-	@cp ${CONFIG_DIR}/* ${INSTALL_INCLUDE_DIR}/tech/${CONFIG_DIR}
-	@cp tech.h ${INSTALL_INCLUDE_DIR}/tech
 	@echo "Installation completed."
 
 endif
@@ -112,39 +109,27 @@ endif
 endif
 
 
-
-
-update: config libtech 
+update: 
 ifneq ($(IS_SUPER_USER), 0)
 	@echo "You have to be root to update libraries!"
 else
-	@make --silent config
 	@make --silent uninstall
 	@make --silent install
 endif
-
-
 
 
 uninstall:
 ifneq ($(IS_SUPER_USER), 0)
 	@echo "You have to be root to uninstall libraries!"
 else
-	@echo "Uninstalling LIBTECH..."
+	@echo "Uninstalling ${TARGET_LIB}..."
 
+	@rm -rf ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
+	@rm -rf ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}
 
-	$(shell if [ -d ${INSTALL_INCLUDE_DIR}/tech ]; then \
-	rm -rf ${INSTALL_INCLUDE_DIR}/tech/*; \
-	rmdir ${INSTALL_INCLUDE_DIR}/tech; \
-	fi \
-	)
+	@rm -rf ${INSTALL_LIB_DIR}/${TARGET_LIB_SO}
+	@rm -rf ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}
 
-	$(shell if [ -d ${INSTALL_LIB_DIR}/tech ]; then \
-	rm -rf ${INSTALL_LIB_DIR}/tech; \
-	fi \
-	)
-
-	$(shell rm -f ${INSTALL_LIB_DIR}/${OUT})
 
 	@echo "Uninstall completed!"
 

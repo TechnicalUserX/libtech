@@ -4,9 +4,9 @@
 
 
 
-#include "../config/tech_features.h"
-#include "../shared/tech_include.h"
-#include "../shared/tech_types.h"
+#include <tech/config/tech_features.h>
+#include <tech/shared/tech_include.h>
+#include <tech/shared/tech_types.h>
 
 #include "tech_terminal.h"
 
@@ -16,6 +16,7 @@
 #ifdef __cplusplus
     extern "C" {
 #endif
+
 
 typedef uint16_t tech_window_position_t; // 0-indexed
 

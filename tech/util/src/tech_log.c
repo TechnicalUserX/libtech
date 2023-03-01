@@ -1,4 +1,4 @@
-#include "../include/tech_log.h"
+#include <tech/util/include/tech_log.h>
 
 void tech_log(FILE *output_file, enum tech_log_style_t style, const char *display_string, ...)
 {

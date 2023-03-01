@@ -1,4 +1,4 @@
-#include "../include/tech_tool.h"
+#include <tech/util/include/tech_tool.h>
 
 tech_byte_t tech_tool_convert_truecolor_to_xterm256(int r, int g, int b)
 {

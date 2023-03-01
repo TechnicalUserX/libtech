@@ -1,12 +1,12 @@
 #ifndef TECH_THREAD_H
 #define TECH_THREAD_H
 
-#include "../config/tech_features.h"
-#include "../shared/tech_include.h"
-#include "../shared/tech_types.h"
+#include <tech/config/tech_features.h>
+#include <tech/shared/tech_include.h>
+#include <tech/shared/tech_types.h>
 
-#include "tech_tool.h"
-#include "tech_error.h"
+#include <tech/util/include/tech_tool.h>
+#include <tech/util/include/tech_error.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -62,7 +62,7 @@ extern "C"
         static pthread_mutexattr_t tech_thread_safe_block_mutex_attribute;                                                                                                                                                                  \
         static atomic_bool tech_thread_safe_block_mutex_unexpected_exit = ATOMIC_VAR_INIT(false);                                                                                                                                           \
         atomic_int tech_thread_safe_block_mutex_lock_ret;                                                                                                                                                                                   \
-        tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN;                                                                                                                                                           \
+        tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN;                                                                                                                                                           \
         if (__atomic_compare_exchange(&tech_thread_safe_block_mutex_initialized, &tech_thread_safe_block_mutex_initialized_expected_value, &tech_thread_safe_block_mutex_initialized_desired_value, 0, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)) \
         {                                                                                                                                                                                                                                   \
             pthread_mutexattr_init(&tech_thread_safe_block_mutex_attribute);                                                                                                                                                                \
@@ -88,7 +88,7 @@ extern "C"
             tech_thread_safe_block_mutex_initialized = false;                                                                                                                                                                               \
             tech_thread_safe_block_mutex_initialized_further = false;                                                                                                                                                                       \
             tech_thread_safe_block_mutex_unexpected_exit = false;                                                                                                                                                                           \
-            tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;                                                                                                                                                        \
+            tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;                                                                                                                                                        \
         }                                                                                                                                                                                                                                   \
         else if (tech_thread_safe_block_mutex_trylock_ret == 0)                                                                                                                                                                             \
         {                                                                                                                                                                                                                                   \
@@ -105,14 +105,14 @@ extern "C"
 #define TECH_THREAD_SAFE_BLOCK_LOCAL_END                                          \
     }                                                                             \
     pthread_mutex_unlock(&tech_thread_safe_block_mutex);                          \
-    tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_SUCCESS;     \
+    tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_SUCCESS;     \
     tech_thread_safe_block_mutex_unexpected_exit = false;                         \
     }                                                                             \
     else if (tech_thread_safe_block_mutex_lock_ret == EOWNERDEAD)                 \
     {                                                                             \
         pthread_mutex_consistent(&tech_thread_safe_block_mutex);                  \
         pthread_mutex_unlock(&tech_thread_safe_block_mutex);                      \
-        tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;  \
+        tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;  \
     }                                                                             \
     else if (tech_thread_safe_block_mutex_lock_ret == ENOTRECOVERABLE)            \
     {                                                                             \
@@ -120,11 +120,11 @@ extern "C"
         pthread_mutexattr_destroy(&tech_thread_safe_block_mutex_attribute);       \
         tech_thread_safe_block_mutex_initialized = false;                         \
         tech_thread_safe_block_mutex_initialized_further = false;                 \
-        tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;  \
+        tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_RECALL;  \
     }                                                                             \
     else                                                                          \
     {                                                                             \
-        tech_thread_safe_block_exit_status = TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN; \
+        tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN; \
     }                                                                             \
     }                                                                             \
     }
@@ -168,7 +168,7 @@ extern "C"
     }                                                                                                                                                               \
     else                                                                                                                                                            \
     {                                                                                                                                                               \
-        tech_thread_safe_block_exit_status = TECH_ERROR_THREAD_SAFE_BLOCK_GLOBAL_CANNOT_LOCK;                                                                       \
+        tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_ERROR_THREAD_SAFE_BLOCK_GLOBAL_CANNOT_LOCK;                                                                       \
     }                                                                                                                                                               \
     TECH_THREAD_SAFE_BLOCK_LOCAL_END                                                                                                                                \
     }

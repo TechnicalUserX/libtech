@@ -1,6 +1,6 @@
-#include "../include/tech_terminal.h"
-#include "../include/tech_thread.h"
-#include "../include/tech_error.h"
+#include <tech/util/include/tech_terminal.h>
+#include <tech/util/include/tech_thread.h>
+#include <tech/util/include/tech_error.h>
 
 // Flag list for all signals currently supported, internal
 __attribute__((visibility("hidden"))) struct tech_terminal_signal_flag_list_struct_t{
@@ -360,10 +360,9 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdin_get_char
 
         bool byte_read_complete = true;
 
-        // Control character check
-        bool control_char_check_complete = true;
 
-        if (terminal_char_temp.byte_size == 1 && ((initial_byte >= 0 && initial_byte <= 31) || initial_byte == 127))
+
+        if (terminal_char_temp.byte_size == 1 && (initial_byte <= 31 || initial_byte == 127))
         {
             // This is a control character
             terminal_char_temp.is_control = true;
@@ -444,7 +443,7 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdin_get_char
             // This for loop will work only for UTF-8 chars which are larger than 1 byte,
             // so this will be skipped for ASCII chars and 1 byte UTF-8 characters
 
-            for (size_t i = 0, index = 1; i < terminal_char_temp.byte_size - 1; i++, index++)
+            for (tech_size_t i = 0, index = 1; i < terminal_char_temp.byte_size - 1; i++, index++)
             {
 
                 tech_byte_t b = 0x0;
@@ -463,7 +462,7 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdin_get_char
         if (byte_read_complete)
         {
             // Copy the bytes to the argument
-            memset(terminal_char, 0x0, sizeof(terminal_char));
+            memset(terminal_char, 0x0, sizeof(tech_terminal_char_t));
             terminal_char->byte_size = terminal_char_temp.byte_size;
             for (size_t i = 0; i < TECH_TERMINAL_CHAR_BYTES_MAX_SIZE; i++)
             {
@@ -548,11 +547,6 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_set_attribute_
 
     tech_terminal_type_t type = tech_terminal_get_type();
 
-    if (type == TECH_TERMINAL_TYPE_UNKNOWN)
-    {
-        tech_error_number = TECH_ERROR_TERMINAL_ATTRIBUTE_CANNOT_SET;
-        return TECH_RETURN_FAILURE;
-    }
 
     if (attribute == NULL)
     {
@@ -568,6 +562,13 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_set_attribute_
 
         switch (type)
         {
+
+            case TECH_TERMINAL_TYPE_UNKNOWN:
+            {
+                tech_error_number = TECH_ERROR_TERMINAL_ATTRIBUTE_CANNOT_SET;
+                return TECH_RETURN_FAILURE;
+            }
+            break;
 
         case TECH_TERMINAL_TYPE_TRUECOLOR: // Also 24BIT
         {
@@ -603,6 +604,14 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_set_attribute_
 
         switch (type)
         {
+
+
+        case TECH_TERMINAL_TYPE_UNKNOWN:
+        {
+            tech_error_number = TECH_ERROR_TERMINAL_ATTRIBUTE_CANNOT_SET;
+            return TECH_RETURN_FAILURE;
+        }
+        break;
 
         case TECH_TERMINAL_TYPE_TRUECOLOR: // Also 24BIT
         {
@@ -656,6 +665,8 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_set_attribute_
     {
         tech_terminal_stdout_print_internal(0, 0, NULL, TECH_TERMINAL_ATTRIBUTE_STRIKETHROUGH);
     }
+
+    return TECH_RETURN_SUCCESS;
 }
 
 __attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdout_print_char_internal(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, tech_terminal_char_t terminal_char)
@@ -740,7 +751,7 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_signal_transla
 
 
 // TECH_TERMINAL_SIGNAL_RESIZE(SIGWINCH) Handler
-__attribute__((visibility("hidden"))) void tech_terminal_signal_resize_handler_internal(int signal)
+__attribute__((visibility("hidden"))) void tech_terminal_signal_resize_handler_internal()
 {
 	tech_terminal_signal_flag_list.tech_terminal_signal_resize_flag = true;
 }
@@ -788,7 +799,7 @@ tech_terminal_encoding_t tech_terminal_get_encoding(void)
     const char *encoding_check_1 = nl_langinfo(CODESET);
     if (!encoding_check_1)
     {
-        return TECH_TERMINAL_TYPE_UNKNOWN;
+        return TECH_TERMINAL_ENCODING_UNKNOWN;
     }
     if (strcmp(encoding_check_1, "UTF-8") == 0)
     {
@@ -848,7 +859,7 @@ tech_terminal_key_t tech_terminal_key_translate(tech_terminal_char_t terminal_ch
                 return TECH_TERMINAL_KEY_LEFT;
             case '3':
             {
-                if (terminal_char.bytes[3] = '~')
+                if (terminal_char.bytes[3] == '~')
                     return TECH_TERMINAL_KEY_DELETE;
             }
             break;
@@ -1123,6 +1134,7 @@ tech_return_t tech_terminal_stdin_get_string(tech_terminal_cursor_position_t row
     tech_size_t acquired_string_size = 0;
 
     tech_terminal_mode_t mode;
+    
     tech_terminal_mode_internal(TECH_TERMINAL_MODE_DIRECTIVE_GET, &mode);
 
     while (!char_read_complete)
@@ -1336,6 +1348,13 @@ tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, te
     tech_terminal_stdout_print_internal(row, col, &args, format);
     va_end(args);
     TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK)
+
+    TECH_THREAD_SAFE_BLOCK_FAIL_START
+        tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
+        return TECH_RETURN_FAILURE;
+    TECH_THREAD_SAFE_BLOCK_FAIL_END
+
+    return TECH_RETURN_SUCCESS;
 }
 
 tech_return_t tech_terminal_char_convert_to_char_stream(char *destination, tech_size_t destination_size, tech_terminal_char_t *source, tech_size_t source_size)
@@ -1426,7 +1445,7 @@ tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t *
         return TECH_RETURN_FAILURE;
     }
 
-    if ((initial_byte >= 0 && initial_byte <= 31) || initial_byte == 127)
+    if (initial_byte <= 31 || initial_byte == 127)
     {
         terminal_char_temp.is_control = true;
         terminal_char_temp.is_printable = false;

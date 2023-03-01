@@ -1,5 +1,5 @@
-#include "../include/tech_thread.h"
-#include "../include/tech_error.h"
+#include <tech/util/include/tech_thread.h>
+#include <tech/util/include/tech_error.h>
 
 tech_return_t tech_thread_safe_block_exit_status_control(tech_thread_safe_block_exit_status_directive_t directive, tech_thread_safe_block_exit_status_t *exit_status_ptr)
 {
@@ -9,34 +9,37 @@ tech_return_t tech_thread_safe_block_exit_status_control(tech_thread_safe_block_
     switch (directive)
     {
 
-    case TECH_THREAD_SAFE_BLOCK_EXIT_STATUS_DIRECTIVE_GET:
-    {
-        if (exit_status_stored_ptr != NULL)
+        case TECH_THREAD_SAFE_BLOCK_EXIT_STATUS_DIRECTIVE_GET:
         {
-            *exit_status_ptr = *exit_status_stored_ptr;
-            return TECH_RETURN_SUCCESS;
+            if (exit_status_stored_ptr != NULL)
+            {
+                *exit_status_ptr = *exit_status_stored_ptr;
+                return TECH_RETURN_SUCCESS;
+            }
+            else
+            {
+                return TECH_RETURN_FAILURE;
+            }
         }
-        else
+        break;
+
+        case TECH_THREAD_SAFE_BLOCK_EXIT_STATUS_DIRECTIVE_INIT:
         {
+
+            if (exit_status_ptr != NULL)
+            {
+                exit_status_stored_ptr = exit_status_ptr;
+                return TECH_RETURN_SUCCESS;
+            }
+            else
+            {
+                return TECH_RETURN_FAILURE;
+            }
+        }
+        break;
+        default:{
             return TECH_RETURN_FAILURE;
         }
-    }
-    break;
-
-    case TECH_THREAD_SAFE_BLOCK_EXIT_STATUS_DIRECTIVE_INIT:
-    {
-
-        if (exit_status_ptr != NULL)
-        {
-            exit_status_stored_ptr = exit_status_ptr;
-            return TECH_RETURN_SUCCESS;
-        }
-        else
-        {
-            return TECH_RETURN_FAILURE;
-        }
-    }
-    break;
     }
 }
 
@@ -53,26 +56,12 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
 
 
 
-    if(directive == TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_FREE){
-
-        struct lock_memory_t* memory_iterator = lock_memory;
-
-        while(memory_iterator != NULL){
-
-            struct lock_memory_t* memory_iterator_next = memory_iterator->next;
-            free(memory_iterator);
-            memory_iterator = memory_iterator_next;
-        }
-
-        return TECH_RETURN_SUCCESS;
-    }
-
-
 
 
 
     struct lock_memory_t *detected_lock_memory = NULL;
 
+    if(directive != TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_FREE){
     TECH_THREAD_SAFE_BLOCK_LOCAL_START
     // This is the place for initialization or configuration
 
@@ -141,33 +130,46 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
         tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
         return TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_FAIL_END
-
+    }
 
 
     switch (directive)
     {
 
-    case TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_LOCK:
-    {
-        if (sem_wait(&detected_lock_memory->semaphore) == 0)
+        case TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_LOCK:
         {
-            // printf("Locked %s\r\n",detected_lock_memory->lock_identifier);
+            if (sem_wait(&detected_lock_memory->semaphore) == 0)
+            {
+                // printf("Locked %s\r\n",detected_lock_memory->lock_identifier);
+                // fflush(stdout);
+                detected_lock_memory->active_mutex = local_mutex; // Set the active mutex before locking
+                tech_error_number = TECH_SUCCESS;
+            }
+        }
+        break;
+
+        case TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_UNLOCK:
+        {
+            // printf("Unlocked %s\r\n",detected_lock_memory->lock_identifier);
             // fflush(stdout);
-            detected_lock_memory->active_mutex = local_mutex; // Set the active mutex before locking
+            sem_post(&detected_lock_memory->semaphore);
             tech_error_number = TECH_SUCCESS;
         }
-    }
-    break;
+        break;
+        
 
-    case TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_UNLOCK:
-    {
-        // printf("Unlocked %s\r\n",detected_lock_memory->lock_identifier);
-        // fflush(stdout);
-        sem_post(&detected_lock_memory->semaphore);
-        tech_error_number = TECH_SUCCESS;
-    }
-    break;
-    }
+        case TECH_THREAD_SAFE_BLOCK_GLOBAL_DIRECTIVE_FREE:
+        {
+            struct lock_memory_t* memory_iterator = lock_memory;
 
+            while(memory_iterator != NULL){
+
+                struct lock_memory_t* memory_iterator_next = memory_iterator->next;
+                free(memory_iterator);
+                memory_iterator = memory_iterator_next;
+            }
+        }
+        break;
+    }
     return TECH_RETURN_SUCCESS;
 }

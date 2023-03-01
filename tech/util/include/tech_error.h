@@ -1,9 +1,10 @@
 #ifndef TECH_ERROR_H
 #define TECH_ERROR_H
 
-#include "../config/tech_features.h"
-#include "../shared/tech_include.h"
-#include "../shared/tech_types.h"
+#include <tech/config/tech_features.h>
+#include <tech/shared/tech_include.h>
+#include <tech/shared/tech_types.h>
+
 
 #ifdef __cplusplus
 extern "C"

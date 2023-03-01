@@ -4,9 +4,10 @@
 #ifndef TECH_TERMINAL_H
 #define TECH_TERMINAL_H
 
-#include "../config/tech_features.h"
-#include "../shared/tech_include.h"
-#include "../shared/tech_types.h"
+#include <tech/config/tech_features.h>
+#include <tech/shared/tech_include.h>
+#include <tech/shared/tech_types.h>
+
 
 
 #define TECH_TERMINAL_ATTRIBUTE_BOLD           "\033[1m"
@@ -206,7 +207,7 @@ typedef enum tech_terminal_echo_state_enum_t{
  */
 typedef struct tech_terminal_char_struct_t{
     tech_byte_t bytes[TECH_TERMINAL_CHAR_BYTES_MAX_SIZE];    
-    uint8_t byte_size;
+    tech_size_t byte_size;
     bool is_printable;
     bool is_control;
     bool is_escape_sequence;

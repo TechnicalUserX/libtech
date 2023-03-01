@@ -1,5 +1,5 @@
-#include "../include/tech_window.h"
-#include "../include/tech_error.h"
+#include <tech/util/include/tech_window.h>
+#include <tech/util/include/tech_error.h>
 
 
 tech_window_t *tech_window_new(tech_window_position_t origin_row, tech_window_position_t origin_col, tech_size_t row_size, tech_size_t col_size)
@@ -392,6 +392,7 @@ tech_return_t tech_window_clear(tech_window_t *win)
 			win->line_buffer[i].char_buffer[j].terminal_char = explicit_empty_char;
 		}
 	}
+	return TECH_RETURN_SUCCESS;
 }
 
 

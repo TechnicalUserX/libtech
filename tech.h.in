@@ -1,19 +1,18 @@
 /**
  * @author TechnicalUserX
- * @brief 
- * @version @TECH_VERSION_CONFIGURATION@
+ * @version @VERSION_CONFIGURATION@
  * 
  */
 
 #ifndef TECH_H
 #define TECH_H
 
-#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_terminal.h>
-#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_error.h>
-#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_log.h>
-#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_thread.h>
-#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_tool.h>
-#include <tech/tech-@TECH_VERSION_CONFIGURATION@/tech_window.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/tech_terminal.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/tech_error.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/tech_log.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/tech_thread.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/tech_tool.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/tech_window.h>
 
 
 #endif

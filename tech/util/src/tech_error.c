@@ -1,5 +1,5 @@
-#include "../include/tech_thread.h"
-#include "../include/tech_error.h"
+#include <tech/util/include/tech_thread.h>
+#include <tech/util/include/tech_error.h>
 
 tech_thread_local_t enum tech_error_t tech_error_number;
 

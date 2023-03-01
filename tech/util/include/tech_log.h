@@ -1,8 +1,8 @@
 #ifndef TECH_LOG_H
 #define TECH_LOG_H
 
-#include "../config/tech_features.h"
-#include "../shared/tech_include.h"
+#include <tech/config/tech_features.h>
+#include <tech/shared/tech_include.h>
 
 #ifdef __cplusplus
 extern "C"

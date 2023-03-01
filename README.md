@@ -44,7 +44,7 @@ int main(){
 In order to access to the `function definition`, compiler flag `-l` must be specified.
 Language | Compiler flag appearance
 -------- | ------------------------
-C        | -ltech
+C/C++    | -ltech
 
 
 ```bash

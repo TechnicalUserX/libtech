@@ -1,37 +1,39 @@
 # LIBTECH Makefile | Written by TechnicalUserX
 #!/bin/bash
 
+
+######################################
+# Common variables
 SHELL := /bin/bash
 CC = gcc
-
 INSTALL_INCLUDE_DIR = /usr/include
 INSTALL_LIB_DIR = /usr/lib
-
-LOOKUP_DIR=tech
-
 CC_INCLUDE_DIR=.
-
+LOOKUP_DIR=tech
+TARGET_LIB_NAME=tech
+CFLAGS = -Wall -Wextra -fPIC -std=c11
+VERSION = 0.0.1-beta
 BUILD_DIR=build
-BUILD_OBJ_DIR = ${BUILD_DIR}/obj
-BUILD_LIB_DIR = ${BUILD_DIR}/lib
+SRC_EXT=c
+HDR_EXT=h
+######################################
 
 MKDIR_P = mkdir -p
 
-TARGET_LIB_SO = libtech.so
-TARGET_LIB_NAME=tech
-TARGET_LIB=libtech
+BUILD_OBJ_DIR = ${BUILD_DIR}/obj
+BUILD_LIB_DIR = ${BUILD_DIR}/lib
+TARGET_LIB=lib${TARGET_LIB_NAME}
+TARGET_LIB_SO = ${TARGET_LIB}.so
 
 
-CFLAGS = -Wall -Wextra -fPIC -std=c11
 
-VERSION = 0.0.1-beta
 
 IS_INSTALLED = $(shell if [ -e ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME} ]; then echo 1; else echo 0; fi)
 IS_SUPER_USER = $(shell id -u)
 
-SRC = $(shell find $(LOOKUP_DIR) -type f -name "*.c")
-HDR = $(shell find $(LOOKUP_DIR) -type f -name "*.h")
-OBJ = $(patsubst $(LOOKUP_DIR)/%, $(BUILD_OBJ_DIR)/%, $(SRC:.c=.o))
+SRC = $(shell find $(LOOKUP_DIR) -type f -name "*.${SRC_EXT}")
+HDR = $(shell find $(LOOKUP_DIR) -type f -name "*.${HDR_EXT}")
+OBJ = $(patsubst $(LOOKUP_DIR)/%, $(BUILD_OBJ_DIR)/%, $(SRC:.${SRC_EXT}=.o))
 
 
 HDR_DIR=$(dir ${HDR} | sort -u);
@@ -51,23 +53,25 @@ $(BUILD_OBJ_DIR)/%.o: $(LOOKUP_DIR)/%.c
 	$(CC) -I ${CC_INCLUDE_DIR} $(CFLAGS) -c $< -o $@ 
 
 
-${LOOKUP_DIR}/%.h:
-	@echo fuck
+${LOOKUP_DIR}/%.${HDR_EXT}:
 	@echo $(subst ${TARGET_LIB_NAME}/,${TARGET_LIB_NAME}-${VERSION}/, $@ )
 
 
-config: tech.h
+config: ${TARGET_LIB_NAME}.${HDR_EXT}
 	@echo Configuration has ended
 
-tech.h:
-	@sed 's/@VERSION_CONFIGURATION@/${VERSION}/g' ${TARGET_LIB_NAME}.h.in>${TARGET_LIB_NAME}.h
-	@echo Created generic tech.h file
+
+${TARGET_LIB_NAME}.${HDR_EXT}:
+	@sed 's/@VERSION_CONFIGURATION@/${VERSION}/g' ${TARGET_LIB_NAME}.${HDR_EXT}.in>${TARGET_LIB_NAME}.${HDR_EXT}
+	@echo Created generic ${TARGET_LIB_NAME}.${HDR_EXT} file
 
 
 clean:
 	@echo Performing cleanup
 	@rm -rf $(BUILD_DIR)
-	@rm -f tech.h
+	@rm -f ${TARGET_LIB_NAME}.${HDR_EXT}
+
+
 
 
 
@@ -82,15 +86,15 @@ ifeq (${IS_INSTALLED},1)
 	@echo "If you want to update, run: 'sudo make update'";
 else
 	@echo "Super user right has been satisfied!";
-	@echo "Copying ${TARGET_LIB} library files to '${INSTALL_LIB_DIR}/tech'...";
+	@echo "Copying ${TARGET_LIB} library files to '${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}'...";
 
 # Create lib.so folder inside library folder
-	$(shell if ! [ -d ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION} ]; then mkdir ${INSTALL_LIB_DIR}/tech-${VERSION}; fi)
+	$(shell if ! [ -d ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION} ]; then mkdir ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}; fi)
 
 	@cp ${BUILD_LIB_DIR}/${TARGET_LIB_SO}.${VERSION} ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}
 	@ln -s ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}/${TARGET_LIB_SO}.${VERSION} ${INSTALL_LIB_DIR}/${TARGET_LIB_SO}
 
-	@echo "Creating 'tech' directory inside '${INSTALL_INCLUDE_DIR}'..."
+	@echo "Creating '${TARGET_LIB_NAME}-${VERSION}' directory inside '${INSTALL_INCLUDE_DIR}'..."
 
 # Creating /usr/include/lib-version
 	$(shell if ! [ -d ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION} ]; then mkdir ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}; fi)
@@ -99,7 +103,7 @@ else
 	@echo "Copying header files to ${INSTALL_INCLUDE_DIR}/${TARGET_LIB}/'..."
 	@${MKDIR_P} ${INSTALL_HDR_DIR}
 	@bash -c '$(foreach a,$(HDR),cp ${a} $(subst ${TARGET_LIB_NAME}/,${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}/,$(dir ${a}) ); )'	@echo FINISH
-	@cp tech.h ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
+	@cp ${TARGET_LIB_NAME}.${HDR_EXT} ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
 
 
 	@echo "Installation completed."

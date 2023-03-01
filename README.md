@@ -1,4 +1,4 @@
-# What is the purpose of this library?
+# LIBTECH | Technical C Library
 
 Everyone will agree that learning something requires to practice it, and I thought that
 why not create a library for the things I learnt along the way?

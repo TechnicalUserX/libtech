@@ -24,7 +24,7 @@ You need `gcc` and `GNU Make` to compile and use this library.
 $ sudo apt-get install gcc make git
 ```
 
-> It does not matter how you retrieve the source code of this repository, but a simple method is to use `git` to clone it to your machine, you are free to download the zip folder from the repository page.
+> :information\_source: It does not matter how you retrieve the source code of this repository, but a simple method is to use `git` to clone it to your machine, you are free to download the zip folder from the repository page.
 
 #### Installing the library
 

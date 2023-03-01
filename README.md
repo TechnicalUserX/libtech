@@ -12,6 +12,7 @@ This library is created for the sake of assistance for personal projects.
 #### Requirements:
   1. GNU Compiler Collection (gcc) 
   2. GNU Make (make)
+  3. Git
 
 You can query whether your working Linux distribution satisfies the prerequisites by:
 ```bash

@@ -1,3 +1,0 @@
-# Test Page 2
-
-Just testing...

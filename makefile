@@ -1,22 +1,29 @@
 # LIBTECH Makefile | Written by TechnicalUserX
 #!/bin/bash
 
-
+######################################
+# Version
+VERSION=0.0.1-beta
+VERSION_MAJOR=0
+VERSION_MINOR=0
+VERSION_PATCH=1
+VERSION_PRE_RELEASE=beta
 ######################################
 # Common variables
 SHELL := /bin/bash
 CC = gcc
+CC_VERSION_DEFINE=-DTECH_VERSION=\"${VERSION}\" -DTECH_VERSION_MAJOR=\"${VERSION_MAJOR}\" -DTECH_VERSION_MINOR=\"${VERSION_MINOR}\" -DTECH_VERSION_PATCH=\"${VERSION_PATCH}\" -DTECH_VERSION_PRE_RELEASE=\"${VERSION_PRE_RELEASE}\"
+CC_INCLUDE_DIR=.
 INSTALL_INCLUDE_DIR = /usr/include
 INSTALL_LIB_DIR = /usr/lib
-CC_INCLUDE_DIR=.
 LOOKUP_DIR=tech
 TARGET_LIB_NAME=tech
 CFLAGS = -Wall -Wextra -fPIC -std=c11
-VERSION = 0.0.1-beta
 BUILD_DIR=build
 SRC_EXT=c
 HDR_EXT=h
 ######################################
+
 
 MKDIR_P = mkdir -p
 
@@ -40,7 +47,7 @@ HDR_DIR=$(dir ${HDR} | sort -u);
 INSTALL_HDR_DIR=$(addprefix  ${INSTALL_INCLUDE_DIR}/,$(dir $(subst ${TARGET_LIB_NAME}/,${TARGET_LIB_NAME}-${VERSION}/, ${HDR})) )
 
 
-${TARGET_LIB}: ${BUILD_LIB_DIR}/$(TARGET_LIB_SO) 
+${TARGET_LIB}: ${BUILD_LIB_DIR}/$(TARGET_LIB_SO) config
 	@echo Compiled ${TARGET_LIB}
 
 ${BUILD_LIB_DIR}/$(TARGET_LIB_SO): $(OBJ)
@@ -50,7 +57,7 @@ ${BUILD_LIB_DIR}/$(TARGET_LIB_SO): $(OBJ)
 
 $(BUILD_OBJ_DIR)/%.o: $(LOOKUP_DIR)/%.c 
 	@$(MKDIR_P) $(shell dirname $@)
-	$(CC) -I ${CC_INCLUDE_DIR} $(CFLAGS) -c $< -o $@ 
+	$(CC) ${CC_VERSION_DEFINE} -I ${CC_INCLUDE_DIR} $(CFLAGS) -c $< -o $@ 
 
 
 ${LOOKUP_DIR}/%.${HDR_EXT}:
@@ -75,7 +82,7 @@ clean:
 
 
 
-install: ${BUILD_LIB_DIR}/${TARGET_LIB_SO} config
+install: ${BUILD_LIB_DIR}/${TARGET_LIB_SO}
 
 ifneq (${IS_SUPER_USER}, 0)
 	@echo "You have to be root to install libraries!"

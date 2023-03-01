@@ -24,7 +24,6 @@ tech_byte_t tech_tool_convert_truecolor_to_xterm256(int r, int g, int b)
     return 16 + (red * 36) + (green * 6) + blue;
 }
 
-
 tech_byte_t tech_tool_convert_xterm256_to_xterm16(tech_byte_t color){
 
     if(color < 16){
@@ -181,4 +180,3 @@ tech_size_t tech_tool_multibyte_length(const char* stream){
 
 	}
 }
-

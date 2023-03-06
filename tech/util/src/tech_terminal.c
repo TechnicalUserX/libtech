@@ -1357,7 +1357,7 @@ tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, te
     return TECH_RETURN_SUCCESS;
 }
 
-tech_return_t tech_terminal_char_convert_to_char_stream(char *destination, tech_size_t destination_size, tech_terminal_char_t *source, tech_size_t source_size)
+tech_return_t tech_terminal_string_convert_to_char_stream(char *destination, tech_size_t destination_size, tech_terminal_char_t *source, tech_size_t source_size)
 {
 
     if (destination == NULL || source == NULL)
@@ -1366,11 +1366,11 @@ tech_return_t tech_terminal_char_convert_to_char_stream(char *destination, tech_
         return TECH_RETURN_FAILURE;
     }
 
-    if (destination_size == 0)
+    if (destination_size == 0 || source_size == 0)
     {
         tech_error_number = TECH_ERROR_SIZE_ZERO;
         return TECH_RETURN_FAILURE;
-    }
+    }    
 
     tech_size_t destination_write_offset = 0; // This can also be thaught as the written bytes
 
@@ -1392,7 +1392,58 @@ tech_return_t tech_terminal_char_convert_to_char_stream(char *destination, tech_
     return TECH_RETURN_SUCCESS;
 }
 
-tech_return_t tech_terminal_char_convert_from_char_stream(tech_terminal_char_t *terminal_char, const char *stream, tech_size_t stream_size)
+tech_return_t tech_terminal_string_convert_from_char_stream(tech_terminal_char_t* destination, tech_size_t destination_size, const char* source, tech_size_t source_size){
+
+    if (destination == NULL || source == NULL)
+    {
+        tech_error_number = TECH_ERROR_NULL_POINTER;
+        return TECH_RETURN_FAILURE;
+    }
+
+    if (destination_size == 0 || source_size == 0)
+    {
+        tech_error_number = TECH_ERROR_SIZE_ZERO;
+        return TECH_RETURN_FAILURE;
+    }    
+
+    tech_size_t mb_total_size = source_size;
+
+    tech_size_t mb_gathered_size = 0;
+    tech_size_t read_chars = 0;
+    tech_terminal_char_t terminal_string_temp[destination_size];
+    memset(terminal_string_temp,0x0,sizeof(terminal_string_temp));
+
+
+    while(mb_gathered_size < mb_total_size && read_chars < destination_size ){
+
+
+        tech_terminal_char_t terminal_char_temp = {0};
+        
+        if(tech_terminal_char_extract_from_char_stream(&terminal_char_temp,source+mb_gathered_size,source_size-mb_gathered_size) == TECH_RETURN_SUCCESS){
+            tech_size_t mb_current_size = terminal_char_temp.byte_size;
+
+            mb_gathered_size += mb_current_size;
+
+            terminal_string_temp[read_chars] = terminal_char_temp;
+
+            read_chars++;
+
+        }else{
+            // Failure reading, needs further checking...
+            return TECH_RETURN_FAILURE;
+        }
+
+    }
+
+    for(tech_size_t i = 0; i < destination_size; i++){
+        destination[i] = terminal_string_temp[i];
+    }
+
+
+    return TECH_RETURN_SUCCESS;
+}
+
+tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t *terminal_char, const char *stream, tech_size_t stream_size)
 {
 
     if (terminal_char == NULL || stream == NULL)
@@ -1445,17 +1496,14 @@ tech_return_t tech_terminal_char_convert_from_char_stream(tech_terminal_char_t *
         return TECH_RETURN_FAILURE;
     }
 
+
+
     if (initial_byte <= 31 || initial_byte == 127)
     {
         terminal_char_temp.is_control = true;
         terminal_char_temp.is_printable = false;
-        if (initial_byte == 27)
-        {
-        }
-        else
-        {
-            terminal_char_temp.is_escape_sequence = false;
-        }
+    }else if(initial_byte == 0){
+        terminal_char_temp = TECH_TERMINAL_CHAR_NULL_TERMINATOR;
     }
     else
     {

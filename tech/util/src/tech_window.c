@@ -180,7 +180,7 @@ tech_return_t tech_window_print(tech_window_t *win, tech_window_position_t row, 
         tech_terminal_char_t terminal_char_temp = {0};
 
 
-        tech_terminal_char_convert_from_char_stream(&terminal_char_temp,mb_char_iterator,mb_total_size-mb_gathered_size);
+        tech_terminal_char_extract_from_char_stream(&terminal_char_temp,mb_char_iterator,mb_total_size-mb_gathered_size);
 
         tech_size_t mb_char_size = terminal_char_temp.byte_size;
 
@@ -265,27 +265,27 @@ tech_return_t tech_window_border(tech_window_t* win,tech_terminal_attribute_t* a
 		tech_terminal_char_t temp;
 
 		memset(&temp,0x0,sizeof(tech_terminal_char_t));
-		tech_terminal_char_convert_from_char_stream(&temp,c1,sizeof(c1));
+		tech_terminal_char_extract_from_char_stream(&temp,c1,sizeof(c1));
 		corner[0] = temp;
 
 		memset(&temp,0x0,sizeof(tech_terminal_char_t));
-		tech_terminal_char_convert_from_char_stream(&temp,c2,sizeof(c2));
+		tech_terminal_char_extract_from_char_stream(&temp,c2,sizeof(c2));
 		corner[1] = temp;
 
 		memset(&temp,0x0,sizeof(tech_terminal_char_t));
-		tech_terminal_char_convert_from_char_stream(&temp,c3,sizeof(c3));
+		tech_terminal_char_extract_from_char_stream(&temp,c3,sizeof(c3));
 		corner[2] = temp;
 
 		memset(&temp,0x0,sizeof(tech_terminal_char_t));
-		tech_terminal_char_convert_from_char_stream(&temp,c4,sizeof(c4));
+		tech_terminal_char_extract_from_char_stream(&temp,c4,sizeof(c4));
 		corner[3] = temp;
 
 		memset(&temp,0x0,sizeof(tech_terminal_char_t));
-		tech_terminal_char_convert_from_char_stream(&temp,h,sizeof(h));
+		tech_terminal_char_extract_from_char_stream(&temp,h,sizeof(h));
 		horizontal = temp;
 
 		memset(&temp,0x0,sizeof(tech_terminal_char_t));
-		tech_terminal_char_convert_from_char_stream(&temp,v,sizeof(v));
+		tech_terminal_char_extract_from_char_stream(&temp,v,sizeof(v));
 		vertical = temp;
 
 

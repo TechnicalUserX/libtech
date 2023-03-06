@@ -323,10 +323,13 @@ tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, te
 
 // 'destination' might not have the sufficient size when the 'source' is converted to multi-byte char string
 // For %100 guaranteed conversion, destination size could be set to 4 times the source size, (wide char = 4 x char)
-tech_return_t tech_terminal_char_convert_to_char_stream(char* destination, tech_size_t destination_size, tech_terminal_char_t* source, tech_size_t source_size);
+tech_return_t tech_terminal_string_convert_to_char_stream(char* destination, tech_size_t destination_size, tech_terminal_char_t* source, tech_size_t source_size);
 
 
-tech_return_t tech_terminal_char_convert_from_char_stream(tech_terminal_char_t* terminal_char, const char* stream, tech_size_t stream_size);
+tech_return_t tech_terminal_string_convert_from_char_stream(tech_terminal_char_t* destination, tech_size_t destination_size, const char* source, tech_size_t source_size);
+
+
+tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t* terminal_char, const char* stream, tech_size_t stream_size);
 
 
 // This function prepares handlers for all supported signals by the libtech

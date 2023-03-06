@@ -1392,7 +1392,7 @@ tech_return_t tech_terminal_char_convert_to_char_stream(char *destination, tech_
     return TECH_RETURN_SUCCESS;
 }
 
-tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t *terminal_char, const char *stream, tech_size_t stream_size)
+tech_return_t tech_terminal_char_convert_from_char_stream(tech_terminal_char_t *terminal_char, const char *stream, tech_size_t stream_size)
 {
 
     if (terminal_char == NULL || stream == NULL)

@@ -7,12 +7,13 @@
 #ifndef TECH_H
 #define TECH_H
 
-#include <tech-@VERSION_CONFIGURATION@/util/include/tech_terminal.h>
 #include <tech-@VERSION_CONFIGURATION@/util/include/tech_error.h>
 #include <tech-@VERSION_CONFIGURATION@/util/include/tech_log.h>
 #include <tech-@VERSION_CONFIGURATION@/util/include/tech_thread.h>
 #include <tech-@VERSION_CONFIGURATION@/util/include/tech_tool.h>
-#include <tech-@VERSION_CONFIGURATION@/util/include/tech_window.h>
+#include <tech-@VERSION_CONFIGURATION@/terminal/tech_terminal.h>
+#include <tech-@VERSION_CONFIGURATION@/terminal/graphics/include/tech_window.h>
+#include <tech-@VERSION_CONFIGURATION@/terminal/graphics/include/tech_menu.h>
 
 
 #endif

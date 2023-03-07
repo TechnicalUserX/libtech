@@ -1,4 +1,4 @@
-#include <tech/util/include/tech_terminal.h>
+#include <tech/terminal/tech_terminal.h>
 #include <tech/util/include/tech_thread.h>
 #include <tech/util/include/tech_error.h>
 
@@ -259,7 +259,9 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_cursor_get_pos
 __attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdout_print_internal(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, va_list *received_args, const char *format, ...)
 {
 
-    tech_terminal_cursor_set_position_internal(row, col);
+    if(tech_terminal_cursor_set_position_internal(row, col)){
+        return TECH_RETURN_FAILURE;
+    }
 
     if (received_args == NULL)
     {
@@ -941,6 +943,26 @@ tech_return_t tech_terminal_cursor_set_position(tech_terminal_cursor_position_t 
     return ret;
 }
 
+tech_return_t tech_terminal_cursor_set_visible(bool visible){
+
+    tech_return_t ret;
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK)
+    if(visible){
+        ret = tech_terminal_stdout_print_internal(0,0,NULL,"\033[?25h");
+    }else{
+        ret = tech_terminal_stdout_print_internal(0,0,NULL,"\033[?25l");
+    }
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK)
+
+    TECH_THREAD_SAFE_BLOCK_FAIL_START
+        tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
+        return TECH_RETURN_FAILURE;
+    TECH_THREAD_SAFE_BLOCK_FAIL_END
+
+    return ret;
+}
+
+
 // Uses internal function
 tech_return_t tech_terminal_mode(tech_terminal_mode_directive_t directive, ...)
 {
@@ -1353,6 +1375,21 @@ tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, te
         tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
         return TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_FAIL_END
+
+    return TECH_RETURN_SUCCESS;
+}
+
+tech_return_t tech_terminal_stdout_clear(void){
+
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK)
+        tech_terminal_stdout_print_internal(0,0,NULL,"\033[2J");
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK)
+
+    TECH_THREAD_SAFE_BLOCK_FAIL_START
+        tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
+        return TECH_RETURN_FAILURE;
+    TECH_THREAD_SAFE_BLOCK_FAIL_END
+
 
     return TECH_RETURN_SUCCESS;
 }

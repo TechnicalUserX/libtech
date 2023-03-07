@@ -14,6 +14,8 @@ const char *tech_error_what(enum tech_error_t error)
         return "NULL pointer detected";
     case TECH_ERROR_SIZE_ZERO:
         return "Provided size must not be zero";
+    case TECH_ERROR_SIZE_EXCEED:
+        return "Inteded size exceeded the limit";
     case TECH_ERROR_CANNOT_FFLUSH:
         return "fflush() failed";
     case TECH_ERROR_INVALID_ARGUMENT:

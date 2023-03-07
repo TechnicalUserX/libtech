@@ -8,7 +8,7 @@
 #include <tech/shared/tech_include.h>
 #include <tech/shared/tech_types.h>
 
-#include "tech_terminal.h"
+#include <tech/terminal/tech_terminal.h>
 
 #define TECH_WINDOW_PRINT_INTERNAL_BUFFER_SIZE 10000
 
@@ -54,7 +54,7 @@ typedef struct tech_window_struct_t
 
     // 0-indexed
     // Hiding anything outside this viewpoint
-    struct
+    struct tech_window_viewpoint_struct_t
     {
         tech_window_position_t top; // Lower index
         tech_window_position_t bottom; // Higher index

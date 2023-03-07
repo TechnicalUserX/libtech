@@ -1,4 +1,4 @@
-#include <tech/util/include/tech_window.h>
+#include <tech/terminal/graphics/include/tech_window.h>
 #include <tech/util/include/tech_error.h>
 
 
@@ -35,6 +35,8 @@ tech_window_t *tech_window_new(tech_window_position_t origin_row, tech_window_po
 
     new_window->line_buffer_size = row_size;
     new_window->line_buffer = (tech_window_line_buffer_t *)malloc(sizeof(tech_window_line_buffer_t) * row_size);
+
+	new_window->parent = NULL;
 
 	if(new_window->line_buffer == NULL){
 		tech_error_number = TECH_ERROR_CANNOT_ALLOC_MEMORY;
@@ -76,19 +78,22 @@ tech_return_t tech_window_refresh(tech_window_t *win)
     }
 
 
-	tech_window_position_t max_row_possible;
-	tech_window_position_t max_col_possible;
-	tech_window_position_t row_restriction;
-	tech_window_position_t col_restriction;
+
+	tech_window_position_t row_restriction = 0;
+	tech_window_position_t col_restriction = 0;
 
 	if(win->parent != NULL){
 		tech_window_refresh(win->parent);
 
+
 		win->origin_row = win->parent->origin_row + win->relative_row;
 		win->origin_col = win->parent->origin_col + win->relative_col;
 
-		max_row_possible = win->parent->row_size - win->origin_row;
-		max_col_possible = win->parent->col_size - win->origin_col;
+		tech_window_position_t max_row_possible = 0;
+		tech_window_position_t max_col_possible = 0;
+
+		max_row_possible = win->parent->origin_row + win->parent->row_size - win->origin_row;
+		max_col_possible = win->parent->origin_col + win->parent->col_size - win->origin_col;
 
 		if(max_row_possible > win->row_size){
 

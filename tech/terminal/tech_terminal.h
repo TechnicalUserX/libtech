@@ -278,6 +278,10 @@ tech_return_t tech_terminal_cursor_get_position(tech_terminal_cursor_position_t 
 
 
 // Thread-safe(STDIN)
+// Sets cursor visibility
+tech_return_t tech_terminal_cursor_set_visible(bool visible);
+
+// Thread-safe(STDIN)
 // Set terminal mode
 // Variadic function, use with caution
 tech_return_t tech_terminal_mode(tech_terminal_mode_directive_t directive, ...);
@@ -319,6 +323,10 @@ tech_return_t tech_terminal_stdout_print_char(tech_terminal_cursor_position_t ro
 // Thread-safe(STDOUT)
 // Printf but tech library compliant
 tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, const char* format, ...);
+
+// Thread-safe(STDOUT)
+// Clears the stdout
+tech_return_t tech_terminal_stdout_clear(void);
 
 
 // 'destination' might not have the sufficient size when the 'source' is converted to multi-byte char string

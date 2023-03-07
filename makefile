@@ -1,4 +1,5 @@
 # LIBTECH Makefile | Written by TechnicalUserX
+# Specialized makefile for libraries
 #!/bin/bash
 
 ######################################
@@ -29,7 +30,7 @@ MKDIR_P = mkdir -p
 
 BUILD_OBJ_DIR = ${BUILD_DIR}/obj
 BUILD_LIB_DIR = ${BUILD_DIR}/lib
-TARGET_LIB=lib${TARGET_LIB_NAME}
+TARGET_LIB = lib${TARGET_LIB_NAME}
 TARGET_LIB_SO = ${TARGET_LIB}.so
 
 

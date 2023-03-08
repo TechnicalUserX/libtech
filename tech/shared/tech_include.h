@@ -9,9 +9,10 @@
 #include <termios.h>
 #include <unistd.h>
 #include <langinfo.h>
+#include <sys/ioctl.h>
 
 #if defined(_PTHREAD_H) || defined(_SEMAPHORE_H)
-#error "Do not include pthread.h and semaphroe.h before including tech libraries"
+    #error "Do not include pthread.h and semaphroe.h before including tech libraries"
 #endif
 
 #include <pthread.h>

@@ -255,6 +255,10 @@ tech_terminal_type_t tech_terminal_get_type(void);
 tech_terminal_encoding_t tech_terminal_get_encoding(void);
 
 
+// Returns the terminal dimensions in rows and columns
+tech_return_t tech_terminal_get_dimensions(tech_size_t* rows, tech_size_t* cols);
+
+
 // Thread-safe(STDOUT)
 // Changes terminal attributes
 tech_return_t tech_terminal_set_attribute(tech_terminal_attribute_t* attribute);

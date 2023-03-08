@@ -51,6 +51,7 @@ typedef struct tech_menu_struct_t
 	// Items
 	tech_size_t menu_item_size;
 	tech_menu_item_t** menu_items;
+	tech_size_t menu_item_size_reserved;
 
 	tech_size_t menu_item_sub_window_size;
 	tech_window_t** menu_item_sub_windows;
@@ -98,5 +99,18 @@ tech_return_t tech_menu_get_current_item(tech_menu_t* menu,tech_size_t* current_
 tech_return_t tech_menu_resize(tech_menu_t* menu, tech_size_t menu_row_size, tech_size_t menu_col_size, tech_size_t menu_item_row_size, tech_size_t menu_item_col_size);
 
 tech_return_t tech_menu_free(tech_menu_t** menu);
+
+tech_return_t tech_menu_modify_item(tech_menu_t* menu, tech_size_t index, tech_menu_item_t* new_item);
+
+tech_return_t tech_menu_append_item(tech_menu_t* menu,tech_menu_item_t* new_item);
+
+tech_return_t tech_menu_remove_item(tech_menu_t* menu, tech_size_t index);
+
+tech_return_t tech_menu_insert_item(tech_menu_t* menu, tech_size_t index, tech_menu_item_t* new_item);
+
+tech_menu_item_t* tech_menu_get_item(tech_menu_t* menu, tech_size_t index);
+
+tech_return_t tech_menu_get_item_size(tech_menu_t* menu, tech_size_t* item_size);
+
 
 #endif

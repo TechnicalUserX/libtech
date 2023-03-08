@@ -20,6 +20,8 @@ const char *tech_error_what(enum tech_error_t error)
         return "fflush() failed";
     case TECH_ERROR_INVALID_ARGUMENT:
         return "Invalid argumenut was given";
+    case TECH_ERROR_BAD_SYSTEM_CALL:
+        return "Bad system call";
     case TECH_ERROR_TERMINAL_PRINT_FAILED:
         return "Terminal print failed";
     case TECH_ERROR_TERMINAL_STDIN_BUFFER_CHECK_FAIL:

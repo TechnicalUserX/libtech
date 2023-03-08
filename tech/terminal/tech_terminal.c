@@ -2,6 +2,7 @@
 #include <tech/util/include/tech_thread.h>
 #include <tech/util/include/tech_error.h>
 
+
 // Flag list for all signals currently supported, internal
 __attribute__((visibility("hidden"))) struct tech_terminal_signal_flag_list_struct_t{
     volatile sig_atomic_t tech_terminal_signal_resize_flag;
@@ -821,6 +822,21 @@ tech_terminal_encoding_t tech_terminal_get_encoding(void)
     }
 
     return TECH_TERMINAL_ENCODING_UNKNOWN;
+}
+
+tech_return_t tech_terminal_get_dimensions(tech_size_t* rows, tech_size_t* cols){
+    
+    struct winsize ws;
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0 || ws.ws_row == 0) {
+        tech_error_number = TECH_ERROR_BAD_SYSTEM_CALL;
+        return TECH_RETURN_FAILURE;
+    } else {
+        *rows = ws.ws_row;
+        *cols = ws.ws_col;
+        tech_error_number = TECH_SUCCESS;
+        return TECH_RETURN_SUCCESS;
+    }
+
 }
 
 tech_return_t tech_terminal_set_attribute(tech_terminal_attribute_t *attribute)

@@ -14,6 +14,10 @@
 
 #define TECH_MENU_ITEM_LINE_COUNT_MAX_SIZE 8
 
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
 typedef struct tech_menu_item_line_struct_t
 {
 	tech_terminal_attribute_t attribute;
@@ -112,5 +116,9 @@ tech_menu_item_t* tech_menu_get_item(tech_menu_t* menu, tech_size_t index);
 
 tech_return_t tech_menu_get_item_size(tech_menu_t* menu, tech_size_t* item_size);
 
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif

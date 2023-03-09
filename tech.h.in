@@ -7,13 +7,20 @@
 #ifndef TECH_H
 #define TECH_H
 
-#include <tech-@VERSION_CONFIGURATION@/util/include/tech_error.h>
-#include <tech-@VERSION_CONFIGURATION@/util/include/tech_log.h>
-#include <tech-@VERSION_CONFIGURATION@/util/include/tech_thread.h>
-#include <tech-@VERSION_CONFIGURATION@/util/include/tech_tool.h>
-#include <tech-@VERSION_CONFIGURATION@/terminal/tech_terminal.h>
-#include <tech-@VERSION_CONFIGURATION@/terminal/graphics/include/tech_window.h>
-#include <tech-@VERSION_CONFIGURATION@/terminal/graphics/include/tech_menu.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/error.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/log.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/thread.h>
+#include <tech-@VERSION_CONFIGURATION@/util/include/tool.h>
+
+#include <tech-@VERSION_CONFIGURATION@/terminal/terminal.h>
+#include <tech-@VERSION_CONFIGURATION@/terminal/graphics/include/window.h>
+#include <tech-@VERSION_CONFIGURATION@/terminal/graphics/include/menu.h>
+
+#include <tech-@VERSION_CONFIGURATION@/network/adapter/adapter.h>
+#include <tech-@VERSION_CONFIGURATION@/network/adapter/wifi/adapter.h>
+#include <tech-@VERSION_CONFIGURATION@/network/ieee80211/radiotap/radiotap.h>
+#include <tech-@VERSION_CONFIGURATION@/network/ieee80211/frame/frame.h>
+
 
 
 #endif

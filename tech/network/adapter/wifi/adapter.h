@@ -38,6 +38,7 @@ typedef enum tech_network_adapter_wifi_operstate_enum_t{
 
 typedef uint8_t tech_network_adapter_wifi_channel_t;
 
+
 tech_return_t tech_network_adapter_wifi_parse_mode(int iw_mode,tech_network_adapter_wifi_mode_t* adapter_mode );
 
 
@@ -51,6 +52,16 @@ tech_return_t tech_network_adapter_wifi_get_frequency(tech_network_adapter_t ada
 
 
 tech_return_t tech_network_adapter_wifi_get_channel(tech_network_adapter_t adapter, tech_network_adapter_wifi_channel_t* channel);
+
+
+tech_return_t tech_network_adapter_wifi_set_mode(tech_network_adapter_t adapter, tech_network_adapter_wifi_mode_t mode);
+
+
+tech_return_t tech_network_adapter_wifi_set_operstate(tech_network_adapter_t adapter, tech_network_adapter_wifi_operstate_t operstate);
+
+
+tech_return_t tech_network_adapter_wifi_set_channel(tech_network_adapter_t adapter, tech_network_adapter_wifi_channel_t channel);
+
 
 #ifdef __cplusplus
     }

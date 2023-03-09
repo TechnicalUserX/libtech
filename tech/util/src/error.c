@@ -86,6 +86,15 @@ const char *tech_error_what(enum tech_error_t error)
     case TECH_ERROR_NETWORK_ADAPTER_NOT_FOUND:
         return "Network adapter not found";
 
+    case TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_MODE:
+        return "Cannot set network wifi adapter mode";
+
+    case TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_OPERSTATE:
+        return "Cannot set network wifi adapter operation state";
+
+    case TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_CHANNEL:
+        return "Cannot set network wifi adapter channel";
+
     default:
         return "Unkown error";
     }

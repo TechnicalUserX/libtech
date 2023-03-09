@@ -131,6 +131,7 @@ tech_return_t tech_network_adapter_wifi_parse_mode(int iw_mode,tech_network_adap
 
 }
 
+
 tech_return_t tech_network_adapter_wifi_get_mode(tech_network_adapter_t adapter, tech_network_adapter_wifi_mode_t* mode){
 
     if(adapter == NULL || mode == NULL){
@@ -165,6 +166,7 @@ tech_return_t tech_network_adapter_wifi_get_mode(tech_network_adapter_t adapter,
     }
 
 }
+
 
 tech_return_t tech_network_adapter_wifi_get_operstate(tech_network_adapter_t adapter, tech_network_adapter_wifi_operstate_t* operstate){
 
@@ -210,6 +212,7 @@ tech_return_t tech_network_adapter_wifi_get_operstate(tech_network_adapter_t ada
     }
 
 }
+
 
 tech_return_t tech_network_adapter_wifi_get_frequency(tech_network_adapter_t adapter,double* frequency, tech_network_adapter_wifi_frequency_flag_t* flag){
 
@@ -257,6 +260,7 @@ tech_return_t tech_network_adapter_wifi_get_frequency(tech_network_adapter_t ada
 
 }
 
+
 tech_return_t tech_network_adapter_wifi_get_channel(tech_network_adapter_t adapter, tech_network_adapter_wifi_channel_t* channel){
 
     if(adapter == NULL || channel == NULL){
@@ -284,6 +288,94 @@ tech_return_t tech_network_adapter_wifi_get_channel(tech_network_adapter_t adapt
             return TECH_RETURN_SUCCESS;
         }
 
+    }
+
+}
+
+
+tech_return_t tech_network_adapter_wifi_set_mode(tech_network_adapter_t adapter, tech_network_adapter_wifi_mode_t mode){
+    char command[1024] = {0};
+        strcat(command,"iw dev ");
+        strcat(command,adapter);
+        strcat(command," set type ");
+    switch(mode){
+        case TECH_NETWORK_ADAPTER_WIFI_MODE_MANAGED:
+            strcat(command,"managed");
+            break;
+        case TECH_NETWORK_ADAPTER_WIFI_MODE_MONITOR:
+            strcat(command,"monitor");
+            break;
+        case TECH_NETWORK_ADAPTER_WIFI_MODE_MASTER:
+        case TECH_NETWORK_ADAPTER_WIFI_MODE_ADHOC:
+        case TECH_NETWORK_ADAPTER_WIFI_MODE_REPEAT:
+        case TECH_NETWORK_ADAPTER_WIFI_MODE_AUTO:
+        case TECH_NETWORK_ADAPTER_WIFI_MODE_SECOND:
+            tech_error_number = TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_MODE;
+            return TECH_RETURN_FAILURE;
+
+    }
+    
+    int ret = system(command);
+
+    if(ret == 0){
+        tech_error_number = TECH_SUCCESS;
+        return TECH_RETURN_SUCCESS;
+    }else{
+        tech_error_number = TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_MODE;
+        return TECH_RETURN_FAILURE;
+    }
+
+}
+
+
+tech_return_t tech_network_adapter_wifi_set_operstate(tech_network_adapter_t adapter, tech_network_adapter_wifi_operstate_t operstate){
+
+    char command[1024] = {0};
+    strcat(command,"ip link set ");
+    strcat(command,adapter);
+    switch(operstate){
+        case TECH_NETWORK_ADAPTER_WIFI_OPERSTATE_UP:
+            strcat(command," up");
+            break;
+        case TECH_NETWORK_ADAPTER_WIFI_OPERSTATE_DOWN:
+            strcat(command," down");
+            break;
+        default:
+            tech_error_number = TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_OPERSTATE;
+            return TECH_RETURN_FAILURE;
+    }
+
+    int ret = system(command);
+
+    if(ret == 0){
+        tech_error_number = TECH_SUCCESS;
+        return TECH_RETURN_SUCCESS;
+    }else{
+        tech_error_number = TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_OPERSTATE;
+        return TECH_RETURN_FAILURE;
+    }
+
+}
+
+
+tech_return_t tech_network_adapter_wifi_set_channel(tech_network_adapter_t adapter, tech_network_adapter_wifi_channel_t channel){
+
+    char command[1024] = {0};
+    strcat(command,"iw dev ");
+    strcat(command,adapter);
+    strcat(command, " set channel ");
+    char channel_number[16] = {0};
+    sprintf(channel_number,"%d",channel);
+    strcat(command, channel_number);
+
+    int ret = system(command);
+
+    if(ret == 0){
+        tech_error_number = TECH_SUCCESS;
+        return TECH_RETURN_SUCCESS;
+    }else{
+        tech_error_number = TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_OPERSTATE;
+        return TECH_RETURN_FAILURE;
     }
 
 }

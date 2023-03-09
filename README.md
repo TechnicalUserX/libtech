@@ -48,7 +48,7 @@ But if you want to include other headers individually, you can do like this:
 #include <tech/shared/tech_include.h>
 ```
 libtech is structured into sub folders to make the sources understandable in context.
-So for example, you will be able to see IEEE80211 wireless headers inside `<tech/ieee80211/...>` folder.
+So for example, you will be able to see IEEE80211 wireless headers inside `<tech/network/ieee80211/...>` folder.
 
 ## Linking to the shared object
 

@@ -45,7 +45,7 @@ This file, `tech/tech.h` is written so that it includes everything inside the li
 But if you want to include other headers individually, you can do like this:
 
 ```c
-#include <tech/shared/tech_include.h>
+#include <tech/shared/include.h>
 ```
 libtech is structured into sub folders to make the sources understandable in context.
 So for example, you will be able to see IEEE80211 wireless headers inside `<tech/network/ieee80211/...>` folder.

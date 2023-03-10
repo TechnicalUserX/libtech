@@ -1,0 +1,6 @@
+Name: test
+Version: @VERSION_CONFIGURATION@
+Description: Technical C Library
+Libs: -ltech
+URL: https://github.com/TechnicalUserX/libtech
+LICENSE: MIT

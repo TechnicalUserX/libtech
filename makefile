@@ -8,12 +8,11 @@ VERSION=0.0.1-beta
 VERSION_MAJOR=0
 VERSION_MINOR=0
 VERSION_PATCH=1
-VERSION_PRE_RELEASE=beta
+VERSION_PRE_RELEASE=1 # 0=stable 1=beta
 ######################################
 # Common variables
 SHELL := /bin/bash
 CC = gcc
-CC_VERSION_DEFINE=-DTECH_VERSION=\"${VERSION}\" -DTECH_VERSION_MAJOR=\"${VERSION_MAJOR}\" -DTECH_VERSION_MINOR=\"${VERSION_MINOR}\" -DTECH_VERSION_PATCH=\"${VERSION_PATCH}\" -DTECH_VERSION_PRE_RELEASE=\"${VERSION_PRE_RELEASE}\"
 CC_INCLUDE_DIR=.
 INSTALL_INCLUDE_DIR = /usr/include
 INSTALL_LIB_DIR = /usr/lib
@@ -23,17 +22,16 @@ CFLAGS = -Wall -Wextra -fPIC -std=c11
 BUILD_DIR=build
 SRC_EXT=c
 HDR_EXT=h
+VERSION_HEADER=${LOOKUP_DIR}/version/version.${HDR_EXT}
 ######################################
-
-
-MKDIR_P = mkdir -p
-
 BUILD_OBJ_DIR = ${BUILD_DIR}/obj
 BUILD_LIB_DIR = ${BUILD_DIR}/lib
 TARGET_LIB = lib${TARGET_LIB_NAME}
+#pkg-config file
+TARGET_LIB_PC = ${TARGET_LIB}.pc
+#shared object file
 TARGET_LIB_SO = ${TARGET_LIB}.so
-
-
+######################################
 
 
 IS_INSTALLED = $(shell if [ -e ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME} ]; then echo 1; else echo 0; fi)
@@ -47,26 +45,30 @@ OBJ = $(patsubst $(LOOKUP_DIR)/%, $(BUILD_OBJ_DIR)/%, $(SRC:.${SRC_EXT}=.o))
 HDR_DIR=$(dir ${HDR} | sort -u);
 INSTALL_HDR_DIR=$(addprefix  ${INSTALL_INCLUDE_DIR}/,$(dir $(subst ${TARGET_LIB_NAME}/,${TARGET_LIB_NAME}-${VERSION}/, ${HDR})) )
 
+MKDIR_P = mkdir -p
 
-${TARGET_LIB}: ${BUILD_LIB_DIR}/$(TARGET_LIB_SO) config
+
+
+${TARGET_LIB}: ${BUILD_LIB_DIR}/$(TARGET_LIB_SO) ${TARGET_LIB_NAME}.${HDR_EXT} ${TARGET_LIB_PC}
 	@echo Compiled ${TARGET_LIB}
 
-${BUILD_LIB_DIR}/$(TARGET_LIB_SO): $(OBJ)
+${BUILD_LIB_DIR}/$(TARGET_LIB_SO): ${VERSION_HEADER} $(OBJ) 
 	@$(MKDIR_P) ${BUILD_LIB_DIR}
 	@$(CC) -I ${CC_INCLUDE_DIR} -shared $^ -o $@.${VERSION}
 	@echo Created ${TARGET_LIB_SO}
 
 $(BUILD_OBJ_DIR)/%.o: $(LOOKUP_DIR)/%.c 
 	@$(MKDIR_P) $(shell dirname $@)
-	$(CC) ${CC_VERSION_DEFINE} -I ${CC_INCLUDE_DIR} $(CFLAGS) -c $< -o $@ 
+	$(CC) -I ${CC_INCLUDE_DIR} $(CFLAGS) -c $< -o $@ 
 
 
 ${LOOKUP_DIR}/%.${HDR_EXT}:
 	@echo $(subst ${TARGET_LIB_NAME}/,${TARGET_LIB_NAME}-${VERSION}/, $@ )
 
 
-config: ${TARGET_LIB_NAME}.${HDR_EXT}
-	@echo Configuration has ended
+${VERSION_HEADER}:
+	@sed -e 's/@VERSION_CONFIGURATION@/"${VERSION}"/g' -e 's/@VERSION_CONFIGURATION_MAJOR@/${VERSION_MAJOR}/g' -e 's/@VERSION_CONFIGURATION_MINOR@/${VERSION_MINOR}/g' -e 's/@VERSION_CONFIGURATION_PATCH@/${VERSION_PATCH}/g' -e 's/@VERSION_CONFIGURATION_PRE_RELEASE@/${VERSION_PRE_RELEASE}/g' ${VERSION_HEADER}.in > ${VERSION_HEADER}
+
 
 
 ${TARGET_LIB_NAME}.${HDR_EXT}:
@@ -74,13 +76,14 @@ ${TARGET_LIB_NAME}.${HDR_EXT}:
 	@echo Created generic ${TARGET_LIB_NAME}.${HDR_EXT} file
 
 
+${TARGET_LIB_PC}:
+	@sed -e 's/@VERSION_CONFIGURATION@/${VERSION}/g' ${TARGET_LIB_PC}.in > ${TARGET_LIB_PC}
 clean:
 	@echo Performing cleanup
 	@rm -rf $(BUILD_DIR)
 	@rm -f ${TARGET_LIB_NAME}.${HDR_EXT}
-
-
-
+	@rm -f ${VERSION_HEADER}
+	@rm -f ${TARGET_LIB_PC}
 
 
 install: ${BUILD_LIB_DIR}/${TARGET_LIB_SO}
@@ -112,7 +115,7 @@ else
 	@${MKDIR_P} ${INSTALL_HDR_DIR}
 	@bash -c '$(foreach a,$(HDR),cp ${a} $(subst ${TARGET_LIB_NAME}/,${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}/,$(dir ${a}) ); )'	@echo FINISH
 	@cp ${TARGET_LIB_NAME}.${HDR_EXT} ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
-
+	@cp ${TARGET_LIB}.pc ${INSTALL_LIB_DIR}/pkgconfig
 
 	@echo "Installation completed."
 
@@ -141,6 +144,7 @@ else
 
 	@rm -rf ${INSTALL_LIB_DIR}/${TARGET_LIB_SO}
 	@rm -rf ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}
+	@rm -f  ${INSTALL_LIB_DIR}/pkgconfig/${TARGET_LIB}.pc
 
 
 	@echo "Uninstall completed!"

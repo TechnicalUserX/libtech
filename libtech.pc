@@ -1,0 +1,6 @@
+Name: test
+Version: 0.0.1-beta
+Description: Technical C Library
+Libs: -ltech
+URL: https://github.com/TechnicalUserX/libtech
+LICENSE: MIT

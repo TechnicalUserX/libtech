@@ -1,13 +1,11 @@
 #include <tech/util/include/thread.h>
 #include <tech/util/include/error.h>
 
-tech_return_t tech_thread_safe_block_exit_status_control(tech_thread_safe_block_exit_status_directive_t directive, tech_thread_safe_block_exit_status_t *exit_status_ptr)
-{
+tech_return_t tech_thread_safe_block_exit_status_control(tech_thread_safe_block_exit_status_directive_t directive, tech_thread_safe_block_exit_status_t *exit_status_ptr){
 
     tech_thread_local_t static tech_thread_safe_block_exit_status_t *exit_status_stored_ptr = NULL;
 
-    switch (directive)
-    {
+    switch (directive){
 
         case TECH_THREAD_SAFE_BLOCK_EXIT_STATUS_DIRECTIVE_GET:
         {
@@ -17,8 +15,8 @@ tech_return_t tech_thread_safe_block_exit_status_control(tech_thread_safe_block_
                 tech_error_number = TECH_SUCCESS;
                 return TECH_RETURN_SUCCESS;
             }
-            else
-            {
+            else{
+
                 return TECH_RETURN_FAILURE;
             }
         }
@@ -45,18 +43,18 @@ tech_return_t tech_thread_safe_block_exit_status_control(tech_thread_safe_block_
     }
 }
 
-tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_global_directive_t directive, const char *lock_identifier, pthread_mutex_t *local_mutex)
+tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_global_directive_t directive, const char *lock_identifier, uint32_t lock_number, pthread_mutex_t *local_mutex)
 {
 
     static struct lock_memory_t
     {
         char lock_identifier[TECH_THREAD_SAFE_BLOCK_GLOBAL_LOCK_IDENTIFIER_MAX_SIZE];
+        uint32_t lock_number;
         sem_t semaphore;
-        pthread_mutex_t *active_mutex;
-        struct lock_memory_t *next;
+        pthread_mutex_t* active_mutex;
+        struct lock_memory_t* next_memory; // Different identifier
+        struct lock_memory_t* next_number; // Same identifier, different number
     } *lock_memory = NULL;
-
-
 
 
 
@@ -75,37 +73,78 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
         memset(new_memory->lock_identifier, 0x0, sizeof(new_memory->lock_identifier));
         strncpy(new_memory->lock_identifier, lock_identifier, TECH_THREAD_SAFE_BLOCK_GLOBAL_LOCK_IDENTIFIER_MAX_SIZE);
         new_memory->active_mutex = NULL; // For now, there is no active mutex
-        new_memory->next = NULL;
+        new_memory->next_memory = NULL;
+        new_memory->next_number = NULL;
+        new_memory->lock_number = lock_number;
         lock_memory = new_memory;
         detected_lock_memory = new_memory;
     }
     else
     {
+        // Searching for the lock identifier
         struct lock_memory_t *memory_iterator;
 
-        for (memory_iterator = lock_memory; memory_iterator != NULL; memory_iterator = memory_iterator->next)
-        {
-            if (strncmp(memory_iterator->lock_identifier, lock_identifier, TECH_THREAD_SAFE_BLOCK_GLOBAL_LOCK_IDENTIFIER_MAX_SIZE) == 0)
-            {
-                detected_lock_memory = memory_iterator; // Active mutex is the previous mutex
-                break;
-            }
+        for (memory_iterator = lock_memory; memory_iterator != NULL; memory_iterator = memory_iterator->next_memory){
 
-            if (memory_iterator->next == NULL)
-            {
+            if (strncmp(memory_iterator->lock_identifier, lock_identifier, TECH_THREAD_SAFE_BLOCK_GLOBAL_LOCK_IDENTIFIER_MAX_SIZE) == 0){
 
+                // Now must detect the correct number, if not exists, create new memory;
+                struct lock_memory_t *number_iterator;
+
+                // Searching for the number iterator
+                for(number_iterator = memory_iterator; number_iterator != NULL; number_iterator = number_iterator->next_number){
+                    
+                        if(number_iterator->lock_number == lock_number){
+                            // We found the correct number
+                            detected_lock_memory = number_iterator; // Active mutex is the previous mutex
+                            break;
+                        }else if(number_iterator->next_memory == NULL){
+
+                            struct lock_memory_t *new_memory = (struct lock_memory_t *)malloc(sizeof(struct lock_memory_t));
+                            sem_init(&new_memory->semaphore, false, 1);
+                            memset(new_memory->lock_identifier, 0x0, sizeof(new_memory->lock_identifier));
+                            strncpy(new_memory->lock_identifier, lock_identifier, TECH_THREAD_SAFE_BLOCK_GLOBAL_LOCK_IDENTIFIER_MAX_SIZE);
+                            new_memory->active_mutex = NULL; // For now, there is no active mutex
+                            new_memory->next_memory = NULL;
+                            new_memory->next_number = NULL;
+                            new_memory->lock_number = lock_number;
+                            memory_iterator->next_memory = new_memory;
+                            number_iterator->next_number = new_memory;
+                            detected_lock_memory = new_memory;
+                            break;
+                        }
+
+                }
+
+            
+                // detected_lock_memory = memory_iterator; // Active mutex is the previous mutex
+                // break;
+            
+            
+            }else if (memory_iterator->next_memory == NULL){
+
+                // Could not find lock identifier, generating new lock memory
                 struct lock_memory_t *new_memory = (struct lock_memory_t *)malloc(sizeof(struct lock_memory_t));
                 sem_init(&new_memory->semaphore, false, 1);
                 memset(new_memory->lock_identifier, 0x0, sizeof(new_memory->lock_identifier));
                 strncpy(new_memory->lock_identifier, lock_identifier, TECH_THREAD_SAFE_BLOCK_GLOBAL_LOCK_IDENTIFIER_MAX_SIZE);
                 new_memory->active_mutex = NULL; // For now, there is no active mutex
-                new_memory->next = NULL;
-                memory_iterator->next = new_memory;
+                new_memory->next_memory = NULL;
+                new_memory->next_number = NULL;
+                new_memory->lock_number = lock_number;
+                memory_iterator->next_memory = new_memory;
                 detected_lock_memory = new_memory;
                 break;
             }
+
+
         }
+
+
+
     }
+
+
 
     if (detected_lock_memory->active_mutex != NULL)
     {
@@ -166,7 +205,7 @@ tech_return_t tech_thread_safe_block_global_control(tech_thread_safe_block_globa
 
             while(memory_iterator != NULL){
 
-                struct lock_memory_t* memory_iterator_next = memory_iterator->next;
+                struct lock_memory_t* memory_iterator_next = memory_iterator->next_memory;
                 free(memory_iterator);
                 memory_iterator = memory_iterator_next;
             }

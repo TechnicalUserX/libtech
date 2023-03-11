@@ -141,7 +141,7 @@
 // General design idea for this lock is to make this lock 'non-blocking'
 // Functions which use this should be pseudo-non-blocking
 // Printing must be pseudo-atomic
-#define TECH_TERMINAL_STDOUT_LOCK tech_thread_safe_block_global_terminal_stdout_lock
+#define TECH_TERMINAL_STDOUT_LOCK "tech_thread_safe_block_global_terminal_stdout_lock"
 
 #define TECH_TERMINAL_STDOUT_PRINT_INTERNAL_BUFFER_SIZE 10000
 
@@ -149,7 +149,7 @@
 // General design idea for this lock is to make this lock 'blocking'
 // Functions using this lock shall prevent others from getting input
 // Try to avoid using functions which use this lock at the same time from different threads
-#define TECH_TERMINAL_STDIN_LOCK tech_thread_safe_block_global_terminal_stdin_lock
+#define TECH_TERMINAL_STDIN_LOCK "tech_thread_safe_block_global_terminal_stdin_lock"
 
 
 #define TECH_TERMINAL_CHAR_BYTES_MAX_SIZE 8

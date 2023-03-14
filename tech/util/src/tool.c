@@ -1,5 +1,6 @@
 #include <tech/util/include/tool.h>
 
+
 tech_byte_t tech_tool_convert_truecolor_to_xterm256(int r, int g, int b)
 {
     int gray = (r == g) && (g == b);
@@ -196,3 +197,44 @@ void tech_tool_hexdump(void* address, int size, int line){
     printf("\n");
 
 }
+
+tech_return_t tech_tool_fd_check_available_data(int fd, bool* check, struct timeval to){
+    if (check == NULL)
+    {
+        tech_error_number = TECH_ERROR_NULL_POINTER;
+        return TECH_RETURN_FAILURE;
+    }
+
+    bool buffer_available = false;
+
+    struct timeval tv = to;
+    fd_set fds;
+    FD_ZERO(&fds);
+    FD_SET(fd, &fds);
+    buffer_available = (select(fd + 1, &fds, NULL, NULL, &tv));
+
+
+
+    if (buffer_available > 0)
+    {
+        *check = true;
+        tech_error_number = TECH_SUCCESS;
+        return TECH_RETURN_SUCCESS;
+
+    }
+    else if (buffer_available == 0)
+    {
+        *check = false;
+        tech_error_number = TECH_SUCCESS;
+        return TECH_RETURN_SUCCESS;
+    }
+    else
+    {
+        tech_error_number = TECH_ERROR_TOOL_FD_CHECK_AVAILABLE_DATA_FAILED;
+        return TECH_RETURN_FAILURE;
+    }
+
+
+
+}
+

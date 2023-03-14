@@ -47,7 +47,8 @@ enum tech_error_t
     TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_MODE,
     TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_OPERSTATE,
     TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_CHANNEL,
-
+    
+    TECH_ERROR_TOOL_FD_CHECK_AVAILABLE_DATA_FAILED
 };
 
 extern tech_thread_local_t enum tech_error_t tech_error_number;

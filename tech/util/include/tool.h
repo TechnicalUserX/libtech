@@ -5,6 +5,9 @@
 #include <tech/shared/include.h>
 #include <tech/shared/types.h>
 
+#include <tech/util/include/error.h>
+
+
 #ifdef __cplusplus
     extern "C" {
 #endif
@@ -25,6 +28,9 @@ tech_byte_t tech_tool_convert_xterm256_to_xterm16(tech_byte_t color);
 tech_size_t tech_tool_multibyte_length(const char* stream);
 
 void tech_tool_hexdump(void* address, int size, int line);
+
+tech_return_t tech_tool_fd_check_available_data(int fd, bool* check, struct timeval to);
+
 
 #ifdef __cplusplus
     }

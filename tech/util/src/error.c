@@ -95,6 +95,10 @@ const char *tech_error_what(enum tech_error_t error)
     case TECH_ERROR_NETWORK_ADAPTER_CANNOT_SET_CHANNEL:
         return "Cannot set network wifi adapter channel";
 
+
+    case TECH_ERROR_TOOL_FD_CHECK_AVAILABLE_DATA_FAILED:
+        return "Cannot check available data for the given file descriptor";
+
     default:
         return "Unkown error";
     }

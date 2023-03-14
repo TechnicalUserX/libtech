@@ -23,6 +23,8 @@ typedef int8_t tech_return_t;
 
 typedef uint64_t tech_size_t;
 
+typedef int64_t tech_ssize_t;
+
 #ifdef __cplusplus
 #define tech_thread_local_t thread_local
 typedef std::atomic_bool atomic_bool;

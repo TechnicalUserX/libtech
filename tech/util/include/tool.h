@@ -31,6 +31,11 @@ void tech_tool_hexdump(void* address, int size, int line);
 
 tech_return_t tech_tool_fd_check_available_data(int fd, bool* check, struct timeval to);
 
+tech_return_t tech_tool_file_basename(const char* path, tech_size_t path_size, char* basename, tech_size_t basename_size);
+
+tech_return_t tech_tool_file_dirname(const char* path, tech_size_t path_size, char* dirname, tech_size_t dirname_size);
+
+
 
 #ifdef __cplusplus
     }

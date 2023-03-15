@@ -238,3 +238,75 @@ tech_return_t tech_tool_fd_check_available_data(int fd, bool* check, struct time
 
 }
 
+
+tech_return_t tech_tool_file_basename(const char* path, tech_size_t path_size, char* basename, tech_size_t basename_size){
+
+    if(path == NULL || basename == NULL){
+        tech_error_number = TECH_ERROR_NULL_POINTER;
+        return TECH_RETURN_FAILURE;
+    }
+
+    if(path_size == 0){
+        tech_error_number = TECH_ERROR_SIZE_ZERO;
+        return TECH_RETURN_FAILURE;
+    }
+
+
+    tech_size_t path_str_size = strnlen(path,path_size);
+
+    // Search until the '/' is found
+    for(tech_ssize_t i = path_str_size-1; i >= 0; i--){
+        if(path[i] == '/'){
+            // Found the location;
+            strncpy(basename,path+i+1,basename_size-1);
+            break;
+        }else if(i == 0){
+            strncpy(basename,path,basename_size-1);
+            break;
+        }
+
+    }
+
+    return TECH_RETURN_SUCCESS;
+}
+
+tech_return_t tech_tool_file_dirname(const char* path, tech_size_t path_size, char* dirname, tech_size_t dirname_size){
+    
+    if(path == NULL || dirname == NULL){
+        tech_error_number = TECH_ERROR_NULL_POINTER;
+        return TECH_RETURN_FAILURE;
+    }
+
+    if(path_size == 0){
+        tech_error_number = TECH_ERROR_SIZE_ZERO;
+        return TECH_RETURN_FAILURE;
+    }
+    
+    tech_size_t path_str_size = strnlen(path,path_size);
+
+    // Search until the '/' is found
+    for(tech_ssize_t i = path_str_size-1; i >= 0; i--){
+        if(i == 0){
+            // Found the location;
+
+            if(path[i] == '/'){
+                strncpy(dirname,"/",dirname_size-1);
+
+            }else{
+                strncpy(dirname,".",dirname_size-1);
+            }
+
+            break;
+        }else if(path[i] == '/'){
+            char dir_str[path_str_size];
+            bzero(dir_str,path_str_size);
+            strncpy(dir_str,path,i);
+            strncpy(dirname,dir_str,dirname_size-1);
+            break;
+        }
+
+    }
+
+    return TECH_RETURN_SUCCESS;
+}
+

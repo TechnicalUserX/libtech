@@ -1,4 +1,4 @@
-Name: test
+Name: LIBTECH
 Version: @VERSION_CONFIGURATION@
 Description: Technical C Library
 Libs: -ltech

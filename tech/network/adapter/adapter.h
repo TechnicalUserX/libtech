@@ -25,10 +25,10 @@ typedef tech_byte_t tech_network_adapter_mac_t[TECH_NETWORK_ADAPTER_MAC_SIZE];
 
 typedef char tech_network_adapter_mac_string_t[TECH_NETWORK_ADAPTER_MAC_STRING_SIZE];
 
-typedef char tech_network_adapter_t[TECH_NETWORK_ADAPTER_NAME_SIZE]; // This is the standard
+typedef char tech_network_adapter_name_t[TECH_NETWORK_ADAPTER_NAME_SIZE]; // This is the standard
 
 typedef struct tech_network_adapter_info_struct_t{
-	tech_network_adapter_t adapter;
+	tech_network_adapter_name_t adapter;
 	tech_network_adapter_mac_t current_mac;
 	tech_network_adapter_mac_t permanent_mac;
 	struct tech_network_adapter_info_struct_t* next;
@@ -45,7 +45,7 @@ tech_return_t tech_network_adapter_get_info_list(tech_network_adapter_info_t** i
 
 tech_return_t tech_network_adapter_free_info_list(tech_network_adapter_info_t** info_list);
 
-tech_return_t tech_network_adapter_find_name_from_mac(tech_network_adapter_t name, tech_network_adapter_mac_t permanent_mac);
+tech_return_t tech_network_adapter_find_name_from_mac(tech_network_adapter_name_t name, tech_network_adapter_mac_t permanent_mac);
 
 
 #ifdef __cplusplus

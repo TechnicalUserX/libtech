@@ -39,7 +39,7 @@ static inline tech_return_t tech_network_adapter_wifi_frequency_to_float(const s
 	return TECH_RETURN_SUCCESS;
 }
 
-static inline tech_return_t tech_network_adapter_wifi_frequency_to_channel(tech_network_adapter_t adapter,double frequency, tech_network_adapter_wifi_channel_t* channel){
+static inline tech_return_t tech_network_adapter_wifi_frequency_to_channel(tech_network_adapter_name_t adapter,double frequency, tech_network_adapter_wifi_channel_t* channel){
 
 
     if(adapter == NULL || channel == NULL){
@@ -132,7 +132,7 @@ tech_return_t tech_network_adapter_wifi_parse_mode(int iw_mode,tech_network_adap
 }
 
 
-tech_return_t tech_network_adapter_wifi_get_mode(tech_network_adapter_t adapter, tech_network_adapter_wifi_mode_t* mode){
+tech_return_t tech_network_adapter_wifi_get_mode(tech_network_adapter_name_t adapter, tech_network_adapter_wifi_mode_t* mode){
 
     if(adapter == NULL || mode == NULL){
         tech_error_number = TECH_ERROR_NULL_POINTER;
@@ -168,7 +168,7 @@ tech_return_t tech_network_adapter_wifi_get_mode(tech_network_adapter_t adapter,
 }
 
 
-tech_return_t tech_network_adapter_wifi_get_operstate(tech_network_adapter_t adapter, tech_network_adapter_wifi_operstate_t* operstate){
+tech_return_t tech_network_adapter_wifi_get_operstate(tech_network_adapter_name_t adapter, tech_network_adapter_wifi_operstate_t* operstate){
 
     if(adapter == NULL && operstate == NULL){
         tech_error_number = TECH_ERROR_NULL_POINTER;
@@ -214,7 +214,7 @@ tech_return_t tech_network_adapter_wifi_get_operstate(tech_network_adapter_t ada
 }
 
 
-tech_return_t tech_network_adapter_wifi_get_frequency(tech_network_adapter_t adapter,double* frequency, tech_network_adapter_wifi_frequency_flag_t* flag){
+tech_return_t tech_network_adapter_wifi_get_frequency(tech_network_adapter_name_t adapter,double* frequency, tech_network_adapter_wifi_frequency_flag_t* flag){
 
 
     if(adapter == NULL || frequency == NULL || flag == NULL){
@@ -261,7 +261,7 @@ tech_return_t tech_network_adapter_wifi_get_frequency(tech_network_adapter_t ada
 }
 
 
-tech_return_t tech_network_adapter_wifi_get_channel(tech_network_adapter_t adapter, tech_network_adapter_wifi_channel_t* channel){
+tech_return_t tech_network_adapter_wifi_get_channel(tech_network_adapter_name_t adapter, tech_network_adapter_wifi_channel_t* channel){
 
     if(adapter == NULL || channel == NULL){
         tech_error_number = TECH_ERROR_NULL_POINTER;
@@ -293,7 +293,7 @@ tech_return_t tech_network_adapter_wifi_get_channel(tech_network_adapter_t adapt
 }
 
 
-tech_return_t tech_network_adapter_wifi_set_mode(tech_network_adapter_t adapter, tech_network_adapter_wifi_mode_t mode){
+tech_return_t tech_network_adapter_wifi_set_mode(tech_network_adapter_name_t adapter, tech_network_adapter_wifi_mode_t mode){
     char command[1024] = {0};
         strcat(command,"iw dev ");
         strcat(command,adapter);
@@ -328,7 +328,7 @@ tech_return_t tech_network_adapter_wifi_set_mode(tech_network_adapter_t adapter,
 }
 
 
-tech_return_t tech_network_adapter_wifi_set_operstate(tech_network_adapter_t adapter, tech_network_adapter_wifi_operstate_t operstate){
+tech_return_t tech_network_adapter_wifi_set_operstate(tech_network_adapter_name_t adapter, tech_network_adapter_wifi_operstate_t operstate){
 
     char command[1024] = {0};
     strcat(command,"ip link set ");
@@ -358,7 +358,7 @@ tech_return_t tech_network_adapter_wifi_set_operstate(tech_network_adapter_t ada
 }
 
 
-tech_return_t tech_network_adapter_wifi_set_channel(tech_network_adapter_t adapter, tech_network_adapter_wifi_channel_t channel){
+tech_return_t tech_network_adapter_wifi_set_channel(tech_network_adapter_name_t adapter, tech_network_adapter_wifi_channel_t channel){
 
     char command[1024] = {0};
     strcat(command,"iw dev ");

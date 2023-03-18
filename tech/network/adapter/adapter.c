@@ -213,7 +213,7 @@ tech_return_t tech_network_adapter_free_info_list(tech_network_adapter_info_t** 
 	return TECH_RETURN_SUCCESS;
 }
 
-tech_return_t tech_network_adapter_find_name_from_mac(tech_network_adapter_t name, tech_network_adapter_mac_t permanent_mac){
+tech_return_t tech_network_adapter_find_name_from_mac(tech_network_adapter_name_t name, tech_network_adapter_mac_t permanent_mac){
 
 
 	if(name == NULL || permanent_mac == NULL){

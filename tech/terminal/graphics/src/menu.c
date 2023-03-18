@@ -505,13 +505,13 @@ tech_return_t tech_menu_driver(tech_menu_t* menu, tech_menu_driver_directive_t d
 	return TECH_RETURN_SUCCESS;
 }
 
-tech_return_t tech_menu_get_current_item(tech_menu_t* menu,tech_size_t* current_item ){
+tech_return_t tech_menu_get_current_item_index(tech_menu_t* menu,tech_size_t* current_item_index ){
 	if (menu == NULL)
 	{
 		tech_error_number = TECH_ERROR_NULL_POINTER;
 		return TECH_RETURN_FAILURE;
 	}
-	*current_item = menu->menu_item_current_index;
+	*current_item_index = menu->menu_item_current_index;
 	tech_error_number = TECH_SUCCESS;
 	return TECH_RETURN_SUCCESS;
 }

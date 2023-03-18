@@ -98,7 +98,7 @@ tech_return_t tech_menu_refresh(tech_menu_t* menu);
 
 tech_return_t tech_menu_driver(tech_menu_t* menu, tech_menu_driver_directive_t directive);
 
-tech_return_t tech_menu_get_current_item(tech_menu_t* menu,tech_size_t* current_item );
+tech_return_t tech_menu_get_current_item_index(tech_menu_t* menu,tech_size_t* current_item );
 
 tech_return_t tech_menu_resize(tech_menu_t* menu, tech_size_t menu_row_size, tech_size_t menu_col_size, tech_size_t menu_item_row_size, tech_size_t menu_item_col_size);
 

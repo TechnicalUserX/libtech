@@ -238,7 +238,6 @@ tech_return_t tech_tool_fd_check_available_data(int fd, bool* check, struct time
 
 }
 
-
 tech_return_t tech_tool_file_basename(const char* path, tech_size_t path_size, char* basename, tech_size_t basename_size){
 
     if(path == NULL || basename == NULL){
@@ -309,4 +308,3 @@ tech_return_t tech_tool_file_dirname(const char* path, tech_size_t path_size, ch
 
     return TECH_RETURN_SUCCESS;
 }
-

@@ -550,6 +550,7 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_set_attribute_
 
     tech_terminal_type_t type = tech_terminal_get_type();
 
+    tech_terminal_stdout_print_internal(0, 0, NULL, TECH_TERMINAL_ATTRIBUTE_CLEAR);
 
     if (attribute == NULL)
     {
@@ -557,7 +558,6 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_set_attribute_
         return TECH_RETURN_SUCCESS;
     }
 
-    tech_terminal_stdout_print_internal(0, 0, NULL, TECH_TERMINAL_ATTRIBUTE_CLEAR);
 
     // Needs to check color compatibility
     if (attribute->set_fg)

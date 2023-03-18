@@ -341,6 +341,9 @@ tech_return_t tech_terminal_string_convert_to_char_stream(char* destination, tec
 tech_return_t tech_terminal_string_convert_from_char_stream(tech_terminal_char_t* destination, tech_size_t destination_size, const char* source, tech_size_t source_size);
 
 
+tech_size_t tech_terminal_string_length(tech_terminal_char_t* terminal_string);
+
+
 tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t* terminal_char, const char* stream, tech_size_t stream_size);
 
 

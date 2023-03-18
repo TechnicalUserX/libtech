@@ -1500,6 +1500,21 @@ tech_return_t tech_terminal_string_convert_from_char_stream(tech_terminal_char_t
     return TECH_RETURN_SUCCESS;
 }
 
+tech_size_t tech_terminal_string_length(tech_terminal_char_t* terminal_string){
+
+    tech_size_t size = 0;
+
+    for(tech_size_t i = 0;; i++){
+        if(terminal_string[i].bytes[0] != (TECH_TERMINAL_CHAR_NULL_TERMINATOR).bytes[0]){
+            size++;
+        }else{
+            break;
+        }
+    }
+
+    return size;
+}
+
 tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t *terminal_char, const char *stream, tech_size_t stream_size)
 {
 

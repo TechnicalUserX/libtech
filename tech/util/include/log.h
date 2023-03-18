@@ -9,7 +9,7 @@ extern "C"
 {
 #endif
 
-    enum tech_log_style_t
+    typedef enum tech_log_style_enum_t
     {
         TECH_LOG_STYLE_NONE = 0b00000,
         TECH_LOG_STYLE_CLOCK = 0b10000,
@@ -17,9 +17,9 @@ extern "C"
         TECH_LOG_STYLE_MONTH = 0b00100,
         TECH_LOG_STYLE_DAY = 0b00010,
         TECH_LOG_STYLE_DAY_NAME = 0b00001
-    };
+    }tech_log_style_t;
 
-    void tech_log(FILE *output_file, enum tech_log_style_t style, const char *display_string, ...);
+    void tech_log(FILE *output_file, tech_log_style_t style, const char *display_string, ...);
 
 #ifdef __cplusplus
 }

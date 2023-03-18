@@ -1,6 +1,6 @@
 #include <tech/util/include/log.h>
 
-void tech_log(FILE *output_file, enum tech_log_style_t style, const char *display_string, ...)
+void tech_log(FILE *output_file, tech_log_style_t style, const char *display_string, ...)
 {
 
     struct tech_log_time_format_t

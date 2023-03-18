@@ -703,17 +703,22 @@ tech_return_t tech_menu_append_item(tech_menu_t* menu,tech_menu_item_t* new_item
 		free(menu->menu_items);
 
 		menu->menu_items = new_item_list;
-
 		menu->menu_item_size_reserved++;
 		menu->menu_item_size++;
-	}else{
-		// Need enough room
-		menu->menu_items[menu->menu_item_size] = new_item_candidate;
 
+
+	}else{
+		// Enough room
+		menu->menu_items[menu->menu_item_size] = new_item_candidate;
 		menu->menu_item_size++;
+
 	}
 
 
+	if(menu->viewpoint.last_item - menu->viewpoint.first_item < (menu->menu_page_size-1) ){
+
+		menu->viewpoint.last_item++;
+	}
 
 	tech_error_number = TECH_SUCCESS;
 	return TECH_RETURN_SUCCESS;
@@ -726,7 +731,7 @@ tech_return_t tech_menu_remove_item(tech_menu_t* menu, tech_size_t index){
 		return TECH_RETURN_FAILURE;
 	}
 
-	if(index > menu->menu_item_size){
+	if(index >= menu->menu_item_size){
 		// Removing items out of index is not allowed
 		tech_error_number = TECH_ERROR_SIZE_EXCEED;
 		return TECH_RETURN_FAILURE;
@@ -739,8 +744,42 @@ tech_return_t tech_menu_remove_item(tech_menu_t* menu, tech_size_t index){
 		menu->menu_items[i] = menu->menu_items[i+1];
 	}
 
+
+
+
+	// Change viewpoint
+
+
+	// Check if there is more data
+	if((menu->menu_item_size-1) == menu->viewpoint.last_item){
+
+		// We are on the last page
+		// Viewpoint must be decreased
+
+		if(menu->viewpoint.first_item == menu->viewpoint.last_item){
+			// Deletion of a specific item does not matter
+			// Only thing that matters is the viewpoint
+			// Page change required
+
+			if(menu->viewpoint.first_item != 0){
+				
+				// There is a page behind
+				menu->viewpoint.first_item -= (menu->menu_page_size);
+				menu->viewpoint.last_item = menu->viewpoint.first_item + (menu->menu_page_size-1);
+			}	
+
+		}else{
+			// decrease only by one
+			menu->viewpoint.last_item--;
+		}
+
+	}
+
 	menu->menu_item_size--;
 	menu->menu_item_size_reserved--;
+
+		// Do not change
+	
 
 	tech_error_number = TECH_SUCCESS;
 	return TECH_RETURN_SUCCESS;
@@ -788,6 +827,9 @@ tech_return_t tech_menu_insert_item(tech_menu_t* menu, tech_size_t index, tech_m
 	}
 
 
+	if(menu->viewpoint.last_item - menu->viewpoint.first_item < (menu->menu_page_size-1) ){
+		menu->viewpoint.last_item++;
+	}
 
 	tech_error_number = TECH_SUCCESS;
 	return TECH_RETURN_SUCCESS;	

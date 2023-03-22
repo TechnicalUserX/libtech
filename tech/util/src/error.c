@@ -32,6 +32,10 @@ const char *tech_error_what(enum tech_error_t error)
     case TECH_ERROR_BAD_SYSTEM_CALL:
         return "Bad system call";
 
+    case TECH_ERROR_VALUE_NOT_FOUND:
+        return "Value not found";
+        
+
     case TECH_ERROR_TERMINAL_PRINT_FAILED:
         return "Terminal print failed";
 

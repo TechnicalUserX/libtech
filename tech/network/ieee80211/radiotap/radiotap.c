@@ -29,10 +29,10 @@ const tech_network_ieee80211_radiotap_align_size_t tech_radiotap_namespace_sizes
 };
 
 
-tech_byte_t* tech_network_ieee80211_radiotap_header_find_field(tech_network_ieee80211_radiotap_presence_t field_index, tech_byte_t* frame_bytes){
+const tech_byte_t* tech_network_ieee80211_radiotap_header_find_field(tech_network_ieee80211_radiotap_presence_t field_index, const tech_byte_t* frame_bytes){
 
 
-    static tech_byte_t* bytes = NULL;
+    static const tech_byte_t* bytes = NULL;
         // If first usage of this function includes a NULL pointer to frame bytes, there is no point to proceed.
         
         if(bytes == frame_bytes && frame_bytes == NULL){

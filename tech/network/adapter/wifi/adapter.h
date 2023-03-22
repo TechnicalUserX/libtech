@@ -54,6 +54,9 @@ tech_return_t tech_network_adapter_wifi_get_frequency(tech_network_adapter_name_
 tech_return_t tech_network_adapter_wifi_get_channel(tech_network_adapter_name_t adapter, tech_network_adapter_wifi_channel_t* channel);
 
 
+tech_return_t tech_network_adapter_wifi_get_channel_count(tech_network_adapter_name_t adapter,tech_size_t* channel_count);
+
+
 tech_return_t tech_network_adapter_wifi_set_mode(tech_network_adapter_name_t adapter, tech_network_adapter_wifi_mode_t mode);
 
 

@@ -350,7 +350,7 @@ tech_return_t tech_terminal_char_extract_from_char_stream(tech_terminal_char_t* 
 // This function prepares handlers for all supported signals by the libtech
 void tech_terminal_signal_init(void);
 
-
+tech_return_t tech_terminal_signal_translate(tech_terminal_char_t* terminal_char, tech_terminal_signal_t signal);
 
 
 #ifdef __cplusplus

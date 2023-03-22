@@ -22,7 +22,7 @@ typedef struct tech_network_ieee80211_radiotap_header_struct_t {
 
 	uint32_t present_flags;
 
-}network_ieee80211_radiotap_header_t;
+}tech_network_ieee80211_radiotap_header_t;
 
 
 typedef struct tech_network_ieee80211_radiotap_align_size_struct_t {
@@ -189,14 +189,13 @@ typedef enum tech_network_ieee80211_radiotap_timestamp_flags_enum_t {
 }tech_network_ieee80211_radiotap_timestamp_flags_t;
 
 
-void tech_network_ieee80211_radiotap_initialize_align_size(tech_network_ieee80211_radiotap_align_size_t radiotap_align_size[23]);
 
 /**
  *  First usage of the function cannot include NULL pointer to a memory address
  *  After using the function with a proper frame byte address, following usages with the address being NULL tries to find next occurences in the field if PRESENT
  *  Each usage with non-NULL address just finds the first occurence of the specified field index
  */
-tech_byte_t* tech_network_ieee80211_radiotap_header_find_field(tech_network_ieee80211_radiotap_presence_t field_index,tech_byte_t* frame_bytes);
+const tech_byte_t* tech_network_ieee80211_radiotap_header_find_field(tech_network_ieee80211_radiotap_presence_t field_index, const tech_byte_t* frame_bytes);
 
 
 

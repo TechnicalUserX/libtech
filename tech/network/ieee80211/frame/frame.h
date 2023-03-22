@@ -19,7 +19,7 @@
 #define TECH_NETWORK_IEEE80211_FRAME_MANAGEMENT_ATIM 0b10010000
 #define TECH_NETWORK_IEEE80211_FRAME_MANAGEMENT_DISASSOCIATION 0b10100000
 #define TECH_NETWORK_IEEE80211_FRAME_MANAGEMENT_AUTHENTICATION 0b10110000
-#define TECH_NETWORK_IEEE80211_FRAME_MANAGEMENT_DEAUTHENTICATION 0x11000000
+#define TECH_NETWORK_IEEE80211_FRAME_MANAGEMENT_DEAUTHENTICATION 0b11000000
 #define TECH_NETWORK_IEEE80211_FRAME_MANAGEMENT_ACTION 0b11010000
 #define TECH_NETWORK_IEEE80211_FRAME_MANAGEMENT_ACTION_NO_ACK 0b11100000
 
@@ -595,7 +595,7 @@ typedef struct tech_network_ieee80211_qos_null_struct_t{
 }tech_network_ieee80211_qos_null_t;
 
 
-//tech_return_t tech_network_ieee80211_frame_find_tagged_parameter(tech_network_ieee80211_tagged_parameter_t tagged_parameter, tech_byte_t* tagged_parameter_data, tech_size_t total_length, tech_byte_t** data_bytes, tech_size_t* data_size);
+tech_return_t tech_network_ieee80211_frame_find_tagged_parameter(int tagged_parameter, tech_byte_t* tagged_parameter_data, tech_size_t total_length,tech_size_t* found_tagged_paramter_size,tech_byte_t** found_tagged_paramter_data);
 
 
 

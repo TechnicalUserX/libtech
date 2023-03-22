@@ -26,6 +26,7 @@ tech_return_t tech_network_adapter_wifi_float_to_frequency(double float_frequenc
     return TECH_RETURN_SUCCESS;
 }
 
+
 tech_return_t tech_network_adapter_wifi_frequency_to_float(const struct iw_freq *freq, double* float_frequency){
 
     if(float_frequency == NULL){
@@ -38,6 +39,7 @@ tech_return_t tech_network_adapter_wifi_frequency_to_float(const struct iw_freq 
     tech_error_number = TECH_SUCCESS;
 	return TECH_RETURN_SUCCESS;
 }
+
 
 tech_return_t tech_network_adapter_wifi_frequency_to_channel(tech_network_adapter_name_t adapter,double frequency, tech_network_adapter_wifi_channel_t* channel){
 
@@ -99,6 +101,53 @@ tech_return_t tech_network_adapter_wifi_frequency_to_channel(tech_network_adapte
         tech_error_number = TECH_ERROR_NETWORK_ADAPTER_WIFI_NO_CHANNEL_FOR_FREQUENCY;
         return TECH_RETURN_FAILURE;
 
+    }
+
+
+}
+
+
+tech_return_t tech_network_adapter_wifi_get_channel_count(tech_network_adapter_name_t adapter,tech_size_t* channel_count){
+
+    if(adapter == NULL || channel_count == NULL){
+        tech_error_number = TECH_ERROR_NULL_POINTER;
+        return TECH_RETURN_FAILURE;
+    }
+
+    static bool internal_socket_initialized = false;
+    static int internal_socket = 0;
+    if(!internal_socket_initialized){
+        internal_socket = socket(AF_INET, SOCK_DGRAM, 0);
+
+        if(internal_socket == -1){
+            tech_error_number = TECH_ERROR_NETWORK_CANNOT_CREATE_SOCKET;
+            return TECH_RETURN_FAILURE;
+        }else{
+            // Initialization successfull
+            internal_socket_initialized = true;
+        }
+
+    }
+
+
+	struct iwreq wrq;
+	char buffer[sizeof(struct iw_range) * 2];
+
+	bzero(buffer, sizeof(buffer));
+	wrq.u.data.pointer = buffer;
+	wrq.u.data.length = sizeof(buffer);
+	wrq.u.data.flags = 0;
+
+	strncpy(wrq.ifr_name, adapter, IFNAMSIZ);
+
+    if(ioctl(internal_socket, SIOCGIWRANGE, &wrq) < 0){
+        tech_error_number = TECH_ERROR_BAD_SYSTEM_CALL;
+        return TECH_RETURN_FAILURE;
+    }else{
+
+		struct iw_range *temp_range = (struct iw_range *) buffer;
+        *channel_count = (tech_size_t)temp_range->num_channels;
+        return TECH_RETURN_SUCCESS;
     }
 
 
@@ -379,3 +428,4 @@ tech_return_t tech_network_adapter_wifi_set_channel(tech_network_adapter_name_t 
     }
 
 }
+

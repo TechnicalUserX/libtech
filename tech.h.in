@@ -21,6 +21,7 @@
 #include <tech-@VERSION_CONFIGURATION@/network/ieee80211/radiotap/radiotap.h>
 #include <tech-@VERSION_CONFIGURATION@/network/ieee80211/frame/frame.h>
 
+#include <tech-@VERSION_CONFIGURATION@/math/math.h>
 
 
 #endif

@@ -706,7 +706,7 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdout_print_c
 
 // Signal to char converter
 // If the signal flag is set, function returns a terminal char and returns TECH_RETURN_SUCCESS; else, return TECH_RETURN_FAILURE
-__attribute__((visibility("hidden"))) tech_return_t tech_terminal_signal_translate(tech_terminal_char_t* terminal_char, tech_terminal_signal_t signal){
+tech_return_t tech_terminal_signal_translate(tech_terminal_char_t* terminal_char, tech_terminal_signal_t signal){
 
 
     if(terminal_char == NULL){

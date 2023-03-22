@@ -12,7 +12,7 @@ VERSION_PRE_RELEASE=1 # 0=stable 1=beta
 ######################################
 # Common variables
 SHELL := /bin/bash
-CC = gcc
+CC = clang
 CC_INCLUDE_DIR=.
 INSTALL_INCLUDE_DIR = /usr/include
 INSTALL_LIB_DIR = /usr/lib
@@ -49,10 +49,10 @@ MKDIR_P = mkdir -p
 
 
 
-${TARGET_LIB}: ${BUILD_LIB_DIR}/$(TARGET_LIB_SO) ${TARGET_LIB_NAME}.${HDR_EXT} ${TARGET_LIB_PC}
+${TARGET_LIB}: ${VERSION_HEADER} ${BUILD_LIB_DIR}/$(TARGET_LIB_SO) ${TARGET_LIB_NAME}.${HDR_EXT} ${TARGET_LIB_PC}
 	@echo Compiled ${TARGET_LIB}
 
-${BUILD_LIB_DIR}/$(TARGET_LIB_SO): ${VERSION_HEADER} $(OBJ) 
+${BUILD_LIB_DIR}/$(TARGET_LIB_SO):  $(OBJ) 
 	@$(MKDIR_P) ${BUILD_LIB_DIR}
 	@$(CC) -I ${CC_INCLUDE_DIR} -shared $^ -o $@.${VERSION}
 	@echo Created ${TARGET_LIB_SO}

@@ -102,7 +102,7 @@ tech_return_t tech_network_adapter_get_info_list(tech_network_adapter_info_t** i
   	// Receive
     char recvbuf[8192]={};
 
-    int len=0;
+    uint32_t len=0;
     for(char *p=recvbuf;;){
 		const int seglen=recv(fd,p,sizeof(recvbuf)-len,0);
 

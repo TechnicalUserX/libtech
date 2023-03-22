@@ -81,11 +81,7 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_mode_internal(
         va_list args;
         va_start(args, directive);
 
-        if (args == NULL)
-        {
-            tech_error_number = TECH_ERROR_INVALID_ARGUMENT;
-            return TECH_RETURN_FAILURE;
-        }
+
 
         tech_terminal_mode_t mode = va_arg(args, tech_terminal_mode_t);
         va_end(args);
@@ -843,7 +839,7 @@ tech_return_t tech_terminal_get_dimensions(tech_size_t* rows, tech_size_t* cols)
 tech_return_t tech_terminal_set_attribute(tech_terminal_attribute_t *attribute)
 {
 
-    tech_return_t ret;
+    tech_return_t ret = TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK,0)
     ret = tech_terminal_set_attribute_internal(attribute);
     TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK,0)
@@ -930,7 +926,7 @@ tech_terminal_key_t tech_terminal_key_translate(tech_terminal_char_t terminal_ch
 tech_return_t tech_terminal_cursor_get_position(tech_terminal_cursor_position_t *row, tech_terminal_cursor_position_t *col)
 {
 
-    tech_return_t ret;
+    tech_return_t ret = TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDIN_LOCK,0);
     ret = tech_terminal_cursor_get_position_internal(row, col);
     TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDIN_LOCK,0);
@@ -947,7 +943,7 @@ tech_return_t tech_terminal_cursor_get_position(tech_terminal_cursor_position_t 
 tech_return_t tech_terminal_cursor_set_position(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col)
 {
 
-    tech_return_t ret;
+    tech_return_t ret = TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK,0)
     ret = tech_terminal_cursor_set_position_internal(row, col);
     TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK,0)
@@ -962,7 +958,7 @@ tech_return_t tech_terminal_cursor_set_position(tech_terminal_cursor_position_t 
 
 tech_return_t tech_terminal_cursor_set_visible(bool visible){
 
-    tech_return_t ret;
+    tech_return_t ret = TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK,0)
     if(visible){
         ret = tech_terminal_stdout_print_internal(0,0,NULL,"\033[?25h");
@@ -984,7 +980,7 @@ tech_return_t tech_terminal_cursor_set_visible(bool visible){
 tech_return_t tech_terminal_mode(tech_terminal_mode_directive_t directive, ...)
 {
 
-    tech_return_t ret;
+    tech_return_t ret = TECH_RETURN_FAILURE;
 
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDIN_LOCK,0);
     va_list args;
@@ -1028,7 +1024,7 @@ tech_return_t tech_terminal_mode(tech_terminal_mode_directive_t directive, ...)
 tech_return_t tech_terminal_stdin_get_byte(tech_byte_t *byte)
 {
 
-    tech_return_t ret;
+    tech_return_t ret = TECH_RETURN_FAILURE;
 
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDIN_LOCK,0)
     ret = tech_terminal_stdin_get_byte_internal(byte);
@@ -1051,7 +1047,7 @@ tech_return_t tech_terminal_stdin_get_char(tech_terminal_char_t *terminal_char)
         return TECH_RETURN_FAILURE;
     }
 
-    tech_return_t ret;
+    tech_return_t ret = TECH_RETURN_FAILURE;
 
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDIN_LOCK,0)
         ret = tech_terminal_stdin_get_char_internal(terminal_char);
@@ -1081,7 +1077,7 @@ tech_return_t tech_terminal_stdin_get_char(tech_terminal_char_t *terminal_char)
 tech_return_t tech_terminal_stdin_buffer_check(bool *check)
 {
 
-    tech_return_t ret;
+    tech_return_t ret = TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDIN_LOCK,0)
     ret = tech_terminal_stdin_buffer_check_internal(check);
     TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDIN_LOCK,0)
@@ -1365,7 +1361,7 @@ tech_return_t tech_terminal_stdin_get_string(tech_terminal_cursor_position_t row
 tech_return_t tech_terminal_stdout_print_char(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, tech_terminal_char_t terminal_char)
 {
 
-    tech_return_t ret;
+    tech_return_t ret = TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK,0)
     ret = tech_terminal_stdout_print_char_internal(row, col, terminal_char);
     TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK,0)

@@ -1,4 +1,4 @@
-#ifndef TECH_VERSON_H
+#ifndef TECH_VERSION_H
 #define TECH_VERSION_H
 
 #include <tech/config/features.h>

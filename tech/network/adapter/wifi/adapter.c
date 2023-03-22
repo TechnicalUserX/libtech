@@ -2,7 +2,7 @@
 
 
 
-static inline tech_return_t tech_network_adapter_wifi_float_to_frequency(double float_frequency, struct iw_freq *frequency){
+tech_return_t tech_network_adapter_wifi_float_to_frequency(double float_frequency, struct iw_freq *frequency){
 
 
     if(frequency == NULL){
@@ -26,7 +26,7 @@ static inline tech_return_t tech_network_adapter_wifi_float_to_frequency(double 
     return TECH_RETURN_SUCCESS;
 }
 
-static inline tech_return_t tech_network_adapter_wifi_frequency_to_float(const struct iw_freq *freq, double* float_frequency){
+tech_return_t tech_network_adapter_wifi_frequency_to_float(const struct iw_freq *freq, double* float_frequency){
 
     if(float_frequency == NULL){
         tech_error_number = TECH_ERROR_NULL_POINTER;
@@ -39,7 +39,7 @@ static inline tech_return_t tech_network_adapter_wifi_frequency_to_float(const s
 	return TECH_RETURN_SUCCESS;
 }
 
-static inline tech_return_t tech_network_adapter_wifi_frequency_to_channel(tech_network_adapter_name_t adapter,double frequency, tech_network_adapter_wifi_channel_t* channel){
+tech_return_t tech_network_adapter_wifi_frequency_to_channel(tech_network_adapter_name_t adapter,double frequency, tech_network_adapter_wifi_channel_t* channel){
 
 
     if(adapter == NULL || channel == NULL){

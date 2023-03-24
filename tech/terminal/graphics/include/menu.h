@@ -104,7 +104,7 @@ tech_return_t tech_menu_resize(tech_menu_t* menu, tech_size_t menu_row_size, tec
 
 tech_return_t tech_menu_free(tech_menu_t** menu);
 
-tech_return_t tech_menu_modify_item(tech_menu_t* menu, tech_size_t index, tech_menu_item_t* new_item);
+tech_return_t tech_menu_assign_item(tech_menu_t* menu, tech_size_t index, tech_menu_item_t* new_item);
 
 tech_return_t tech_menu_append_item(tech_menu_t* menu,tech_menu_item_t* new_item);
 

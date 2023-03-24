@@ -5,11 +5,7 @@
 tech_menu_t* tech_menu_new(tech_size_t origin_row, tech_size_t origin_col, tech_size_t menu_row_size, tech_size_t menu_col_size, tech_size_t menu_item_row_size, tech_size_t menu_item_col_size, tech_size_t menu_item_size, tech_menu_item_t **menu_items, tech_terminal_attribute_t* menu_cursor_identifier,tech_terminal_attribute_t* menu_cursor_details)
 {
 
-	if (menu_item_size == 0)
-	{
-		tech_error_number = TECH_ERROR_SIZE_ZERO;
-		return TECH_RETURN_NULL;
-	}
+
 
 	if (menu_row_size == 0 || menu_col_size == 0)
 	{
@@ -81,7 +77,7 @@ tech_menu_t* tech_menu_new(tech_size_t origin_row, tech_size_t origin_col, tech_
 	new_menu->menu_item_sub_window_size = menu_row_size * menu_col_size;
 
 	new_menu->viewpoint.first_item = 0;
-	new_menu->viewpoint.last_item = (menu_item_size > new_menu->menu_item_sub_window_size) ? new_menu->menu_item_sub_window_size-1 : menu_item_size-1;
+	new_menu->viewpoint.last_item = (menu_item_size > new_menu->menu_item_sub_window_size) ? new_menu->menu_item_sub_window_size-1 : (menu_item_size == 0 ? 0 : menu_item_size - 1 ) ;
 
 
 	new_menu->menu_item_sub_windows = (tech_window_t **)malloc(sizeof(tech_window_t *) * new_menu->menu_item_sub_window_size);
@@ -119,28 +115,36 @@ tech_menu_t* tech_menu_new(tech_size_t origin_row, tech_size_t origin_col, tech_
 
 	// Item creation
 	new_menu->menu_item_size = menu_item_size;
-	new_menu->menu_items = (tech_menu_item_t **)malloc(sizeof(tech_menu_item_t*)*menu_item_size);
-
 	new_menu->menu_item_size_reserved = menu_item_size;
 
-	if(new_menu->menu_items == NULL){
-		tech_error_number = TECH_ERROR_NULL_POINTER;
-		return TECH_RETURN_NULL;
-	}
+	if(menu_item_size){
 
-
-	for (tech_size_t i = 0; i < menu_item_size; i++)
-	{
-		new_menu->menu_items[i] = (tech_menu_item_t*)malloc(sizeof(tech_menu_item_t));
-		new_menu->menu_items[i]->line_count = menu_items[i]->line_count;
-
-		for (tech_size_t j = 0; j < menu_items[i]->line_count; j++)
-		{
-			new_menu->menu_items[i]->lines[j].attribute = menu_items[i]->lines[j].attribute;
-			new_menu->menu_items[i]->lines[j].line_buffer_size = menu_items[i]->lines[j].line_buffer_size;
-			strncpy(new_menu->menu_items[i]->lines[j].line_buffer, menu_items[i]->lines[j].line_buffer, TECH_MENU_ITEM_LINE_BUFFER_MAX_SIZE);
+		if(new_menu->menu_items == NULL){
+			tech_error_number = TECH_ERROR_NULL_POINTER;
+			return TECH_RETURN_NULL;
 		}
+
+
+		for (tech_size_t i = 0; i < menu_item_size; i++)
+		{
+			new_menu->menu_items[i] = (tech_menu_item_t*)malloc(sizeof(tech_menu_item_t));
+			new_menu->menu_items[i]->line_count = menu_items[i]->line_count;
+
+			for (tech_size_t j = 0; j < menu_items[i]->line_count; j++)
+			{
+				new_menu->menu_items[i]->lines[j].attribute = menu_items[i]->lines[j].attribute;
+				new_menu->menu_items[i]->lines[j].line_buffer_size = menu_items[i]->lines[j].line_buffer_size;
+				strncpy(new_menu->menu_items[i]->lines[j].line_buffer, menu_items[i]->lines[j].line_buffer, TECH_MENU_ITEM_LINE_BUFFER_MAX_SIZE);
+			}
+		}
+		new_menu->menu_items = (tech_menu_item_t **)malloc(sizeof(tech_menu_item_t*)*menu_item_size);
+
+	}else{
+		new_menu->menu_items = NULL;
 	}
+
+
+
 
 	return new_menu;
 }
@@ -183,7 +187,7 @@ tech_return_t tech_menu_post(tech_menu_t *menu)
 		return TECH_RETURN_FAILURE;
 	}
 
-	for (tech_size_t subwin_index = 0, item_index = menu->viewpoint.first_item; subwin_index < menu->menu_item_sub_window_size && item_index <= menu->viewpoint.last_item; subwin_index++, item_index++)
+	for (tech_size_t subwin_index = 0, item_index = menu->viewpoint.first_item; subwin_index < menu->menu_item_sub_window_size && item_index <= menu->viewpoint.last_item && menu->menu_item_size > 0; subwin_index++, item_index++)
 	{
 		// For each sub window
 		// Printing to sub window
@@ -257,6 +261,16 @@ tech_return_t tech_menu_refresh(tech_menu_t* menu){
 }
 
 tech_return_t tech_menu_driver(tech_menu_t* menu, tech_menu_driver_directive_t directive){
+
+	if(menu == NULL){
+		tech_error_number = TECH_ERROR_NULL_POINTER;
+		return TECH_RETURN_FAILURE;
+	}
+
+	if(menu->menu_item_size == 0){
+		tech_error_number = TECH_ERROR_SIZE_ZERO;
+		return TECH_RETURN_FAILURE;
+	}
 
 	// Calculate the current sub window index
 	/*
@@ -511,6 +525,10 @@ tech_return_t tech_menu_get_current_item_index(tech_menu_t* menu,tech_size_t* cu
 		tech_error_number = TECH_ERROR_NULL_POINTER;
 		return TECH_RETURN_FAILURE;
 	}
+	if(menu->menu_item_size == 0){
+		tech_error_number = TECH_ERROR_SIZE_ZERO;
+		return TECH_RETURN_FAILURE;
+	}
 	*current_item_index = menu->menu_item_current_index;
 	tech_error_number = TECH_SUCCESS;
 	return TECH_RETURN_SUCCESS;
@@ -652,7 +670,7 @@ tech_return_t tech_menu_free(tech_menu_t** menu){
 	return TECH_RETURN_SUCCESS;
 }
 
-tech_return_t tech_menu_modify_item(tech_menu_t* menu, tech_size_t index, tech_menu_item_t* new_item){
+tech_return_t tech_menu_assign_item(tech_menu_t* menu, tech_size_t index, tech_menu_item_t* new_item){
 	if (menu == NULL){
 		tech_error_number = TECH_ERROR_NULL_POINTER;
 		return TECH_RETURN_FAILURE;
@@ -664,7 +682,7 @@ tech_return_t tech_menu_modify_item(tech_menu_t* menu, tech_size_t index, tech_m
 	}
 
 
-	if(index > menu->menu_item_size){
+	if(index >= menu->menu_item_size){
 		tech_error_number = TECH_ERROR_SIZE_EXCEED;
 		return TECH_RETURN_FAILURE;
 	}
@@ -685,7 +703,7 @@ tech_return_t tech_menu_append_item(tech_menu_t* menu,tech_menu_item_t* new_item
 		return TECH_RETURN_FAILURE;
 	}
 
-
+	
 	tech_menu_item_t* new_item_candidate = (tech_menu_item_t*)malloc(sizeof(tech_menu_item_t));
 	*new_item_candidate = *new_item;
 
@@ -704,22 +722,22 @@ tech_return_t tech_menu_append_item(tech_menu_t* menu,tech_menu_item_t* new_item
 
 		menu->menu_items = new_item_list;
 		menu->menu_item_size_reserved++;
-		menu->menu_item_size++;
 
 
 	}else{
 		// Enough room
+
 		menu->menu_items[menu->menu_item_size] = new_item_candidate;
-		menu->menu_item_size++;
 
 	}
 
 
-	if(menu->viewpoint.last_item - menu->viewpoint.first_item < (menu->menu_page_size-1) ){
+	if(menu->viewpoint.last_item - menu->viewpoint.first_item < (menu->menu_page_size-1) && menu->menu_item_size > 0){
 
 		menu->viewpoint.last_item++;
 	}
 
+	menu->menu_item_size++;
 	tech_error_number = TECH_SUCCESS;
 	return TECH_RETURN_SUCCESS;
 }
@@ -728,6 +746,11 @@ tech_return_t tech_menu_remove_item(tech_menu_t* menu, tech_size_t index){
 	// Removing does not change the reserved size, but rotates everything to left
 	if (menu == NULL){
 		tech_error_number = TECH_ERROR_NULL_POINTER;
+		return TECH_RETURN_FAILURE;
+	}
+
+	if(menu->menu_item_size == 0){
+		tech_error_number = TECH_ERROR_SIZE_ZERO;
 		return TECH_RETURN_FAILURE;
 	}
 
@@ -819,17 +842,19 @@ tech_return_t tech_menu_insert_item(tech_menu_t* menu, tech_size_t index, tech_m
 			}
 
 		}
-		menu->menu_item_size++;
-		menu->menu_item_size_reserved++;
+
 		free(menu->menu_items);
 		menu->menu_items = new_item_list;
 
+		if(menu->viewpoint.last_item - menu->viewpoint.first_item < (menu->menu_page_size-1) && menu->menu_item_size > 0){
+			menu->viewpoint.last_item++;
+		}
+
+		menu->menu_item_size++;
+		menu->menu_item_size_reserved++;
 	}
 
 
-	if(menu->viewpoint.last_item - menu->viewpoint.first_item < (menu->menu_page_size-1) ){
-		menu->viewpoint.last_item++;
-	}
 
 	tech_error_number = TECH_SUCCESS;
 	return TECH_RETURN_SUCCESS;	

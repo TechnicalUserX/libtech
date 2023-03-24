@@ -35,6 +35,7 @@ tech_return_t tech_tool_file_basename(const char* path, tech_size_t path_size, c
 
 tech_return_t tech_tool_file_dirname(const char* path, tech_size_t path_size, char* dirname, tech_size_t dirname_size);
 
+tech_return_t tech_tool_endian_reverse_byte_order(tech_byte_t* bytes, tech_size_t byte_size);
 
 
 #ifdef __cplusplus

@@ -308,3 +308,30 @@ tech_return_t tech_tool_file_dirname(const char* path, tech_size_t path_size, ch
 
     return TECH_RETURN_SUCCESS;
 }
+
+tech_return_t tech_tool_endian_reverse_byte_order(tech_byte_t* bytes, tech_size_t byte_size){
+
+    if(bytes == NULL){
+        tech_error_number = TECH_ERROR_NULL_POINTER;
+        return TECH_RETURN_FAILURE;
+    }
+
+    if(byte_size == 0){
+        tech_error_number = TECH_SUCCESS;
+        return TECH_RETURN_SUCCESS;
+    }
+
+
+    tech_size_t middle = byte_size/2;
+    tech_size_t last_index = byte_size-1;
+
+    for(tech_size_t i = 0; i < middle; i++){
+
+        tech_byte_t temp = bytes[last_index-i];
+        bytes[last_index-i] = bytes[i];
+        bytes[i] = temp;
+    }
+
+
+    return TECH_RETURN_SUCCESS;
+}

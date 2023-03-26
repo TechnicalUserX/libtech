@@ -118,6 +118,8 @@ tech_menu_t* tech_menu_new(tech_size_t origin_row, tech_size_t origin_col, tech_
 	new_menu->menu_item_size_reserved = menu_item_size;
 
 	if(menu_item_size){
+		
+		new_menu->menu_items = (tech_menu_item_t **)malloc(sizeof(tech_menu_item_t*)*menu_item_size);
 
 		if(new_menu->menu_items == NULL){
 			tech_error_number = TECH_ERROR_NULL_POINTER;
@@ -137,7 +139,6 @@ tech_menu_t* tech_menu_new(tech_size_t origin_row, tech_size_t origin_col, tech_
 				strncpy(new_menu->menu_items[i]->lines[j].line_buffer, menu_items[i]->lines[j].line_buffer, TECH_MENU_ITEM_LINE_BUFFER_MAX_SIZE);
 			}
 		}
-		new_menu->menu_items = (tech_menu_item_t **)malloc(sizeof(tech_menu_item_t*)*menu_item_size);
 
 	}else{
 		new_menu->menu_items = NULL;

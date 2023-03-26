@@ -205,14 +205,13 @@ tech_return_t tech_tool_fd_check_available_data(int fd, bool* check, struct time
         return TECH_RETURN_FAILURE;
     }
 
-    bool buffer_available = false;
+    int buffer_available = false;
 
     struct timeval tv = to;
     fd_set fds;
     FD_ZERO(&fds);
     FD_SET(fd, &fds);
     buffer_available = (select(fd + 1, &fds, NULL, NULL, &tv));
-
 
 
     if (buffer_available > 0)

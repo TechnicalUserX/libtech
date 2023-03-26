@@ -708,28 +708,30 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdout_print_c
 // If the signal flag is set, function returns a terminal char and returns TECH_RETURN_SUCCESS; else, return TECH_RETURN_FAILURE
 tech_return_t tech_terminal_signal_translate(tech_terminal_char_t* terminal_char, tech_terminal_signal_t signal){
 
-
-    if(terminal_char == NULL){
-        tech_error_number = TECH_ERROR_NULL_POINTER;
-        return TECH_RETURN_FAILURE;
-    }
-
     tech_terminal_char_t terminal_char_temp = {0};
-    terminal_char_temp.byte_size = 1;
-    terminal_char_temp.is_control = false;
-    terminal_char_temp.is_escape_sequence = false;
-    terminal_char_temp.is_printable = false;
-    terminal_char_temp.is_signal = false;
-    terminal_char_temp.is_utf_8 = false;
+    
+    if(terminal_char != NULL){
 
+        terminal_char_temp.byte_size = 1;
+        terminal_char_temp.is_control = false;
+        terminal_char_temp.is_escape_sequence = false;
+        terminal_char_temp.is_printable = false;
+        terminal_char_temp.is_signal = false;
+        terminal_char_temp.is_utf_8 = false;
+
+    }
 
     switch(signal){
 
         case TECH_TERMINAL_SIGNAL_RESIZE:{
             if (tech_terminal_signal_flag_list.tech_terminal_signal_resize_flag){
-                terminal_char_temp.is_signal = true;    
-                terminal_char_temp.bytes[0] = TECH_TERMINAL_SIGNAL_RESIZE;
-                *terminal_char = terminal_char_temp;
+                if(terminal_char != NULL){
+                    terminal_char_temp.is_signal = true;    
+                    terminal_char_temp.bytes[0] = TECH_TERMINAL_SIGNAL_RESIZE;
+                    *terminal_char = terminal_char_temp;
+                }
+
+
                 tech_terminal_signal_flag_list.tech_terminal_signal_resize_flag = false;
                 tech_error_number = TECH_SUCCESS;
                 return TECH_RETURN_SUCCESS;
@@ -1050,7 +1052,22 @@ tech_return_t tech_terminal_stdin_get_char(tech_terminal_char_t *terminal_char)
     tech_return_t ret = TECH_RETURN_FAILURE;
 
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDIN_LOCK,0)
-        ret = tech_terminal_stdin_get_char_internal(terminal_char);
+        struct timeval to = {.tv_sec = 0,.tv_usec = 100000};
+
+        while(1){
+            bool check = false;
+            tech_tool_fd_check_available_data(STDIN_FILENO,&check,to);
+            if(check){
+                ret = tech_terminal_stdin_get_char_internal(terminal_char);
+                break;
+            }else{
+                if(tech_terminal_signal_translate(terminal_char,TECH_TERMINAL_SIGNAL_RESIZE) == TECH_RETURN_SUCCESS){
+                    ret = TECH_RETURN_SUCCESS;
+                    break;
+                }
+            }
+        }
+
     TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDIN_LOCK,0)
 
     TECH_THREAD_SAFE_BLOCK_FAIL_START
@@ -1059,18 +1076,8 @@ tech_return_t tech_terminal_stdin_get_char(tech_terminal_char_t *terminal_char)
     TECH_THREAD_SAFE_BLOCK_FAIL_END
 
 
-    if (ret == TECH_RETURN_FAILURE)
-    {
-        // Will check signals here
-        tech_terminal_char_t temp;
-        if(tech_terminal_signal_translate(&temp,TECH_TERMINAL_SIGNAL_RESIZE) == TECH_RETURN_SUCCESS){
-            *terminal_char = temp;
-            tech_error_number = TECH_SUCCESS;
-            return TECH_RETURN_SUCCESS;
-        }
 
-    }
-    return TECH_RETURN_FAILURE;
+    return ret;
 }
 
 // Uses internal function
@@ -1409,6 +1416,26 @@ tech_return_t tech_terminal_stdout_clear(void){
     return TECH_RETURN_SUCCESS;
 }
 
+tech_return_t tech_terminal_stdout_clear_from_cursor(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col){
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK,0)
+
+        tech_terminal_cursor_set_position_internal(row,col);
+        fprintf(stdout,"\033[J");
+        fflush(stdout);
+
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK,0)
+
+
+    TECH_THREAD_SAFE_BLOCK_FAIL_START
+        tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
+        return TECH_RETURN_FAILURE;
+    TECH_THREAD_SAFE_BLOCK_FAIL_END
+
+
+    tech_error_number = TECH_SUCCESS;
+    return TECH_RETURN_SUCCESS;
+}
+
 tech_return_t tech_terminal_string_convert_to_char_stream(char *destination, tech_size_t destination_size, tech_terminal_char_t *source, tech_size_t source_size)
 {
 
@@ -1609,5 +1636,6 @@ void tech_terminal_signal_init(void)
 	struct sigaction sa;
     memset(&sa,0x0,sizeof(struct sigaction));
 	sa.sa_handler = tech_terminal_signal_resize_handler_internal;
+    sa.sa_flags = SA_RESTART;
 	sigaction(SIGWINCH, &sa, NULL);
 }

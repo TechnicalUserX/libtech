@@ -332,6 +332,10 @@ tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, te
 // Clears the stdout
 tech_return_t tech_terminal_stdout_clear(void);
 
+// Thread-safe(STDOUT)
+// Clears the stdout from the given cursor position to the bottom
+tech_return_t tech_terminal_stdout_clear_from_cursor(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col);
+
 
 // 'destination' might not have the sufficient size when the 'source' is converted to multi-byte char string
 // For %100 guaranteed conversion, destination size could be set to 4 times the source size, (wide char = 4 x char)

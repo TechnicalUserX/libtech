@@ -32,9 +32,21 @@ TARGET_LIB_PC = ${TARGET_LIB}.pc
 #shared object file
 TARGET_LIB_SO = ${TARGET_LIB}.so
 ######################################
+TERMUX_ROOT_DIR=/data/data/com.termux/files/
+TERMUX_INSTALL_INCLUDE_DIR=${TERMUX_ROOT_DIR}/usr/include
+TERMUX_INSTALL_LIB_DIR=${TERMUX_ROOT_DIR}/usr/lib
+######################################
+OS_TYPE=$(shell uname -o)
+######################################
 
-
+ifeq ("${OS_TYPE}","GNU/Linux")
 IS_INSTALLED = $(shell if [ -e ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME} ]; then echo 1; else echo 0; fi)
+else ifeq ("${OS_TYPE}","Android")
+IS_INSTALLED = $(shell if [ -e ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME} ]; then echo 1; else echo 0; fi)
+else
+$(error Your operating system is not supported)
+endif
+
 IS_SUPER_USER = $(shell id -u)
 
 SRC = $(shell find $(LOOKUP_DIR) -type f -name "*.${SRC_EXT}")
@@ -44,8 +56,12 @@ OBJ = $(patsubst $(LOOKUP_DIR)/%, $(BUILD_OBJ_DIR)/%, $(SRC:.${SRC_EXT}=.o))
 
 HDR_DIR=$(dir ${HDR} | sort -u);
 INSTALL_HDR_DIR=$(addprefix  ${INSTALL_INCLUDE_DIR}/,$(dir $(subst ${TARGET_LIB_NAME}/,${TARGET_LIB_NAME}-${VERSION}/, ${HDR})) )
+TERMUX_INSTALL_HDR_DIR=$(addprefix  ${TERMUX_INSTALL_INCLUDE_DIR}/,$(dir $(subst ${TARGET_LIB_NAME}/,${TARGET_LIB_NAME}-${VERSION}/, ${HDR})) )
 
 MKDIR_P = mkdir -p
+
+
+
 
 
 
@@ -78,6 +94,8 @@ ${TARGET_LIB_NAME}.${HDR_EXT}:
 
 ${TARGET_LIB_PC}:
 	@sed -e 's/@VERSION_CONFIGURATION@/${VERSION}/g' ${TARGET_LIB_PC}.in > ${TARGET_LIB_PC}
+
+
 clean:
 	@echo Performing cleanup
 	@rm -rf $(BUILD_DIR)
@@ -86,18 +104,26 @@ clean:
 	@rm -f ${TARGET_LIB_PC}
 
 
-install: ${BUILD_LIB_DIR}/${TARGET_LIB_SO}
+install: ${VERSION_HEADER} ${TARGET_LIB_NAME}.${HDR_EXT} ${BUILD_LIB_DIR}/${TARGET_LIB_SO} ${TARGET_LIB_PC}
 
-ifneq (${IS_SUPER_USER}, 0)
-	@echo "You have to be root to install libraries!"
-else
-
+# Checking installation
 ifeq (${IS_INSTALLED},1)
 	@echo "Libraries has been already installed";
 	@echo "If you want to update, run: 'sudo make update'";
+	@$(error "Libraries are already installed, make update")
+endif
+
+# Operating system check
+ifeq ("${OS_TYPE}","GNU/Linux")
+
+
+ifneq (${IS_SUPER_USER}, 0)
+	@echo "You have to be root to install libraries!"
+	@$(error "You have to be root to make install")
 else
 	@echo "Super user right has been satisfied!";
-	@echo "Copying ${TARGET_LIB} library files to '${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}'...";
+endif
+
 
 # Create lib.so folder inside library folder
 	$(shell if ! [ -d ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION} ]; then mkdir ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}; fi)
@@ -113,15 +139,38 @@ else
 	
 	@echo "Copying header files to ${INSTALL_INCLUDE_DIR}/${TARGET_LIB}/'..."
 	@${MKDIR_P} ${INSTALL_HDR_DIR}
-	@bash -c '$(foreach a,$(HDR),cp ${a} $(subst ${TARGET_LIB_NAME}/,${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}/,$(dir ${a}) ); )'	@echo FINISH
+	@bash -c '$(foreach a,$(HDR),cp ${a} $(subst ${TARGET_LIB_NAME}/,${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}/,$(dir ${a}) ); )'
 	@cp ${TARGET_LIB_NAME}.${HDR_EXT} ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
 	@cp ${TARGET_LIB}.pc ${INSTALL_LIB_DIR}/pkgconfig
+
+	@echo "Installation completed."
+else ifeq ("${OS_TYPE}","Android")
+
+# Create lib.so folder inside library folder
+	$(shell if ! [ -d ${TERMUX_INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION} ]; then mkdir ${TERMUX_INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}; fi)
+
+	@cp ${BUILD_LIB_DIR}/${TARGET_LIB_SO}.${VERSION} ${TERMUX_INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}
+	@ln -s ${TERMUX_INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}/${TARGET_LIB_SO}.${VERSION} ${TERMUX_INSTALL_LIB_DIR}/${TARGET_LIB_SO}
+
+	@echo "Creating '${TARGET_LIB_NAME}-${VERSION}' directory inside '${TERMUX_INSTALL_INCLUDE_DIR}'..."
+
+# Creating /usr/include/lib-version
+	$(shell if ! [ -d ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION} ]; then mkdir ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}; fi)
+	@ln -s ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION} ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}
+	
+	@echo "Copying header files to ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB}/'..."
+	@${MKDIR_P} ${TERMUX_INSTALL_HDR_DIR}
+	@bash -c '$(foreach a,$(HDR),cp ${a} $(subst ${TARGET_LIB_NAME}/,${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}/,$(dir ${a}) ); )'
+	@cp ${TARGET_LIB_NAME}.${HDR_EXT} ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
+	@cp ${TARGET_LIB}.pc ${TERMUX_INSTALL_LIB_DIR}/pkgconfig
 
 	@echo "Installation completed."
 
 endif
 
-endif
+
+
+
 
 
 update: 
@@ -134,10 +183,17 @@ endif
 
 
 uninstall:
-ifneq ($(IS_SUPER_USER), 0)
-	@echo "You have to be root to uninstall libraries!"
-else
 	@echo "Uninstalling ${TARGET_LIB}..."
+ifeq ("${OS_TYPE}","GNU/Linux")
+
+
+ifneq (${IS_SUPER_USER}, 0)
+	@$(error "You have to be root to make uninstall")
+else
+	@echo "Super user right has been satisfied!";
+endif
+
+
 
 	@rm -rf ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
 	@rm -rf ${INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}
@@ -147,6 +203,16 @@ else
 	@rm -f  ${INSTALL_LIB_DIR}/pkgconfig/${TARGET_LIB}.pc
 
 
-	@echo "Uninstall completed!"
+else ifeq ("${OS_TYPE}","GNU/Linux")
+
+	@rm -rf ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
+	@rm -rf ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}
+
+	@rm -rf ${TERMUX_INSTALL_LIB_DIR}/${TARGET_LIB_SO}
+	@rm -rf ${TERMUX_INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}
+	@rm -f  ${TERMUX_INSTALL_LIB_DIR}/pkgconfig/${TARGET_LIB}.pc
+
 
 endif
+	@echo "Uninstall completed!"
+

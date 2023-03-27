@@ -18,7 +18,7 @@ INSTALL_INCLUDE_DIR = /usr/include
 INSTALL_LIB_DIR = /usr/lib
 LOOKUP_DIR=tech
 TARGET_LIB_NAME=tech
-CFLAGS = -Wall -Wextra -fPIC -std=c11
+CFLAGS = -Wall -Wextra -fPIC -std=c11 -pthread
 BUILD_DIR=build
 SRC_EXT=c
 HDR_EXT=h

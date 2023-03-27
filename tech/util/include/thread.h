@@ -19,7 +19,7 @@ extern "C"
     {
         TECH_THREAD_SAFE_BLOCK_EXIT_SUCCESS = 0,
         TECH_THREAD_SAFE_BLOCK_EXIT_RECALL,
-        TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN
+        TECH_THREAD_SAFE_BLOCK_EXIT_FAILURE
     };
 
     enum tech_thread_safe_block_exit_status_directive_enum_t
@@ -50,6 +50,8 @@ extern "C"
 // Thread-safe block
 // Do not ever let code_block terminate with return,throw,pthread_exit() and similar expressions
 // If the caller dies, block could be recurred by another thread but if it doesn't, it is a deadlock until original caller unlocks it,
+// Android does not support Robust Mutexes
+#if defined(__linux__)
 #define TECH_THREAD_SAFE_BLOCK_LOCAL_START                                                                                                                                                                                                    \
     {                                                                                                                                                                                                                                         \
         tech_thread_local_t static tech_thread_safe_block_exit_status_t tech_thread_safe_block_exit_status;                                                                                                                                   \
@@ -62,7 +64,7 @@ extern "C"
         static pthread_mutexattr_t tech_thread_safe_block_mutex_attribute;                                                                                                                                                                    \
         static atomic_bool tech_thread_safe_block_mutex_unexpected_exit = ATOMIC_VAR_INIT(false);                                                                                                                                             \
         atomic_int tech_thread_safe_block_mutex_lock_ret;                                                                                                                                                                                     \
-        tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN;                                                                                                                       \
+        tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_FAILURE;                                                                                                                       \
         if (atomic_compare_exchange_strong(&tech_thread_safe_block_mutex_initialized, &tech_thread_safe_block_mutex_initialized_expected_value, tech_thread_safe_block_mutex_initialized_desired_value)) \
         {                                                                                                                                                                                                                                   \
             pthread_mutexattr_init(&tech_thread_safe_block_mutex_attribute);                                                                                                                                                                \
@@ -102,6 +104,8 @@ extern "C"
                 tech_thread_safe_block_mutex_unexpected_exit = true;                                                                                                                                                                        \
                 {
 
+
+
 #define TECH_THREAD_SAFE_BLOCK_LOCAL_END                                                                                \
     }                                                                                                                   \
     pthread_mutex_unlock(&tech_thread_safe_block_mutex);                                                                \
@@ -124,13 +128,70 @@ extern "C"
     }                                                                                                                   \
     else                                                                                                                \
     {                                                                                                                   \
-        tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_UNKNOWN; \
+        tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_FAILURE; \
     }                                                                                                                   \
     }                                                                                                                   \
     }
 
+
+
+
+#elif defined(__ANDROID__)
+
+#define TECH_THREAD_SAFE_BLOCK_LOCAL_START \
+    { \
+        tech_thread_local_t static tech_thread_safe_block_exit_status_t tech_thread_safe_block_exit_status; \
+        tech_thread_safe_block_exit_status_control(TECH_THREAD_SAFE_BLOCK_EXIT_STATUS_DIRECTIVE_INIT, &tech_thread_safe_block_exit_status); \
+        static atomic_bool tech_thread_safe_block_mutex_initialized = ATOMIC_VAR_INIT(false); \
+        static atomic_bool tech_thread_safe_block_mutex_initialized_further = ATOMIC_VAR_INIT(false); \
+        bool tech_thread_safe_block_mutex_initialized_expected_value = ATOMIC_VAR_INIT(false); \
+        atomic_bool tech_thread_safe_block_mutex_initialized_desired_value = ATOMIC_VAR_INIT(true); \
+        static pthread_mutex_t tech_thread_safe_block_mutex; \
+        if(atomic_compare_exchange_strong(&tech_thread_safe_block_mutex_initialized, &tech_thread_safe_block_mutex_initialized_expected_value, tech_thread_safe_block_mutex_initialized_desired_value)) \
+        {                                                                                                                                                                                                                                   \
+            pthread_mutex_init(&tech_thread_safe_block_mutex, NULL);                                                                                                                                     \
+            tech_thread_safe_block_mutex_initialized_further = true;                                                                                                                                                                        \
+        }  \
+        while (!tech_thread_safe_block_mutex_initialized_further)  \
+        { \
+            usleep(100); /*Busy-waiting is the only option*/ \
+        }   \
+        if (tech_thread_safe_block_mutex_initialized_further) \
+        { \
+            tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_FAILURE; \
+            if (pthread_mutex_lock(&tech_thread_safe_block_mutex) == 0) \
+            {
+                
+
+#define TECH_THREAD_SAFE_BLOCK_LOCAL_END \
+                  \
+                tech_thread_safe_block_exit_status = (tech_thread_safe_block_exit_status_t)TECH_THREAD_SAFE_BLOCK_EXIT_SUCCESS; \
+                pthread_mutex_unlock(&tech_thread_safe_block_mutex); \
+            } \
+        } \
+    } 
+
+#else
+    #define TECH_THREAD_SAFE_BLOCK_LOCAL_START {
+
+    #define TECH_THREAD_SAFE_BLOCK_LOCAL_END }
+#endif
+
+
+
+
+
+
+
+
+
+
 // If this block is called before any initialization to the exit status variable, this block never executes.
 // Executes when the original caller locked the mutex and died
+
+#if defined(__linux__) || defined(__ANDROID__)
+
+
 #define TECH_THREAD_SAFE_BLOCK_FAIL_START                                                                                                                         \
     {                                                                                                                                                             \
         tech_thread_safe_block_exit_status_t TECH_THREAD_SAFE_BLOCK_EXIT_STATUS;                                                                                  \
@@ -146,6 +207,19 @@ extern "C"
     }                                   \
     }                                   \
     }
+
+#else
+
+#define TECH_THREAD_SAFE_BLOCK_FAIL_START {
+
+#define TECH_THREAD_SAFE_BLOCK_FAIL_END }
+
+#endif
+
+
+
+#if defined(__linux__) || defined(__ANDROID__)
+
 
 #define TECH_THREAD_SAFE_BLOCK_GLOBAL_START(lock_identifier, lock_number)                                                                                                            \
     {                                                                                                                                                                                \
@@ -171,6 +245,17 @@ extern "C"
     }                                                                                                                                                       \
     TECH_THREAD_SAFE_BLOCK_LOCAL_END                                                                                                                        \
     }
+
+#else
+
+#define TECH_THREAD_SAFE_BLOCK_GLOBAL_START(lock_identifier, lock_number) {
+
+#define TECH_THREAD_SAFE_BLOCK_GLOBAL_END(lock_identifier, lock_number) }
+
+
+#endif
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -51,7 +51,8 @@ extern "C"
 // Do not ever let code_block terminate with return,throw,pthread_exit() and similar expressions
 // If the caller dies, block could be recurred by another thread but if it doesn't, it is a deadlock until original caller unlocks it,
 // Android does not support Robust Mutexes
-#if defined(__linux__)
+#if defined(__linux__) && !defined(__ANDROID__)
+
 #define TECH_THREAD_SAFE_BLOCK_LOCAL_START                                                                                                                                                                                                    \
     {                                                                                                                                                                                                                                         \
         tech_thread_local_t static tech_thread_safe_block_exit_status_t tech_thread_safe_block_exit_status;                                                                                                                                   \

@@ -1186,91 +1186,50 @@ tech_return_t tech_terminal_stdin_get_string(tech_terminal_cursor_position_t row
 
         if (tech_terminal_stdin_get_char_internal(&terminal_char) == TECH_RETURN_SUCCESS)
         {
-
-            switch (tech_terminal_key_translate(terminal_char))
+            tech_terminal_key_t key = tech_terminal_key_translate(terminal_char);
+            switch (key)
             {
 
-            case TECH_TERMINAL_KEY_LEFT:
-            {
-                if (mode == TECH_TERMINAL_MODE_RAW)
+                case TECH_TERMINAL_KEY_LEFT:
                 {
-                    if (string_cursor > 0)
+                    if (mode == TECH_TERMINAL_MODE_RAW)
                     {
-                        string_cursor--;
-                        tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
-                    }
-                }
-            }
-            break;
-
-            case TECH_TERMINAL_KEY_RIGHT:
-            {
-                if (mode == TECH_TERMINAL_MODE_RAW)
-                {
-
-                    if (string_cursor < acquired_string_size)
-                    {
-                        string_cursor++;
-                        tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
-                    }
-                }
-            }
-            break;
-
-            case TECH_TERMINAL_KEY_DELETE:
-            {
-                if (mode == TECH_TERMINAL_MODE_RAW)
-                {
-
-                    if (string_cursor < acquired_string_size)
-                    {
-                        for (tech_size_t i = string_cursor; i < acquired_string_size - 1; i++)
-                        {
-                            terminal_string_temp[i] = terminal_string_temp[i + 1];
-                        }
-                        acquired_string_size--;
-
-                        for (tech_size_t i = string_cursor; i < acquired_string_size; i++)
-                        {
-                            tech_terminal_stdout_print_internal(0, 0, NULL, "%s", (char *)terminal_string_temp[i].bytes);
-                        }
-                        tech_terminal_stdout_print_internal(init_row, init_col + acquired_string_size, NULL, " ");
-                        tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
-                    }
-                }
-            }
-            break;
-
-            case TECH_TERMINAL_KEY_BACKSPACE:
-            {
-                if (mode == TECH_TERMINAL_MODE_RAW)
-                {
-                    if (string_cursor > 0)
-                    {
-                        if (string_cursor == acquired_string_size)
+                        if (string_cursor > 0)
                         {
                             string_cursor--;
-                            acquired_string_size--;
-                            tech_terminal_stdout_print_internal(init_row, init_col + string_cursor, NULL, " ");
                             tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
                         }
-                        else
-                        {
+                    }
+                }
+                break;
 
-                            // Delete
-                            for (tech_size_t i = string_cursor - 1; i < acquired_string_size - 1; i++)
+                case TECH_TERMINAL_KEY_RIGHT:
+                {
+                    if (mode == TECH_TERMINAL_MODE_RAW)
+                    {
+
+                        if (string_cursor < acquired_string_size)
+                        {
+                            string_cursor++;
+                            tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
+                        }
+                    }
+                }
+                break;
+
+                case TECH_TERMINAL_KEY_DELETE:
+                {
+                    if (mode == TECH_TERMINAL_MODE_RAW)
+                    {
+
+                        if (string_cursor < acquired_string_size)
+                        {
+                            for (tech_size_t i = string_cursor; i < acquired_string_size - 1; i++)
                             {
                                 terminal_string_temp[i] = terminal_string_temp[i + 1];
                             }
-
-                            // Go left and print rest of the characters
-
                             acquired_string_size--;
-                            string_cursor--;
 
-                            tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
-
-                            // Print the rest of the string if exists
                             for (tech_size_t i = string_cursor; i < acquired_string_size; i++)
                             {
                                 tech_terminal_stdout_print_internal(0, 0, NULL, "%s", (char *)terminal_string_temp[i].bytes);
@@ -1280,68 +1239,111 @@ tech_return_t tech_terminal_stdin_get_string(tech_terminal_cursor_position_t row
                         }
                     }
                 }
-            }
-            break;
+                break;
 
-            case TECH_TERMINAL_KEY_ENTER:
-            {
-
-                for (tech_size_t i = 0; i < acquired_string_size; i++)
+                case TECH_TERMINAL_KEY_BACKSPACE:
                 {
-                    terminal_string[i] = terminal_string_temp[i];
-                }
-                // NULL terminator insertion
-                terminal_string[acquired_string_size].byte_size = 1;
-                memset(terminal_string[acquired_string_size].bytes, 0x0, TECH_TERMINAL_CHAR_BYTES_MAX_SIZE);
-                terminal_string[acquired_string_size].is_control = true;
-                terminal_string[acquired_string_size].is_escape_sequence = false;
-                terminal_string[acquired_string_size].is_printable = false;
-                terminal_string[acquired_string_size].is_utf_8 = false;
-
-                tech_error_number = TECH_SUCCESS;
-                char_read_complete = true;
-            }
-            break;
-
-            case TECH_TERMINAL_KEY_NOT_DETECTED:
-            { // Must chech whether it is printable
-
-                if (terminal_char.is_printable && acquired_string_size < size - 1)
-                {
-
-                    if (string_cursor == acquired_string_size)
+                    if (mode == TECH_TERMINAL_MODE_RAW)
                     {
-                        acquired_string_size++;
-                        terminal_string_temp[string_cursor] = terminal_char;
-                        string_cursor++;
-                        if (mode == TECH_TERMINAL_MODE_RAW)
+                        if (string_cursor > 0)
                         {
-                            tech_terminal_stdout_print_internal(0, 0, NULL, "%s", (char *)terminal_char.bytes);
-                        }
-                    }
-                    else
-                    {
-
-                        for (tech_size_t i = acquired_string_size; i > string_cursor; i--)
-                        {
-                            terminal_string_temp[i] = terminal_string_temp[i - 1];
-                        }
-                        terminal_string_temp[string_cursor] = terminal_char;
-                        acquired_string_size++;
-                        for (tech_size_t i = string_cursor; i < acquired_string_size; i++)
-                        {
-                            if (mode == TECH_TERMINAL_MODE_RAW)
+                            if (string_cursor == acquired_string_size)
                             {
-                                tech_terminal_stdout_print_internal(0, 0, NULL, "%s", (char *)terminal_string_temp[i].bytes);
+                                string_cursor--;
+                                acquired_string_size--;
+                                tech_terminal_stdout_print_internal(init_row, init_col + string_cursor, NULL, " ");
+                                tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
+                            }
+                            else
+                            {
+
+                                // Delete
+                                for (tech_size_t i = string_cursor - 1; i < acquired_string_size - 1; i++)
+                                {
+                                    terminal_string_temp[i] = terminal_string_temp[i + 1];
+                                }
+
+                                // Go left and print rest of the characters
+
+                                acquired_string_size--;
+                                string_cursor--;
+
+                                tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
+
+                                // Print the rest of the string if exists
+                                for (tech_size_t i = string_cursor; i < acquired_string_size; i++)
+                                {
+                                    tech_terminal_stdout_print_internal(0, 0, NULL, "%s", (char *)terminal_string_temp[i].bytes);
+                                }
+                                tech_terminal_stdout_print_internal(init_row, init_col + acquired_string_size, NULL, " ");
+                                tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
                             }
                         }
-
-                        string_cursor++;
-                        tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
                     }
                 }
-            }
-            break;
+                break;
+
+                case TECH_TERMINAL_KEY_ENTER:
+                {
+
+                    for (tech_size_t i = 0; i < acquired_string_size; i++)
+                    {
+                        terminal_string[i] = terminal_string_temp[i];
+                    }
+                    // NULL terminator insertion
+                    terminal_string[acquired_string_size].byte_size = 1;
+                    memset(terminal_string[acquired_string_size].bytes, 0x0, TECH_TERMINAL_CHAR_BYTES_MAX_SIZE);
+                    terminal_string[acquired_string_size].is_control = true;
+                    terminal_string[acquired_string_size].is_escape_sequence = false;
+                    terminal_string[acquired_string_size].is_printable = false;
+                    terminal_string[acquired_string_size].is_utf_8 = false;
+
+                    tech_error_number = TECH_SUCCESS;
+                    char_read_complete = true;
+                }
+                break;
+
+                case TECH_TERMINAL_KEY_PRINTABLE:
+                { // Must chech whether it is printable
+
+
+                    if (terminal_char.is_printable && acquired_string_size < size - 1)
+                    {
+
+                        if (string_cursor == acquired_string_size)
+                        {
+                            acquired_string_size++;
+                            terminal_string_temp[string_cursor] = terminal_char;
+                            string_cursor++;
+                            if (mode == TECH_TERMINAL_MODE_RAW)
+                            {
+                                tech_terminal_stdout_print_internal(0, 0, NULL, "%s", (char *)terminal_char.bytes);
+                            }
+                        }
+                        else
+                        {
+
+                            for (tech_size_t i = acquired_string_size; i > string_cursor; i--)
+                            {
+                                terminal_string_temp[i] = terminal_string_temp[i - 1];
+                            }
+                            terminal_string_temp[string_cursor] = terminal_char;
+                            acquired_string_size++;
+                            for (tech_size_t i = string_cursor; i < acquired_string_size; i++)
+                            {
+                                if (mode == TECH_TERMINAL_MODE_RAW)
+                                {
+                                    tech_terminal_stdout_print_internal(0, 0, NULL, "%s", (char *)terminal_string_temp[i].bytes);
+                                }
+                            }
+
+                            string_cursor++;
+                            tech_terminal_cursor_set_position_internal(init_row, init_col + string_cursor);
+                        }
+                    }
+                }
+                break;
+
             }
         }
         else

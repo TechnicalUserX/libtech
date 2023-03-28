@@ -823,7 +823,7 @@ tech_terminal_encoding_t tech_terminal_get_encoding(void)
     return TECH_TERMINAL_ENCODING_UNKNOWN;
 }
 
-tech_return_t tech_terminal_get_dimensions(tech_size_t* rows, tech_size_t* cols){
+tech_return_t tech_terminal_get_dimensions(uint16_t* rows, uint16_t* cols){
     
     struct winsize ws;
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0 || ws.ws_row == 0) {

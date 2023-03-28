@@ -256,7 +256,7 @@ tech_terminal_encoding_t tech_terminal_get_encoding(void);
 
 
 // Returns the terminal dimensions in rows and columns
-tech_return_t tech_terminal_get_dimensions(tech_size_t* rows, tech_size_t* cols);
+tech_return_t tech_terminal_get_dimensions(uint16_t* rows, uint16_t* cols);
 
 
 // Thread-safe(STDOUT)

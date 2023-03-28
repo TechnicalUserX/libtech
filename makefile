@@ -174,11 +174,16 @@ endif
 
 
 update: 
+
+ifeq ("${OS_TYPE}","GNU/Linux")
+
 ifneq ($(IS_SUPER_USER), 0)
 	@echo "You have to be root to update libraries!"
 else
 	@make --silent uninstall
 	@make --silent install
+endif
+
 endif
 
 
@@ -202,6 +207,7 @@ endif
 	@rm -rf ${INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}
 	@rm -f  ${INSTALL_LIB_DIR}/pkgconfig/${TARGET_LIB}.pc
 
+	@echo "Uninstall completed!"
 
 else ifeq ("${OS_TYPE}","GNU/Linux")
 
@@ -212,7 +218,7 @@ else ifeq ("${OS_TYPE}","GNU/Linux")
 	@rm -rf ${TERMUX_INSTALL_LIB_DIR}/${TARGET_LIB_NAME}-${VERSION}
 	@rm -f  ${TERMUX_INSTALL_LIB_DIR}/pkgconfig/${TARGET_LIB}.pc
 
+	@echo "Uninstall completed!"
 
 endif
-	@echo "Uninstall completed!"
 

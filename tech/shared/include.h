@@ -31,7 +31,6 @@
     #include <cinttypes>
     #include <cstring>
     #include <cstdlib>
-    #include <cinttypes>
     #include <cstdbool>
     #include <cwchar>
     #include <ctime>
@@ -48,7 +47,6 @@
     #include <stdio.h>
     #include <inttypes.h>
     #include <stdlib.h>
-    #include <inttypes.h>
     #include <string.h>
     #include <wchar.h>
     #include <time.h>

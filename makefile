@@ -184,6 +184,10 @@ else
 	@make --silent install
 endif
 
+
+else ifeq ("${OS_TYPE}","GNU/Linux")
+	@make --silent uninstall
+	@make --silent install
 endif
 
 
@@ -209,7 +213,7 @@ endif
 
 	@echo "Uninstall completed!"
 
-else ifeq ("${OS_TYPE}","GNU/Linux")
+else ifeq ("${OS_TYPE}","Android")
 
 	@rm -rf ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}-${VERSION}
 	@rm -rf ${TERMUX_INSTALL_INCLUDE_DIR}/${TARGET_LIB_NAME}

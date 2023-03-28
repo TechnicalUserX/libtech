@@ -12,7 +12,7 @@ VERSION_PRE_RELEASE=1 # 0=stable 1=beta
 ######################################
 # Common variables
 SHELL := /bin/bash
-CC = clang
+CC = gcc
 CC_INCLUDE_DIR=.
 INSTALL_INCLUDE_DIR = /usr/include
 INSTALL_LIB_DIR = /usr/lib

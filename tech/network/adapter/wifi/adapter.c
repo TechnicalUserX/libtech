@@ -414,7 +414,7 @@ tech_return_t tech_network_adapter_wifi_set_channel(tech_network_adapter_name_t 
     strcat(command,adapter);
     strcat(command, " set channel ");
     char channel_number[16] = {0};
-    sprintf(channel_number,"%d",channel);
+    sprintf(channel_number,"%"PRIu8, channel);
     strcat(command, channel_number);
 
     int ret = system(command);

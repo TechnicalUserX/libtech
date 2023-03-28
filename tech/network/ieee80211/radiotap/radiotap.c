@@ -134,9 +134,7 @@ const tech_byte_t* tech_network_ieee80211_radiotap_header_find_field(tech_networ
 
     } 
 
-    //printf("Total byte jump: %d + %d + %d\n",total_byte_jump,4, 4*(present_flags_field_count));
 
-    //printf("Stop index: %d\n\n",index_counter);
 
     return bytes + total_byte_jump + 4 + present_flags_field_count*4;
 }

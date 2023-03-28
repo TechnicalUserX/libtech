@@ -16,7 +16,6 @@
 #include <sys/socket.h>
 #include <linux/rtnetlink.h>
 
-
 #if defined(_PTHREAD_H) || defined(_SEMAPHORE_H)
     #error "Do not include pthread.h and semaphroe.h before including tech libraries"
 #endif
@@ -29,9 +28,10 @@
     #include <atomic>
     #include <cstdarg>
     #include <cstdio>
-    #include <cstdint>
+    #include <cinttypes>
     #include <cstring>
     #include <cstdlib>
+    #include <cinttypes>
     #include <cstdbool>
     #include <cwchar>
     #include <ctime>
@@ -46,8 +46,9 @@
     #include <stdarg.h>
     #include <stdbool.h>
     #include <stdio.h>
-    #include <stdint.h>
+    #include <inttypes.h>
     #include <stdlib.h>
+    #include <inttypes.h>
     #include <string.h>
     #include <wchar.h>
     #include <time.h>

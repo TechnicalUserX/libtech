@@ -184,8 +184,7 @@ else
 	@make --silent install
 endif
 
-
-else ifeq ("${OS_TYPE}","GNU/Linux")
+else ifeq ("${OS_TYPE}","Android")
 	@make --silent uninstall
 	@make --silent install
 endif

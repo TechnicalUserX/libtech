@@ -188,7 +188,8 @@ tech_return_t tech_menu_post(tech_menu_t *menu)
 		return TECH_RETURN_FAILURE;
 	}
 
-	for (tech_size_t subwin_index = 0, item_index = menu->viewpoint.first_item; subwin_index < menu->menu_item_sub_window_size && item_index <= menu->viewpoint.last_item && menu->menu_item_size > 0; subwin_index++, item_index++)
+	
+	for (tech_size_t subwin_index = 0, item_index = menu->viewpoint.first_item; (subwin_index < menu->menu_item_sub_window_size) && (item_index <= menu->viewpoint.last_item) && (menu->menu_item_size > 0); subwin_index++, item_index++)
 	{
 		// For each sub window
 		// Printing to sub window

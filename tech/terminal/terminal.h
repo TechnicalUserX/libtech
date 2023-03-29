@@ -325,8 +325,13 @@ tech_return_t tech_terminal_stdout_print_char(tech_terminal_cursor_position_t ro
 
 
 // Thread-safe(STDOUT)
-// Printf but tech library compliant
+// printf() but tech library compliant
 tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, const char* format, ...);
+
+// Thread-safe(STDOUT)
+// wprintf() but tech library compliant
+tech_return_t tech_terminal_stdout_print_wide(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, const wchar_t *format, ...);
+
 
 // Thread-safe(STDOUT)
 // Clears the stdout
@@ -335,6 +340,11 @@ tech_return_t tech_terminal_stdout_clear(void);
 // Thread-safe(STDOUT)
 // Clears the stdout from the given cursor position to the bottom
 tech_return_t tech_terminal_stdout_clear_from_cursor(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col);
+
+
+// Thread-safe(STDOUT)
+// Clears the line given by row and col
+tech_return_t tech_terminal_stdout_clear_line(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col );
 
 
 // 'destination' might not have the sufficient size when the 'source' is converted to multi-byte char string

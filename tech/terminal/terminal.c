@@ -219,7 +219,7 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdin_buffer_c
 __attribute__((visibility("hidden"))) tech_return_t tech_terminal_cursor_get_position_internal(tech_terminal_cursor_position_t *row, tech_terminal_cursor_position_t *col)
 {
 
-    char buffer[32];
+    char buffer[32] = {0};
 
     tech_terminal_mode_internal(TECH_TERMINAL_MODE_DIRECTIVE_SAVE);
     tech_terminal_mode_internal(TECH_TERMINAL_MODE_DIRECTIVE_SET, TECH_TERMINAL_MODE_RAW);
@@ -270,6 +270,29 @@ __attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdout_print_i
     else
     {
         vfprintf(stdout, format, *received_args);
+    }
+    fflush(stdout);
+    tech_error_number = TECH_SUCCESS;
+    return TECH_RETURN_SUCCESS;
+}
+
+__attribute__((visibility("hidden"))) tech_return_t tech_terminal_stdout_print_wide_internal(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, va_list *received_args, const wchar_t *format, ...)
+{
+
+    if(tech_terminal_cursor_set_position_internal(row, col)){
+        return TECH_RETURN_FAILURE;
+    }
+
+    if (received_args == NULL)
+    {
+        va_list args;
+        va_start(args, format);
+        vfwprintf(stdout, format, args);
+        va_end(args);
+    }
+    else
+    {
+        vfwprintf(stdout, format, *received_args);
     }
     fflush(stdout);
     tech_error_number = TECH_SUCCESS;
@@ -1403,6 +1426,25 @@ tech_return_t tech_terminal_stdout_print(tech_terminal_cursor_position_t row, te
     return TECH_RETURN_SUCCESS;
 }
 
+tech_return_t tech_terminal_stdout_print_wide(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col, const wchar_t *format, ...)
+{
+
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK,0)
+        va_list args;
+        va_start(args, format);
+        tech_terminal_stdout_print_wide_internal(row, col, &args, format);
+        va_end(args);
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK,0)
+
+    TECH_THREAD_SAFE_BLOCK_FAIL_START
+        tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
+        return TECH_RETURN_FAILURE;
+    TECH_THREAD_SAFE_BLOCK_FAIL_END
+
+    tech_error_number = TECH_SUCCESS;
+    return TECH_RETURN_SUCCESS;
+}
+
 tech_return_t tech_terminal_stdout_clear(void){
 
     TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK,0)
@@ -1433,6 +1475,21 @@ tech_return_t tech_terminal_stdout_clear_from_cursor(tech_terminal_cursor_positi
         return TECH_RETURN_FAILURE;
     TECH_THREAD_SAFE_BLOCK_FAIL_END
 
+
+    tech_error_number = TECH_SUCCESS;
+    return TECH_RETURN_SUCCESS;
+}
+
+tech_return_t tech_terminal_stdout_clear_line(tech_terminal_cursor_position_t row, tech_terminal_cursor_position_t col){
+
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_START(TECH_TERMINAL_STDOUT_LOCK,0)
+        tech_terminal_stdout_print_internal(row,col,NULL,"\033[2K");
+    TECH_THREAD_SAFE_BLOCK_GLOBAL_END(TECH_TERMINAL_STDOUT_LOCK,0)
+
+    TECH_THREAD_SAFE_BLOCK_FAIL_START
+        tech_error_number = TECH_ERROR_THREAD_SAFE_BLOCK_UNEXPECTED_EXIT;
+        return TECH_RETURN_FAILURE;
+    TECH_THREAD_SAFE_BLOCK_FAIL_END
 
     tech_error_number = TECH_SUCCESS;
     return TECH_RETURN_SUCCESS;

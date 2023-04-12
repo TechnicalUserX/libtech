@@ -61,3 +61,8 @@ libtech can be used with C++ programs. The linking procedure does not differ muc
 ```bash
 $ g++ main.cpp -ltech
 ```
+
+
+$$
+f(x) = 100
+$$
